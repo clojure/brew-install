@@ -9,7 +9,7 @@
       <directory>target</directory>
       <outputDirectory>.</outputDirectory>
       <includes>
-        <include>clojure-install*.jar</include>
+        <include>brew-install*.jar</include>
       </includes>
     </fileSet>
   </fileSets>
