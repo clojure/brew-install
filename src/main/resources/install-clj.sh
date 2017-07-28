@@ -11,4 +11,4 @@ if [[ ! -n "$JAVA_CMD" ]]; then
 fi
 
 # Run initial dependency installer
-"$JAVA_CMD" -classpath INSTALL_JAR clojure.tools.Install
+"$JAVA_CMD" -classpath JAR_PATH/clojure-install-${project.version}.jar clojure.tools.Install

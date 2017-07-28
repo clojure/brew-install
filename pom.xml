@@ -23,6 +23,12 @@
     </developer>
   </developers>
 
+  <properties>
+    <clojure.version>1.9.0-alpha17</clojure.version>
+    <spec.version>0.1.123</spec.version>
+    <tools.deps.version>0.1.14</tools.deps.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.clojure</groupId>
@@ -32,7 +38,18 @@
   </dependencies>
 	
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.0.2</version>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>

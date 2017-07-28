@@ -1,0 +1,3 @@
+org.clojure/clojure=${clojure.version}
+org.clojure/spec.alpha=${spec.version}
+org.clojure/tools.deps.alpha=${tools.deps.version}
