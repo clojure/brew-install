@@ -10,5 +10,15 @@ if [[ ! -n "$JAVA_CMD" ]]; then
   fi
 fi
 
+install_dir=PREFIX
+
+if [[ ! -d "$HOME/.clojure" ]]; then
+  mkdir "$HOME/.clojure"
+fi
+
+if [[ ! -f "$HOME/.clojure/clj.props"]]; then
+  cp "$install_dir/clj.props" "$HOME/.clojure/clj.props"
+fi
+
 # Run initial dependency installer
-"$JAVA_CMD" -classpath JAR_PATH/clojure-install-${project.version}.jar clojure.tools.Install
+"$JAVA_CMD" -classpath "$install_dir/clojure-install-${project.version}.jar" clojure.tools.Install

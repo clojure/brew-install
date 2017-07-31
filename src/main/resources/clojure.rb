@@ -1,7 +1,7 @@
 class Clojure < Formula
   desc "The Clojure Programming Language"
   homepage "https://clojure.org"
-  url "http://cdn.cognitect.com/brew/clojure-install-bundle-${project.version}.tar.gz"
+  url "http://cdn.cognitect.com/brew/brew-install-${project.version}.tar.gz"
   sha256 "SHA"
 
   bottle :unneeded
@@ -11,9 +11,10 @@ class Clojure < Formula
 
   def install
     prefix.install "clojure-install-${project.version}.jar"
-    inreplace "install-clj.sh", /INSTALL_JAR/, "#{prefix}/clojure-install-${project.version}.jar"
+    prefix.install "clj.props"
+    inreplace "install-clj.sh", /PREFIX/, "#{prefix}"
     bin.install "install-clj.sh" => "install-clj"
-    bin.install "clj.sh" => "clj"
+    bin.install "clj"
     system "/bin/sh", "#{bin}/install-clj"
   end
 
