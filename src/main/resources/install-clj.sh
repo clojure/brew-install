@@ -13,10 +13,12 @@ fi
 install_dir=PREFIX
 
 if [[ ! -d "$HOME/.clojure" ]]; then
+  echo "Creating $HOME/.clojure"
   mkdir "$HOME/.clojure"
 fi
 
 if [[ ! -f "$HOME/.clojure/clj.props" ]]; then
+  echo "Copying $install_dir/clj.props to $HOME/.clojure/clj.props"
   cp "$install_dir/clj.props" "$HOME/.clojure/clj.props"
 fi
 

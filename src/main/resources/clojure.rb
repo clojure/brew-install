@@ -15,11 +15,11 @@ class Clojure < Formula
     inreplace "install-clj.sh", /PREFIX/, "#{prefix}"
     bin.install "install-clj.sh" => "install-clj"
     bin.install "clj"
-    system "/bin/sh", "#{bin}/install-clj"
   end
 
   test do
     ENV.java_cache
+    system "${bin}/install-clj"
     system "#{bin}/clj", "-e", "nil"
   end
 end
