@@ -18,9 +18,9 @@ cp target/classes/install-clj.sh target
 mvn dependency:get -DgroupId=org.clojure -DartifactId=tools.deps.alpha -Dversion="${tdeps}" -Dpackaging=jar -Ddest=target/tools-deps.jar -DremoteRepositories=central::default::http://repo1.maven.apache.org/maven2
 jar xf target/tools-deps.jar clj
 mv clj target
-tar -cvzf "target/brew-install-${version}.tar.gz" -Ctarget "brew-install-${version}.jar" clj.props install-clj.sh clj
+tar -cvzf "target/install-clj-${version}.tar.gz" -Ctarget "install-clj-${version}.jar" clj.props install-clj.sh clj
 
 # Create formula file
 cp target/classes/clojure.rb target
-sha=$(shasum -a 256 "target/brew-install-${version}.tar.gz" | cut -c 1-64)
+sha=$(shasum -a 256 "target/install-clj-${version}.tar.gz" | cut -c 1-64)
 sed -i '' "s/SHA/$sha/" target/clojure.rb

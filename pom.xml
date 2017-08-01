@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.clojure</groupId>
-  <artifactId>brew-install</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
-  <name>brew-install</name>
+  <artifactId>install-clj</artifactId>
+  <version>0.1.0</version>
+  <name>install-clj</name>
   <description>Clojure brew installer</description>
-	<url>https://github.com/clojure/brew-install</url>
+  <url>https://github.com/clojure/brew-install</url>
 
   <licenses>
     <license>
