@@ -7,18 +7,18 @@ formula (clojure.rb), suitable for updating in the brew central tap.
 
 The tar file contains:
 
-* brew-install jar - an uberjar including clojure-install and all its dep jars
+* install-clj jar - an uberjar including clojure-install and all its dep jars
 * clj.props - the initial file of dep properties to install (Clojure, spec, tools.deps)
 * install-clj script - just invokes the installer from clojure-install
 * clj script - the main user-facing Clojure runner (pulled from tools.deps.alpha)
 
 ## Updating versions
 
-The brew installer version is defined by the pom.xml project version. It should be updated
+The installer version is defined by the pom.xml project version. It should be updated
 only by running script/build/update_version.
 
 The Clojure, spec, and tools.deps.alpha versions to include in the brew installer are
-defined in the pom.xml as properties files and make their way from there into all the
+defined in the pom.xml as properties and make their way from there into all the
 other files via several means.
 
 ## Package script
