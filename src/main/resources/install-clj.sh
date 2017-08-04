@@ -18,8 +18,10 @@ if [[ ! -d "$HOME/.clojure" ]]; then
 fi
 
 if [[ -e "$HOME/.clojure/clj.props" ]]; then
+  echo "Backing up "$HOME/.clojure/clj.props"
   cp -f "$HOME/.clojure/clj.props" "$HOME/.clojure/clj.props.backup"
 fi
+echo "Writing: $HOME/.clojure/clj.props"
 cp "$install_dir/clj.props" "$HOME/.clojure/clj.props"
 
 # Run initial dependency installer
