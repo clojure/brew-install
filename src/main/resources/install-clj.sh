@@ -17,10 +17,10 @@ if [[ ! -d "$HOME/.clojure" ]]; then
   mkdir "$HOME/.clojure"
 fi
 
-if [[ ! -f "$HOME/.clojure/clj.props" ]]; then
-  echo "Copying $install_dir/clj.props to $HOME/.clojure/clj.props"
-  cp "$install_dir/clj.props" "$HOME/.clojure/clj.props"
+if [[ -e "$HOME/.clojure/clj.props" ]]; then
+  cp -f "$HOME/.clojure/clj.props" "$HOME/.clojure/clj.props.backup"
 fi
+cp "$install_dir/clj.props" "$HOME/.clojure/clj.props"
 
 # Run initial dependency installer
 "$JAVA_CMD" -classpath "$install_dir/install-clj-${project.version}.jar" clojure.tools.Install
