@@ -14,7 +14,7 @@ class Clojure < Formula
     prefix.install "clj.props"
     inreplace "install-clj.sh", /PREFIX/, "#{prefix}"
     bin.install "install-clj.sh" => "install-clj"
-    bin.install "clj"
+    bin.install "clj.sh" => "clj"
   end
 
   test do
