@@ -4,7 +4,7 @@ set -e
 
 # Clean
 echo "Cleaning"
-sh -x rm -rf target
+rm -rf target
 
 # Installer version
 version=$(mvn help:evaluate -Dexpression=project.version 2>/dev/null| grep -v "^\[")
@@ -12,14 +12,14 @@ echo "Building installer version $version"
 
 # Build uberjar and filter resources
 echo "Building uberjar"
-sh -x mvn clean package -Dmaven.test.skip=true
+mvn clean package -Dmaven.test.skip=true
 
 # Make tar file of jar and script
 echo "Building installer tar file"
 cp target/classes/clj.props target
 cp target/classes/install-clj.sh target
 cp target/classes/clj.sh target
-sh -x tar -cvzf "target/install-clj-${version}.tar.gz" -Ctarget "install-clj-${version}.jar" clj.props install-clj.sh clj.sh
+tar -cvzf "target/install-clj-${version}.tar.gz" -Ctarget "install-clj-${version}.jar" clj.props install-clj.sh clj.sh
 
 # Create formula file
 echo "Creating formula file"
