@@ -4,15 +4,15 @@ set -e
 
 # Clean
 echo "Cleaning"
-# rm -rf target
+rm -rf target
 
 # Installer version
-version=$(mvn help:evaluate -Dexpression=project.version 2>/dev/null| grep -v "^\[")
+version=$(mvn -B help:evaluate -Dexpression=project.version 2>/dev/null| grep -v "^\[")
 echo "Building installer version $version"
 
 # Build uberjar and filter resources
 echo "Building uberjar"
-mvn clean package -Dmaven.test.skip=true
+mvn -B clean package -Dmaven.test.skip=true
 
 # Make tar file of jar and script
 echo "Building installer tar file"
