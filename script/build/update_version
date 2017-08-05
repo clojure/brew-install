@@ -2,6 +2,8 @@
 
 set -e
 
-mvn -B versions:set -DgenerateBackupPoms=false -DnewVersion=`script/build/revision`
+v=$(script/build/revision)
+echo "Setting version to $v"
+mvn -B versions:set -DgenerateBackupPoms=false -DnewVersion="$v"
 git commit -m 'update version' pom.xml
 git push
