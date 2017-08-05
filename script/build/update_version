@@ -6,4 +6,4 @@ v=$(script/build/revision)
 echo "Setting version to $v"
 mvn -B versions:set -DgenerateBackupPoms=false -DnewVersion="$v"
 git commit -m 'update version' pom.xml
-git push origin HEAD
+git push origin refs/heads/master
