@@ -25,4 +25,4 @@ tar -cvzf "target/install-clj-${version}.tar.gz" -Ctarget "install-clj-${version
 echo "Creating formula file"
 cp target/classes/clojure.rb target
 sha=$(shasum -a 256 "target/install-clj-${version}.tar.gz" | cut -c 1-64)
-sed -i '' "s/SHA/$sha/" target/clojure.rb
+perl -pi.bak -e "s,SHA,$sha,g" target/clojure.rb
