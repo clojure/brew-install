@@ -4,7 +4,7 @@ set -e
 
 # Clean
 echo "Cleaning"
-rm -rf target
+# rm -rf target
 
 # Installer version
 version=$(mvn help:evaluate -Dexpression=project.version 2>/dev/null| grep -v "^\[")
