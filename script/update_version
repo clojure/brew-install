@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -e
+
+version_template=$(cat VERSION_TEMPLATE)
+
+if [[ ! "$version_template" =~ ^[0-9]+\.[0-9]+\.GENERATED_VERSION(-[a-zA-Z0-9]+)?$ ]]; then
+  echo "Invalid version template string: $version_template" >&2
+  exit -1
+fi
+
+rev=$(git --no-replace-objects describe --match v0.0)
+rev=${rev:5} # drop the first 5 characters
+rev=${rev:0:${#rev}-9} # drop the last 9 characters
+v=${version_template/GENERATED_VERSION/$rev}
+echo "Setting version to $v"
+mvn -B versions:set -DgenerateBackupPoms=false -DnewVersion="$v"
+git commit -m "update version to $v" pom.xml

@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-
-v=$(script/build/revision)
-echo "Setting version to $v"
-mvn -B versions:set -DgenerateBackupPoms=false -DnewVersion="$v"
-git commit -m 'update version' pom.xml
