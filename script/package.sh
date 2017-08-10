@@ -28,5 +28,7 @@ sha=$(shasum -a 256 "target/install-clj-${version}.tar.gz" | cut -c 1-64)
 perl -pi.bak -e "s,SHA,$sha,g" target/clojure.rb
 
 # Deploy to s3
-aws s3 cp "target/install-clj-${version}.tar.gz" "$S3_BUCKET/install/brew/install-clj-${version}.tar.gz"
-aws s3 cp "target/clojure.rb" "$S3_BUCKET/install/brew/clojure-${version}.rb"
+if [[ ! -z "$S3_BUCKET" ]]; then
+  aws s3 cp "target/install-clj-${version}.tar.gz" "$S3_BUCKET/install/brew/install-clj-${version}.tar.gz"
+  aws s3 cp "target/clojure.rb" "$S3_BUCKET/install/brew/clojure-${version}.rb"
+fi
