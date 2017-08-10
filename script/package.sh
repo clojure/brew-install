@@ -29,6 +29,6 @@ perl -pi.bak -e "s,SHA,$sha,g" target/clojure.rb
 
 # Deploy to s3
 if [[ ! -z "$S3_BUCKET" ]]; then
-  aws s3 cp "target/install-clj-${version}.tar.gz" "$S3_BUCKET/install/brew/install-clj-${version}.tar.gz"
-  aws s3 cp "target/clojure.rb" "$S3_BUCKET/install/brew/clojure-${version}.rb"
+  aws s3 cp --only-show-errors "target/install-clj-${version}.tar.gz" "$S3_BUCKET/install/brew/install-clj-${version}.tar.gz"
+  aws s3 cp --only-show-errors "target/clojure.rb" "$S3_BUCKET/install/brew/clojure-${version}.rb"
 fi
