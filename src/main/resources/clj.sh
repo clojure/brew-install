@@ -57,8 +57,13 @@ if [[ ! -n "$JAVA_CMD" ]]; then
   fi
 fi
 
-# Find deps.edn and cache directory to use (either project or system)
+# Run install-clj if not yet run
 clojure_dir="$HOME/.clojure"
+if [[ ! -d "$clojure_dir" ]]; then
+  install-clj
+fi
+
+# Find deps.edn and cache directory to use (either project or system)
 system_deps="$clojure_dir/deps.edn"
 system_cache_dir="$clojure_dir/.cpcache"
 project_deps=deps.edn
