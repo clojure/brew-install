@@ -17,10 +17,6 @@ class Clojure < Formula
     bin.install "clj.sh" => "clj"
   end
 
-#  def post_install
-#    system bin/"install-clj"
-#  end
-
   test do
     ENV.java_cache
     system "#{bin}/clj", "-e", "nil"
