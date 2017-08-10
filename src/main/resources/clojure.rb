@@ -1,7 +1,7 @@
 class Clojure < Formula
   desc "The Clojure Programming Language"
   homepage "https://clojure.org"
-  url "http://cdn.cognitect.com/brew/install-clj-${project.version}.tar.gz"
+  url "https://download.clojure.org/install/brew/install-clj-${project.version}.tar.gz"
   sha256 "SHA"
 
   bottle :unneeded
