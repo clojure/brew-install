@@ -17,9 +17,9 @@ mvn -B clean package -Dmaven.test.skip=true
 # Make tar file of jar and script
 echo "Building installer tar file"
 cp target/classes/clj.props target
-cp target/classes/install-clj.sh target
-cp target/classes/clj.sh target
-tar -cvzf "target/install-clj-${version}.tar.gz" -Ctarget "install-clj-${version}.jar" clj.props install-clj.sh clj.sh
+cp target/classes/install-clj target
+cp target/classes/clj target
+tar -cvzf "target/install-clj-${version}.tar.gz" -Ctarget "install-clj-${version}.jar" clj.props install-clj clj
 
 # Create formula file
 echo "Creating formula file"
