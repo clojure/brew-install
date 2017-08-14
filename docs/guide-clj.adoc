@@ -20,7 +20,7 @@ The tools.deps.alpha is a library providing a functional API to access these cap
 
 The Clojure 1.9 release for the first time requires multiple artifacts to run Clojure (clojure, spec.alpha, and core.specs.alpha) and thus the issues of transitive dependency are now immediately in front of a Clojure user in the first minute. A new script (`clj`) will be provided by system-specific installers (e.g. brew, apt-get, etc) to provide a path for getting started with Clojure development.
 
-Maven-artifacts-first orientation of current tooling has created great rigidity and friction for dev processes - making it hard to e.g. work with libs not yet building/publishing artifacts (new users!), working on speculative changes w/o artifacts, working on mutual changes across multiple libs, give control to a 3rd party tool to manage shared dependencies, and to directly leverage git which is now widely used as a source of truth for code lifecycles.
+Maven-artifacts-first orientation of current tooling has created great rigidity and friction for dev processes - making it hard to e.g. work with libs not yet building/publishing artifacts (new users!), work on speculative changes w/o artifacts, working on mutual changes across multiple libs, give control to a 3rd party tool to manage shared dependencies, and to directly leverage git which is now widely used as a source of truth for code lifecycles.
 
 == Installation
 
@@ -72,14 +72,14 @@ Usage: `clj [<jvm_opts>] [<dep_opts>] [<main_opts>]`
 where:
 
 * `jvm_opts` is 0 or more of the following:
-  * `-D...` - sets a system property in the JVM, ex: -Dfoo=bar
-  * `-X...` - sets a JVM runtime setting, ex: -Xmx256m
-  * `-Jopt` - passes `opt` through to the JVM, ex: -J-server
+** `-D...` - sets a system property in the JVM, ex: -Dfoo=bar
+** `-X...` - sets a JVM runtime setting, ex: -Xmx256m
+** `-Jopt` - passes `opt` through to the JVM, ex: -J-server
 * `dep_opts` is any of the following (but each at most once):
-  * `-Ralias...` - concatenated resolve-args aliases, ex: -R:bench:1.9
-  * `-Calias...` - concatenated classpath-override aliases, ex: -C:dev
-  * `-Plib=path,...` - comma-delimited, lib=path pairs specifying classpath overrides. Note: disables caching!
-	* `-S` - compute classpath and show it, without running Clojure
+** `-Ralias...` - concatenated resolve-args aliases, ex: -R:bench:1.9
+** `-Calias...` - concatenated classpath-override aliases, ex: -C:dev
+** `-Plib=path,...` - comma-delimited, lib=path pairs specifying classpath overrides. Note: disables caching!
+** `-S` - compute classpath and show it, without running Clojure
 * `main_opts` are the `clojure.main` arguments, see [docs](https://clojure.org/reference/repl_and_main)
 
 The `clj` script constructs and invokes a command-line of the form:
@@ -94,18 +94,18 @@ section on classpath caching below for more details. When a classpath is not ava
 used to construct the classpath:
 
 * Compute the deps map
-  * Read the ~/.clojure/deps.edn file
-  * If a local edn file exists at ./deps.edn, read that file
-  * Combine these two maps with `merge`
+** Read the ~/.clojure/deps.edn file
+** If a local edn file exists at ./deps.edn, read that file
+** Combine these two maps with `merge`
 * Compute the resolve-deps args
-  * If `-R` specifies one or more aliases, find each alias in the deps map `:aliases`
-  * `merge-with` `merge` the alias maps - the result is the resolve-args map
+** If `-R` specifies one or more aliases, find each alias in the deps map `:aliases`
+** `merge-with` `merge` the alias maps - the result is the resolve-args map
 * Invoke `resolve-deps` with deps map and resolve-args map
 * Write the libs map to the classpath cache
 * Compute the classpath-overrides map
-  * If `-C` specifies one or more aliases, find each alias in the deps map `:aliases`
-  * If `-P` specifies a map of lib to path, add this as a trailing overrides map
-  * `merge` the classpath-override alias maps
+** If `-C` specifies one or more aliases, find each alias in the deps map `:aliases`
+** If `-P` specifies a map of lib to path, add this as a trailing overrides map
+** `merge` the classpath-override alias maps
 * Invoke `make-classpath` with the libs map returned by `resolve-deps` and the classpath-overrides map
 * Write the classpath to the classpath cache
 * Print the computed classpath to stdout
@@ -142,11 +142,11 @@ where:
 * `<coord>` is a map with keys `:type` and (optionally) `:version` where the only initial type is `:mvn`
 * `<alias>` is a keyword
 * `<resolve-args-or-classpath-overrides>` is:
-  * resolve-args: map with any of these optional keys. The value for each is a map from lib to coord.
-    * `:extra-deps` - dependencies to add to the initial set
-    * `:override-deps` - if dep is found when expanding deps, use this coordinate, regardless of what is specified
-    * `:default-deps` - if dep is found when expanding deps, and no coordinate is provided, use this
-  * classpath-overrides: map from lib to path
+** resolve-args: map with any of these optional keys. The value for each is a map from lib to coord.
+*** `:extra-deps` - dependencies to add to the initial set
+*** `:override-deps` - if dep is found when expanding deps, use this coordinate, regardless of what is specified
+*** `:default-deps` - if dep is found when expanding deps, and no coordinate is provided, use this
+** classpath-overrides: map from lib to path
 * `<provider-type>` - matches the coord type, ie `:mvn`
 * `<provider-config>` - depends on provider type, but example is `{:repos {"central" {:url "..."}}}`
 
