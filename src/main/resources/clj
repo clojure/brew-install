@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Version = ${project.version}
+
 set -e
 
 # Extract java opts

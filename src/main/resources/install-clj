@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Version = ${project.version}
+
 # Parse args
 install_opts=()
 while [ $# -gt 0 ]
