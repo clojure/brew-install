@@ -43,6 +43,10 @@ do
       classpath_overrides="${1:2}"
       shift
       ;;
+    -S)
+      show_classpath="$1"
+      shift
+      ;;
     *)
       break
       ;;
@@ -118,8 +122,9 @@ fi
 
 cp=$(cat "$cp_file")
 
-# Launch!
-if type -p rlwrap >/dev/null 2>&1; then
+if [[ -n "$show_classpath" ]]; then
+  echo $cp
+elif type -p rlwrap >/dev/null 2>&1; then
   rlwrap -r -q '\"' -b "(){}[],^%3@\";:'" "$JAVA_CMD" "${java_opts[@]}" -classpath "$cp" clojure.main "$@"
 else
   "$JAVA_CMD" "${java_opts[@]}" -classpath "$cp" clojure.main "$@"
