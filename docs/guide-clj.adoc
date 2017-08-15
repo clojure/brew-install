@@ -60,7 +60,7 @@ export PATH=$PATH:$INSTALL
 
 == Environment
 
-The `clj` script relies on several directories and optionally on several environment variables. In general, you can ignore most of this when getting started with `clj` as the installer takes care of it.
+The `clj` script relies on several directories and optionally on several environment variables. In general, as a new user of `clj`, you can ignore this section and everything is take care of by the `clj` and installer scripts.
 
 * install directory
 ** Created by the installer or during the installation process
@@ -171,6 +171,8 @@ where:
 
 === Classpath caching
 
+*The naming strategy here is temporary and will change.*
+
 Classpath files are cached in the current directory under `.cpcache/`. File are of two forms:
 
 * `.cpcache/<resolve-aliases>.libs`
@@ -280,6 +282,66 @@ deps.edn:
 ----
 
 Note that `-S` can be combined with other `clj` options as well.
+
+== Glossary
+
+**Library**
+
+An independently-developed chunk of code residing in a directory hierarchy under a root.  We will narrow to those libraries that can be globally named, e.g. `my.namespace/my-lib`.
+
+**Artifact**
+
+A snapshot of a library, captured at a point in time, possibly subjected to some build process, labeled with a version, containing some manifest documenting its dependencies, and packaged in e.g. a jar.
+
+**Dependency**
+
+An expression, at the project/library level, that the declaring library needs the declared library in order to provide some of its functions. Must at least specify library name, might also specify version and other attrs. Actual (functional) dependencies are more fine-grained. 
+
+We would like to support:
+
+* maven artifacts
+* unversioned libraries - a file location identifying a jar or directory root
+* git coordinates (later)
+
+**Classpath (and roots/paths)**
+
+An ordered list of local 'places' (filesystem directories and/or jars) that will form root paths for searches of requires/imports at runtime, supplied as an argument to Java. We are not in control of the semantics of this. We will discourage order-dependence.
+
+**Expansion**
+
+Given a set of root dependencies, a full walk of the transitive dependencies.
+
+**Resolution**
+
+Given a collection of root dependencies and additional modifications, creates a fully-expanded dependency tree, then produces a mapping from each library mentioned to a single version to be used that would satisfy all dependents, as well as the local path. We will also include those dependents for each entry. Conflicts arise only if libraries depend on different major versions of a library.
+
+**Classpath creation**
+
+Creates a classpath from a resolved lib-map and optional extra local lib paths. Current plan for lib-map does not provide for control over resulting order.
+
+**Version**
+
+A human numbering system whose interpretation is determined by convention. Usually x.y.z. Must protect against 'semver' interpretation, which allows libraries to break users while keeping the name the same. Ascending by convention - higher numbers are 'later', vague compatibility with lower/earlier.
+
+**Version difference**
+
+This occurs when the dependency expansion contains the same library with more than one "version" specified but where there is a relative ordering (either by number or by SHA etc). Version differences can be resolved by choosing the "later" or "newest" version when that relationship can be established.
+
+**Version conflict**
+
+A version conflict occurs when the dependency expansion contains the same library with more than one "version" such that the best choice cannot be automatically chosen:
+
+* semver version breakage (major version changed)
+* github shas that do not contain any common root or ancestry (two shas on different branches for example)
+* versions that cross different repos or repo types such that no relative relationship can be established
+
+**Maven Repo**
+
+A repository of library artifacts - e.g. Maven central or Clojars
+
+**Requires and imports**
+
+Mentions in source code of library (sub)components that must be in the classpath in order to succeed. namespace and package/class names are transformed into path components.
 
 == More information
 
