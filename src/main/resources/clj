@@ -65,20 +65,20 @@ fi
 
 # Determine config directory
 if [[ -n "$CLJ_CONFIG" ]]; then
-  clojure_dir="$CLJ_CONFIG"
+  config_dir="$CLJ_CONFIG"
 elif [[ -n "$XDG_CONFIG_HOME" ]]; then
-  clojure_dir="$XDG_CONFIG_HOME/clojure"
+  config_dir="$XDG_CONFIG_HOME/clojure"
 else
-  clojure_dir="$HOME/.clojure"
+  config_dir="$HOME/.clojure"
 fi
 
 # Run install-clj if not yet run
-if [[ ! -d "$clojure_dir" ]]; then
+if [[ ! -d "$config_dir" ]]; then
   install-clj
 fi
 
 # Find deps.edn and cache directory to use (either project or system)
-system_deps="$clojure_dir/deps.edn"
+system_deps="$config_dir/deps.edn"
 project_deps=deps.edn
 project_cache_dir=.cpcache
 
@@ -91,7 +91,7 @@ if [[ ! -f "$project_deps" ]]; then
   elif [[ -n "$XDG_CACHE_HOME" ]]; then
     project_cache_dir="$XDG_CACHE_HOME/clojure"
   else
-    project_cache_dir="$clojure_dir/.cpcache"
+    project_cache_dir="$config_dir/.cpcache"
   fi
 fi
 
@@ -114,11 +114,11 @@ fi
 # Check cached cp file - if needed, make a new one
 if [ ! -f "$cp_file" ] || [ ! -f "$libs_file" ] || [ "$libs_file" -nt "$cp_file" ] || [ "$project_deps" -nt "$cp_file" ]; then
   # Check whether the clj.cp itself is out of date and if so, rebuild it
-  if [ -f "$clojure_dir/clj.props" ] && [ "$clojure_dir/clj.props" -nt "$clojure_dir/clj.cp" ]; then
+  if [ -f "$config_dir/clj.props" ] && [ "$config_dir/clj.props" -nt "$config_dir/clj.cp" ]; then
     install-clj
   fi
 
-  tools_cp=$(cat "$clojure_dir/clj.cp")
+  tools_cp=$(cat "$config_dir/clj.cp")
   tools_args=()
 
   if [[ -n "$resolve_aliases" ]]; then
