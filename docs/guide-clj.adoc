@@ -169,6 +169,8 @@ where:
 * `<provider-type>` - matches the coord type, ie `:mvn`
 * `<provider-config>` - depends on provider type, but example is `{:repos {"central" {:url "..."}}}`
 
+For more detailed info, see https://github.com/clojure/tools.deps.alpha/blob/master/src/main/clojure/clojure/tools/deps/alpha/specs.clj[the specs]. The deps.edn file should be an instance of the `::deps-map` spec.
+
 === Classpath caching
 
 *The naming strategy here is temporary and will change.*
