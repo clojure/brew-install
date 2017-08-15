@@ -60,7 +60,7 @@ export PATH=$PATH:$INSTALL
 
 == Environment
 
-The `clj` script relies on several directories and optionally on several environment variables. In general, as a new user of `clj`, you can ignore this section and everything is take care of by the `clj` and installer scripts.
+The `clj` script relies on several directories and optionally on several environment variables. In general, as a new user of `clj`, you can ignore this section as everything is taken care of by the `clj` and installer scripts.
 
 * install directory
 ** Created by the installer or during the installation process
