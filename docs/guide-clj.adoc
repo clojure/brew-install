@@ -43,26 +43,23 @@ COMING SOON
 
 === Manual installation
 
-The following process can be used to manually install the `clj` script on a *nix system. Note that this installation process is similar to the automated process, but will install the jar and scripts in the ~/.clojure directory, rather than its typical location.
+The following process can be used to manually install the `clj` script on a *nix system. This installation process is similar to what the automated process does.
 
 Process:
 
 [source,shell]
 ----
-# Create ~/.clojure directory
-mkdir $HOME/.clojure
+# Create an installation directory (use whatever directory you prefer)
+export INSTALL=$HOME/install-clj
+mkdir -p $INSTALL
 
-# Download and expand the installation tar file
+# Download and create the installation directory
+cd $INSTALL
 curl -O https://download.clojure.org/install/brew/install-clj.tar.gz
-tar xzf install-clj.tar.gz -C $HOME/.clojure
-
-# Replace PREFIX in install-clj to reference the jar
-perl -pi.bak -e "s,PREFIX,$HOME/.clojure,g" $HOME/.clojure/install-clj
-
-# Add the scripts to the path
-chmod +x $HOME/.clojure/install-clj
-chmod +x $HOME/.clojure/clj
-export PATH=$PATH:$HOME/.clojure
+tar xzf install-clj.tar.gz
+chmod +x install-clj clj
+perl -pi.bak -e "s,PREFIX,$INSTALL,g" install-clj
+export PATH=$PATH:$INSTALL
 ----
 
 == Usage
