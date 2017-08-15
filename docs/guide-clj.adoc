@@ -16,9 +16,9 @@ Clojure "endeavors to be a general-purpose language suitable in those areas wher
 * the classpath used when invoking JVM processes (and/or URLClassLoaders)
 * transitive dependency download and resolution from Maven repositories
 
-The tools.deps.alpha is a library providing a functional API to access these capabilities. tools.deps.alpha makes it simple and easy to interactively consume JVM libraries, without dragging in unrelated concerns of building programs or project management. (It should also be a useful shared resource for future work on project and build tools.)
+https://github.com/clojure/tools.deps.alpha[tools.deps.alpha] is a library providing a functional API to access these capabilities. tools.deps.alpha makes it simple and easy to interactively consume JVM libraries, without dragging in unrelated concerns of building programs or project management. (It should also be a useful shared resource for future work on project and build tools.)
 
-The Clojure 1.9 release for the first time requires multiple artifacts to run Clojure (clojure, spec.alpha, and core.specs.alpha) and thus the issues of transitive dependency are now immediately in front of a Clojure user in the first minute. A new script (`clj`) will be provided by system-specific installers (e.g. brew, apt-get, etc) to provide a path for getting started with Clojure development.
+The Clojure 1.9 release for the first time requires multiple artifacts to run Clojure (clojure, spec.alpha, and core.specs.alpha) and thus the issues of transitive dependency are now immediately in front of a Clojure user in the first minute. A new script (`clj`) is provided by system-specific installers (e.g. brew, apt-get, etc) as a path for getting started with Clojure development.
 
 Maven-artifacts-first orientation of current tooling has created great rigidity and friction for dev processes - making it hard to e.g. work with libs not yet building/publishing artifacts (new users!), work on speculative changes w/o artifacts, working on mutual changes across multiple libs, give control to a 3rd party tool to manage shared dependencies, and to directly leverage git which is now widely used as a source of truth for code lifecycles.
 
@@ -26,7 +26,7 @@ Maven-artifacts-first orientation of current tooling has created great rigidity 
 
 === Installation on Mac via `brew`
 
-The Clojure formula will soon be added to the central tap, but for now you can install with the latest Clojure formula here:
+The Clojure formula will soon be added to the central tap, but for now you can install from the latest Clojure formula here:
 
 [source,shell]
 ----
@@ -45,15 +45,11 @@ COMING SOON
 
 The following process can be used to manually install the `clj` script on a *nix system. This installation process is similar to what the automated process does.
 
-Process:
-
 [source,shell]
 ----
-# Create an installation directory (use whatever directory you prefer)
+# Set INSTALL to any directory where you want to install the scripts
 export INSTALL=$HOME/install-clj
 mkdir -p $INSTALL
-
-# Download and create the installation directory
 cd $INSTALL
 curl -O https://download.clojure.org/install/brew/install-clj.tar.gz
 tar xzf install-clj.tar.gz
@@ -61,6 +57,34 @@ chmod +x install-clj clj
 perl -pi.bak -e "s,PREFIX,$INSTALL,g" install-clj
 export PATH=$PATH:$INSTALL
 ----
+
+== Environment
+
+The `clj` script relies on several directories and optionally on several environment variables. In general, you can ignore most of this when getting started with `clj` as the installer takes care of it.
+
+* install directory
+** Created by the installer or during the installation process
+** Contents:
+*** `clj` - main script
+*** `install-clj` - a script used by `clj` to create and populate the config directory when needed
+*** `clj.props` - initial props file to be copied to the config directory
+*** `install-clj-X.Y.Z.jar` - uberjar installer jar invoked by `install-clj`
+* config directory
+** Lazily created by `clj` if no config directory is detected. Locations checked in this order:
+*** If `$CLJ_CONFIG` is set, then use `$CLJ_CONFIG` (explicit override)
+*** If `$XDG_CONFIG_HOME` is set, then use `$XDG_CONFIG_HOME/clojure` (follows Freedesktop conventions)
+*** Else use `$HOME/.clojure`
+** Contents:
+*** `clj.props` - defines the versions for the libraries used in the tools.deps.alpha classpath
+*** `clj.cp` - classpath to invoke tools.deps.alpha with (built from `clj.props`)
+*** `deps.edn` - system deps file, defines default Clojure version and provider defaults
+* cache directory
+** Lazily created if `clj` is invoked without a local `deps.edn` file. Locations checked in this order:
+*** If `$CLJ_CACHE` is set, then use `$CLJ_CACHE` (explicit override)
+*** If `$XDG_CACHE_HOME` is set, then use `$XDG_CACHE_HOME/clojure` (follows Freedesktop conventions)
+*** Else use `config_dir/.cpcache`
+** Contents:
+*** See the section below on classpath caching
 
 == Usage
 
@@ -79,20 +103,18 @@ where:
 ** `-S` - compute classpath and show it, without running Clojure
 * `main_opts` are the `clojure.main` arguments, see [docs](https://clojure.org/reference/repl_and_main)
 
-The `clj` script constructs and invokes a command-line of the form:
+The `clj` script ultimately constructs and invokes a command-line of the form:
 
 [source,shell]
 ----
 java <java_opts> -cp <classpath> clojure.main <main_opts>
 ----
 
-The `dep_opts` are used to compute the `<classpath>`. Classpaths are cached (except when using `-P`) - see the
-section on classpath caching below for more details. When a classpath is not available, the following process is
-used to construct the classpath:
+The `dep_opts` are used to compute the `<classpath>` in this final invocation. Classpaths are cached (except when using `-P`) - see the section on classpath caching below for more details. When a classpath is not available, the following process is used to construct the classpath:
 
 * Compute the deps map
-** Read the ~/.clojure/deps.edn file
-** If a local edn file exists at ./deps.edn, read that file
+** Read the system deps.edn file from the config directory
+** If a local deps file exists at ./deps.edn, read that file
 ** Combine these two maps with `merge`
 * Compute the resolve-deps args
 ** If `-R` specifies one or more aliases, find each alias in the deps map `:aliases`
