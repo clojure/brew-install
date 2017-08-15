@@ -63,22 +63,36 @@ if [[ ! -n "$JAVA_CMD" ]]; then
   fi
 fi
 
+# Determine config directory
+if [[ ! -n "$CLJ_CONFIG" ]]; then
+  clojure_dir="$CLJ_CONFIG"
+elif [[ ! -n "$XDG_CONFIG_HOME" ]]; then
+  clojure_dir="$XDG_CONFIG_HOME/clojure"
+else
+  clojure_dir="$HOME/.clojure"
+fi
+
 # Run install-clj if not yet run
-clojure_dir="$HOME/.clojure"
 if [[ ! -d "$clojure_dir" ]]; then
   install-clj
 fi
 
 # Find deps.edn and cache directory to use (either project or system)
 system_deps="$clojure_dir/deps.edn"
-system_cache_dir="$clojure_dir/.cpcache"
 project_deps=deps.edn
 project_cache_dir=.cpcache
 
-# If project deps.edn is missing, use system deps
+# If project deps.edn is missing, use system deps and cache
 if [[ ! -f "$project_deps" ]]; then
   project_deps="$system_deps"
-  project_cache_dir="$system_cache_dir"
+
+  if [[ ! -n "$CLJ_CACHE" ]]; then
+    project_cache_dir="$CLJ_CACHE"
+  elif [[ ! -n "$XDG_CACHE_HOME" ]]; then
+    project_cache_dir="$XDG_CACHE_HOME/clojure"
+  else
+    project_cache_dir="$clojure_dir/.cpcache"
+  fi
 fi
 
 # Construct location of cached classpath file

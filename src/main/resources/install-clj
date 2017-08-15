@@ -27,17 +27,25 @@ fi
 
 install_dir=PREFIX
 
-if [[ ! -d "$HOME/.clojure" ]]; then
-  if [[ -n $verbose ]]; then echo "Creating $HOME/.clojure"; fi
-  mkdir "$HOME/.clojure"
+if [[ ! -n "$CLJ_CONFIG" ]]; then
+  clojure_dir="$CLJ_CONFIG"
+elif [[ ! -n "$XDG_CONFIG_HOME" ]]; then
+  clojure_dir="$XDG_CONFIG_HOME/clojure"
+else
+  clojure_dir="$HOME/.clojure"
 fi
 
-if [[ -e "$HOME/.clojure/clj.props" ]]; then
-  if [[ -n $verbose ]]; then echo "Backing up $HOME/.clojure/clj.props"; fi
-  cp -f "$HOME/.clojure/clj.props" "$HOME/.clojure/clj.props.backup"
+if [[ ! -d "$clojure_dir" ]]; then
+  if [[ -n $verbose ]]; then echo "Creating $clojure_dir"; fi
+  mkdir -p "$clojure_dir"
 fi
-if [[ -n $verbose ]]; then echo "Writing: $HOME/.clojure/clj.props"; fi
-cp "$install_dir/clj.props" "$HOME/.clojure/clj.props"
+
+if [[ -e "$clojure_dir/clj.props" ]]; then
+  if [[ -n $verbose ]]; then echo "Backing up $clojure_dir/clj.props"; fi
+  cp -f "$clojure_dir/clj.props" "$clojure_dir/clj.props.backup"
+fi
+if [[ -n $verbose ]]; then echo "Writing: $clojure_dir/clj.props"; fi
+cp "$install_dir/clj.props" "$clojure_dir/clj.props"
 
 # Run initial dependency installer
-"$JAVA_CMD" -classpath "$install_dir/install-clj-${project.version}.jar" clojure.tools.Install "${install_opts[@]}"
+"$JAVA_CMD" -classpath "$install_dir/install-clj-${project.version}.jar" clojure.tools.Install "$clojure_dir" "${install_opts[@]}"
