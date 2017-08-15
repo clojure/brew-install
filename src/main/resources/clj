@@ -64,9 +64,9 @@ if [[ ! -n "$JAVA_CMD" ]]; then
 fi
 
 # Determine config directory
-if [[ ! -n "$CLJ_CONFIG" ]]; then
+if [[ -n "$CLJ_CONFIG" ]]; then
   clojure_dir="$CLJ_CONFIG"
-elif [[ ! -n "$XDG_CONFIG_HOME" ]]; then
+elif [[ -n "$XDG_CONFIG_HOME" ]]; then
   clojure_dir="$XDG_CONFIG_HOME/clojure"
 else
   clojure_dir="$HOME/.clojure"
@@ -86,9 +86,9 @@ project_cache_dir=.cpcache
 if [[ ! -f "$project_deps" ]]; then
   project_deps="$system_deps"
 
-  if [[ ! -n "$CLJ_CACHE" ]]; then
+  if [[ -n "$CLJ_CACHE" ]]; then
     project_cache_dir="$CLJ_CACHE"
-  elif [[ ! -n "$XDG_CACHE_HOME" ]]; then
+  elif [[ -n "$XDG_CACHE_HOME" ]]; then
     project_cache_dir="$XDG_CACHE_HOME/clojure"
   else
     project_cache_dir="$clojure_dir/.cpcache"
