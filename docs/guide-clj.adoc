@@ -58,34 +58,6 @@ perl -pi.bak -e "s,PREFIX,$INSTALL,g" install-clj
 export PATH=$PATH:$INSTALL
 ----
 
-== Environment
-
-The `clj` script relies on several directories and optionally on several environment variables. In general, as a new user of `clj`, you can ignore this section as everything is taken care of by the `clj` and installer scripts.
-
-* install directory
-** Created by the installer or during the installation process
-** Contents:
-*** `clj` - main script
-*** `install-clj` - a script used by `clj` to create and populate the config directory when needed
-*** `clj.props` - initial props file to be copied to the config directory
-*** `install-clj-X.Y.Z.jar` - uberjar installer jar invoked by `install-clj`
-* config directory
-** Lazily created by `clj` if no config directory is detected. Locations checked in this order:
-*** If `$CLJ_CONFIG` is set, then use `$CLJ_CONFIG` (explicit override)
-*** If `$XDG_CONFIG_HOME` is set, then use `$XDG_CONFIG_HOME/clojure` (follows Freedesktop conventions)
-*** Else use `$HOME/.clojure`
-** Contents:
-*** `clj.props` - defines the versions for the libraries used in the tools.deps.alpha classpath
-*** `clj.cp` - classpath to invoke tools.deps.alpha with (built from `clj.props`)
-*** `deps.edn` - system deps file, defines default Clojure version and provider defaults
-* cache directory
-** Lazily created if `clj` is invoked without a local `deps.edn` file. Locations checked in this order:
-*** If `$CLJ_CACHE` is set, then use `$CLJ_CACHE` (explicit override)
-*** If `$XDG_CACHE_HOME` is set, then use `$XDG_CACHE_HOME/clojure` (follows Freedesktop conventions)
-*** Else use `config_dir/.cpcache`
-** Contents:
-*** See the section below on classpath caching
-
 == Usage
 
 Usage: `clj [<jvm_opts>] [<dep_opts>] [<main_opts>]`
@@ -177,8 +149,8 @@ For more detailed info, see https://github.com/clojure/tools.deps.alpha/blob/mas
 
 Classpath files are cached in the current directory under `.cpcache/`. File are of two forms:
 
-* `.cpcache/<resolve-aliases>.libs`
-* `.cpcache/<resolve-aliases>/<classpath-aliases>.cp`
+* `.cpcache/<resolve-aliases>.libs` - a `::lib-map` in the https://github.com/clojure/tools.deps.alpha/blob/master/src/main/clojure/clojure/tools/deps/alpha/specs.clj[specs], the output of running `resolve-deps`
+* `.cpcache/<resolve-aliases>/<classpath-aliases>.cp` - a classpath string, the output of `make-classpath`
 
 where the `<resolve-aliases>` are either the `-R` aliases or `default`. The `<classpath-aliases>` are either the `-C` aliases or `default`.
 
@@ -345,7 +317,35 @@ A repository of library artifacts - e.g. Maven central or Clojars
 
 Mentions in source code of library (sub)components that must be in the classpath in order to succeed. namespace and package/class names are transformed into path components.
 
-== More information
+== Environment
+
+The `clj` script relies on several directories and optionally on several environment variables. In general, as a new user of `clj`, you can ignore this section as everything is taken care of by the `clj` and installer scripts.
+
+* install directory
+** Created by the installer or during the installation process
+** Contents:
+*** `clj` - main script
+*** `install-clj` - a script used by `clj` to create and populate the config directory when needed
+*** `clj.props` - initial props file to be copied to the config directory
+*** `install-clj-X.Y.Z.jar` - uberjar installer jar invoked by `install-clj`
+* config directory
+** Lazily created by `clj` if no config directory is detected. Locations checked in this order:
+*** If `$CLJ_CONFIG` is set, then use `$CLJ_CONFIG` (explicit override)
+*** If `$XDG_CONFIG_HOME` is set, then use `$XDG_CONFIG_HOME/clojure` (follows Freedesktop conventions)
+*** Else use `$HOME/.clojure`
+** Contents:
+*** `clj.props` - defines the versions for the libraries used in the tools.deps.alpha classpath
+*** `clj.cp` - classpath to invoke tools.deps.alpha with (built from `clj.props`)
+*** `deps.edn` - system deps file, defines default Clojure version and provider defaults
+* cache directory
+** Lazily created if `clj` is invoked without a local `deps.edn` file. Locations checked in this order:
+*** If `$CLJ_CACHE` is set, then use `$CLJ_CACHE` (explicit override)
+*** If `$XDG_CACHE_HOME` is set, then use `$XDG_CACHE_HOME/clojure` (follows Freedesktop conventions)
+*** Else use `config_dir/.cpcache`
+** Contents:
+*** See the section below on classpath caching
+
+== Links
 
 Resources:
 
