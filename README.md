@@ -40,8 +40,8 @@ Release history:
 
 See the following resources for more information:
 
-* https://github.com/clojure/tools.deps.alpha - library + clj script
-* https://github.com/clojure/clojure-install - installer jar
+* https://github.com/clojure/tools.deps.alpha - dependency and classpath library
+* https://github.com/clojure/clojure-install - installer bootstrap library
 
 ## Developer Information
 
