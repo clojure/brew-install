@@ -65,12 +65,12 @@ Usage: `clj [<jvm_opts>] [<dep_opts>] [<main_opts>]`
 where:
 
 * `jvm_opts` is 0 or more of the following:
-** `-D...` - sets a system property in the JVM, ex: -Dfoo=bar
-** `-X...` - sets a JVM runtime setting, ex: -Xmx256m
-** `-Jopt` - passes `opt` through to the JVM, ex: -J-server
+** `-D...` - sets a system property in the JVM, ex: `-Dfoo=bar`
+** `-X...` - sets a JVM runtime setting, ex: `-Xmx256m`
+** `-Jopt` - passes `opt` through to the JVM, ex: `-J-server`
 * `dep_opts` is any of the following (but each at most once):
-** `-Ralias...` - concatenated resolve-args aliases, ex: -R:bench:1.9
-** `-Calias...` - concatenated classpath-override aliases, ex: -C:dev
+** `-Ralias...` - concatenated resolve-args aliases, ex: `-R:bench:1.9`
+** `-Calias...` - concatenated classpath-override aliases, ex: `-C:dev`
 ** `-Plib=path,...` - comma-delimited, lib=path pairs specifying classpath overrides. Note: disables caching!
 ** `-S` - compute classpath and show it, without running Clojure
 * `main_opts` are the `clojure.main` arguments, see [docs](https://clojure.org/reference/repl_and_main)
@@ -279,7 +279,9 @@ We would like to support:
 
 **Classpath (and roots/paths)**
 
-An ordered list of local 'places' (filesystem directories and/or jars) that will form root paths for searches of requires/imports at runtime, supplied as an argument to Java. We are not in control of the semantics of this. We will discourage order-dependence.
+An ordered list of local 'places' (filesystem directories and/or jars) that will form root paths for searches of requires/imports at runtime, supplied as an argument to Java which controls the semantics. We discourage order-dependence in the classpath, which implies something is duplicated (and thus likely broken).
+
+Classpaths are a list of paths, separated by a platform-specific file separator (`:` on *nix and `;` on Windows).
 
 **Expansion**
 
