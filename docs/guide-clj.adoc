@@ -118,30 +118,61 @@ If you wish to change the versions manually, just edit the file. The next invoca
 
 == deps.edn
 
-The deps.edn file has the following format:
+The deps.edn file is an instance of the `::deps-map` https://github.com/clojure/tools.deps.alpha/blob/master/src/main/clojure/clojure/tools/deps/alpha/specs.clj[spec]. The full spec is defined below:
+
+[cols="<*,", options="header", role="table"]
+|===
+| Spec name | Definition | Description |
+| `::deps-map` | `(s/keys :opt-un [::deps ::aliases ::providers ])` | The deps.edn format |
+| `::deps` | `(s/map-of ::lib ::coord)` | Dependencies, a map from lib to (optional) coord |
+| `::lib` | `symbol?` | A library like `org.clojure/core` or `criterium` |
+| `::coord` | `(s/nilable (s/multi-spec coord :type))` | The artifact description. Different coordinate types are supported, such as `:mvn` or `:file` |
+| `::aliases` | `(s/map-of ::alias (s/or :resolve-deps ::resolve-args :make-classpath ::classpath-overrides))` | Aliases for use at the command line |
+| `::alias` | `keyword?` | The command line alias to use with `clj -R` or `clj -C` |
+| `::resolve-args` | `(s/keys :opt-un [::extra-deps ::override-deps ::default-deps])` | Dep modifications to pass to `resolve-deps` |
+| `::extra-deps` | `(s/map-of ::lib ::coord)` | Dependencies to add to the initial set |
+| `::override-deps` | `(s/map-of ::lib ::coord)` | If dep is found when expanding deps, use this coordinate, regardless of what is specified |
+| `::default-deps` | `(s/map-of ::lib ::coord)` | If dep is found when expanding deps and no coordinate is provided, use this coordinate |
+| `::classpath-overrides` | `(s/map-of ::lib ::path)` | Override paths to use for libraries, passed to `make-classpath` |
+| `::providers` | `(s/keys :opt-un [::mvn ::file])` | Provider configuration, often stored in the system deps.edn |
+| `::mvn` | `(s/keys :opt [::repos])` | Maven provider |
+| `::repos` | `(s/map-of ::repo-id ::repo)` | Define Maven repos |
+| `::repo-id` | `string?` | Repository name |
+| `::repo` | `(s/keys :opt-un [::url])` | A Maven repository configuration |
+| `::url` | `string?` | A Maven repository url |
+|===
+
+Example:
 
 [source,clojure]
 ----
-{:deps {<lib> <coord>, ...}
- :aliases {<alias> <resolve-args-or-classpath-overrides>, ...}
- :providers {<provider-type> <provider-config>}}
+{
+ ;; Project dependencies, a map from lib to coordinate
+ :deps {
+   org.clojure/clojure {:type :mvn, :version "1.8.0"}
+   ring {:type :mvn, :version "1.5.0"}
+   hiccup {:type :mvn, :version "1.0.5"}
+ }
+
+ ;; Aliases that can be used with -R and -C
+ :aliases {
+   ;; An alias that adds an extra dep to use for benchmarking
+   :bench {:extra-deps {criterium {:type :mvn, :version "0.4.4"}}}
+
+   ;; An alias to override the default Clojure version
+   :1.9 {:override-deps {org.clojure/clojure {:type :mvn, :version "1.9.0-alpha17"}}}
+
+   ;; A classpath override alias to use a local build of Clojure
+   :dev {org.clojure/clojure "/Users/me/clojure/target/classes"}
+ }
+
+ ;; Configure Maven repos - these are typical set in the system deps.edn only
+ :providers {
+   :mvn {:repos {"central" {:url "https://repo1.maven.org/maven2/"}
+                 "clojars" {:url "https://clojars.org/repo/"}}}
+ }
+}
 ----
-
-where:
-
-* `<lib>` is a symbol of the form `<groupId>/<artifactId>` or just `<artifact-and-groupId>`
-* `<coord>` is a map with keys `:type` and (optionally) `:version` where the only initial type is `:mvn`
-* `<alias>` is a keyword
-* `<resolve-args-or-classpath-overrides>` is:
-** resolve-args: map with any of these optional keys. The value for each is a map from lib to coord.
-*** `:extra-deps` - dependencies to add to the initial set
-*** `:override-deps` - if dep is found when expanding deps, use this coordinate, regardless of what is specified
-*** `:default-deps` - if dep is found when expanding deps, and no coordinate is provided, use this
-** classpath-overrides: map from lib to path
-* `<provider-type>` - matches the coord type, ie `:mvn`
-* `<provider-config>` - depends on provider type, but example is `{:repos {"central" {:url "..."}}}`
-
-For more detailed info, see https://github.com/clojure/tools.deps.alpha/blob/master/src/main/clojure/clojure/tools/deps/alpha/specs.clj[the specs]. The deps.edn file should be an instance of the `::deps-map` spec.
 
 === Classpath caching
 
