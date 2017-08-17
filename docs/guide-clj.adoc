@@ -120,7 +120,7 @@ If you wish to change the versions manually, just edit the file. The next invoca
 
 The deps.edn file is an instance of the `::deps-map` https://github.com/clojure/tools.deps.alpha/blob/master/src/main/clojure/clojure/tools/deps/alpha/specs.clj[spec]. The full spec is defined below:
 
-[cols="3<*,", options="header", role="table"]
+[cols="3<*", options="header", role="table"]
 |===
 | Spec name | Definition | Description |
 | `::deps-map` | `(s/keys :opt-un [::deps ::aliases ::providers ])` | The deps.edn format |
