@@ -174,30 +174,6 @@ Example:
 }
 ----
 
-=== Classpath caching
-
-*The naming strategy here is temporary and will change.*
-
-Classpath files are cached in the current directory under `.cpcache/`. File are of two forms:
-
-* `.cpcache/<resolve-aliases>.libs` - a `::lib-map` in the https://github.com/clojure/tools.deps.alpha/blob/master/src/main/clojure/clojure/tools/deps/alpha/specs.clj[specs], the output of running `resolve-deps`
-* `.cpcache/<resolve-aliases>/<classpath-aliases>.cp` - a classpath string, the output of `make-classpath`
-
-where the `<resolve-aliases>` are either the `-R` aliases or `default`. The `<classpath-aliases>` are either the `-C` aliases or `default`.
-
-The cached classpath file is used when:
-
-* It exists
-* It is newer than `deps.edn`
-* It is newer than the libs file
-* `-P` is NOT in use
-
-The cached libs file is used when:
-
-* It exists
-* It is newer than `deps.edn`
-* `-P` is NOT in use
-
 == Examples
 
 === Running a REPL from anywhere
@@ -377,6 +353,30 @@ The `clj` script relies on several directories and optionally on several environ
 *** Else use `config_dir/.cpcache`
 ** Contents:
 *** See the section below on classpath caching
+
+== Classpath caching
+
+*The naming strategy here is temporary and will change.*
+
+Classpath files are cached in the current directory under `.cpcache/`. File are of two forms:
+
+* `.cpcache/<resolve-aliases>.libs` - a `::lib-map` in the https://github.com/clojure/tools.deps.alpha/blob/master/src/main/clojure/clojure/tools/deps/alpha/specs.clj[specs], the output of running `resolve-deps`
+* `.cpcache/<resolve-aliases>/<classpath-aliases>.cp` - a classpath string, the output of `make-classpath`
+
+where the `<resolve-aliases>` are either the `-R` aliases or `default`. The `<classpath-aliases>` are either the `-C` aliases or `default`.
+
+The cached classpath file is used when:
+
+* It exists
+* It is newer than `deps.edn`
+* It is newer than the libs file
+* `-P` is NOT in use
+
+The cached libs file is used when:
+
+* It exists
+* It is newer than `deps.edn`
+* `-P` is NOT in use
 
 == Links
 
