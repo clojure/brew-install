@@ -12,7 +12,7 @@ class Clojure < Formula
   def install
     prefix.install "install-clj-${project.version}.jar"
     prefix.install "clj.props"
-    inreplace "install-clj", /PREFIX/, "#{prefix}"
+    inreplace "install-clj", /PREFIX/, prefix
     bin.install "install-clj"
     bin.install "clj"
   end
