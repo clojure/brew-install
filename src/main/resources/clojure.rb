@@ -3,6 +3,7 @@ class Clojure < Formula
   homepage "https://clojure.org"
 
   devel do
+    version "${project.version}"
     url "https://download.clojure.org/install/brew/install-clj-${project.version}.tar.gz"
     sha256 "SHA"
   end
