@@ -1,6 +1,9 @@
 class Clojure < Formula
   desc "The Clojure Programming Language"
   homepage "https://clojure.org"
+  version "1.8.0.119"
+  url "https://download.clojure.org/install/brew/install-clj-1.8.0.119.tar.gz"
+  sha256 "7e272d3ae13d97c8fb6848d6851112e88995958391f40a1787bd82b6222d779e"
 
   devel do
     version "${project.version}"
