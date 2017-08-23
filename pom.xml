@@ -24,7 +24,7 @@
   </developers>
 
   <properties>
-    <clojure.version>1.9.0-alpha18</clojure.version>
+    <clojure.version>1.8.0</clojure.version>
     <spec.version>0.1.123</spec.version>
     <tools.deps.version>0.1.56</tools.deps.version>
   </properties>
