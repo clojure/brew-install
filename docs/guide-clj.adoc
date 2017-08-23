@@ -30,7 +30,7 @@ The Clojure formula will soon be added to the central tap, but for now you can i
 
 [source,shell]
 ----
-brew install https://download.clojure.org/install/brew/clojure.rb
+brew install --devel https://download.clojure.org/install/brew/clojure.rb
 ----
 
 === Installation on Linux
