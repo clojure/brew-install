@@ -11,7 +11,7 @@ class Clojure < Formula
   depends_on "rlwrap"
 
   def install
-    prefix.install "install-clj-${project.version}.jar"
+    prefix.install Dir["*.jar"]
     prefix.install "clj.props"
     inreplace "install-clj", /PREFIX/, prefix
     bin.install "install-clj"
