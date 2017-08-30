@@ -194,12 +194,12 @@ Example:
 * Given: A deps.edn file like the one below.
 * Result: Start a repl including external deps and a source directory root.
 
-deps.edn:
-
-```clojure
+[source,clojure]
+----
+;; deps.edn
 {:deps {org.clojure/clojure {:type :mvn :version "1.9.0-alpha19"}
         my/src {:type :file :path "src"}}}
-```
+----
 
 === Running a Clojure namespace in the current directory
 
@@ -212,12 +212,12 @@ deps.edn:
 * Given: A deps.edn file like the one below.
 * Result: Start a repl using the deps and add the extra deps defined by the `:bench` alias.
 
-deps.edn:
-
-```clojure
+[source,clojure]
+----
+;; deps.edn
 {:deps {org.clojure/clojure {:type :mvn :version "1.8.0"}}
  :aliases {:bench {:extra-deps {criterium {:type :mvn :version "0.4.4"}}}}}
-```
+----
 
 === Add an optional dependency and override a dependency
 
@@ -225,10 +225,9 @@ deps.edn:
 * Given: A deps.edn file like the one below.
 * Result: Start a repl using the deps and add the extra deps defined by the `:bench` alias and the override deps defined by the `:1.9` alias.
 
-deps.edn:
-
 [source,clojure]
 ----
+;; deps.edn
 {:deps {org.clojure/clojure {:type :mvn :version "1.8.0"}}
  :aliases {:1.9 {:override-deps {org.clojure/clojure {:type :mvn :version "1.9.0-alpha17"}}}
            :bench {:extra-deps {criterium {:type :mvn :version "0.4.4"}}}}}
@@ -240,10 +239,9 @@ deps.edn:
 * Given: A deps.edn file like the one below.
 * Result: Start a repl using the deps, the override deps defined by the `:1.9` alias, and the classpath override for the dev path.
 
-deps.edn:
-
-[source,shell]
+[source,clojure]
 ----
+;; deps.edn
 {:deps {org.clojure/clojure {:type :mvn :version "1.8.0"}}
  :aliases {:1.9 {:override-deps {org.clojure/clojure {:type :mvn :version "1.9.0-alpha17"}}}
            :dev {org.clojure/clojure "/Users/me/code/clojure/target/classes"}}}
@@ -255,10 +253,9 @@ deps.edn:
 * Given: A deps.edn file like the one below.
 * Result: Start a repl using the deps and the classpath override for the lib. The cache is never used when `-P` is used on the command-line.
 
-deps.edn:
-
-[source,shell]
+[source,clojure]
 ----
+;; deps.edn
 {:deps {org.clojure/clojure {:type :mvn :version "1.9.0-alpha17"}}}
 ----
 
@@ -268,10 +265,9 @@ deps.edn:
 * Given: A deps.edn like the one below.
 * Result: Computes the classpath and echoes it to stdout
 
-deps.edn:
-
-[source,shell]
+[source,clojure]
 ----
+;; deps.edn
 {:deps {:org.clojure/clojure {:type :mvn :version "1.8.0"}}}
 ----
 
