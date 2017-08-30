@@ -188,6 +188,19 @@ Example:
 * Given: A deps.edn file in the current directory.
 * Result: Start a repl using the deps.edn file at ./deps.edn.
 
+=== Including your source directory into the classpath
+
+* Invoke: `clj`
+* Given: A deps.edn file like the one below.
+* Result: Start a repl including external deps and a source directory root.
+
+deps.edn:
+
+```clojure
+{:deps {org.clojure/clojure {:type :mvn :version "1.9.0-alpha19"}
+        my/src {:type :file :path "src"}}}
+```
+
 === Running a Clojure namespace in the current directory
 
 * Invoke: `clj -m my.app 1 2 3`
