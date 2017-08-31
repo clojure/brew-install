@@ -24,6 +24,13 @@ class Clojure < Formula
     bin.install "clj"
   end
 
+  def caveats; <<-EOS.undent
+
+      Run `clojure -h` to see Clojure runner options.
+      Run `clj` for an interactive Clojure REPL.
+    EOS
+  end
+
   test do
     ENV.java_cache
     args = "(+ 1 1)"
