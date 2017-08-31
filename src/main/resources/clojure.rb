@@ -26,6 +26,8 @@ class Clojure < Formula
 
   test do
     ENV.java_cache
-    system "#{bin}/clojure", "-e", "nil"
+    args = "(+ 1 1)"
+    %w[clojure clj].each do |clj|
+      assert_equal "2", shell_output("#{bin}/#{clj} -e #{args}").strip
   end
 end
