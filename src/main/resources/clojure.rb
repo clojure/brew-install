@@ -20,11 +20,12 @@ class Clojure < Formula
     prefix.install "clj.props"
     inreplace "install-clj", /PREFIX/, prefix
     bin.install "install-clj"
+    bin.install "clojure"
     bin.install "clj"
   end
 
   test do
     ENV.java_cache
-    system "#{bin}/clj", "-e", "nil"
+    system "#{bin}/clojure", "-e", "nil"
   end
 end

@@ -18,8 +18,9 @@ mvn -B clean package -Dmaven.test.skip=true
 echo "Building installer tar file"
 cp target/classes/clj.props target
 cp target/classes/install-clj target
+cp target/classes/clojure target
 cp target/classes/clj target
-tar -cvzf "target/install-clj-${version}.tar.gz" -Ctarget "install-clj-${version}.jar" clj.props install-clj clj
+tar -cvzf "target/install-clj-${version}.tar.gz" -Ctarget "install-clj-${version}.jar" clj.props install-clj clojure clj
 
 # Create formula file
 echo "Creating formula file"
