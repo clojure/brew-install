@@ -103,7 +103,9 @@ The `dep_opts` are used to compute the `<classpath>` in this final invocation. C
 
 == clj.props
 
-The clj.props file is used to create the initial set of dependencies loaded for tools.deps.alpha when it is building claspaths. It has the following format:
+The clj.props file is used to create the initial set of dependencies loaded for tools.deps.alpha when it is building claspaths. For information on where it is stored, see the Environment section.
+
+It has the following format:
 
 [source]
 ----
