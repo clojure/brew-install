@@ -20,7 +20,6 @@ class Clojure < Formula
   end
 
   def caveats; <<-EOS.undent
-
       Run `clojure -h` to see Clojure runner options.
       Run `clj` for an interactive Clojure REPL.
     EOS
