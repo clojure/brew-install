@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.clojure</groupId>
   <artifactId>install-clj</artifactId>
-  <version>1.9.0-alpha19.140</version>
+  <version>1.9.0-alpha19.142</version>
   <name>install-clj</name>
   <description>Clojure brew installer</description>
   <url>https://github.com/clojure/brew-install</url>
