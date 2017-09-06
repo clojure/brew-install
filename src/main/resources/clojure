@@ -119,7 +119,7 @@ fi
 
 # Check cached cp file - if needed, make a new one
 if [ ! -f "$cp_file" ] || [ ! -f "$libs_file" ] || [ "$libs_file" -nt "$cp_file" ] || [ "$project_deps" -nt "$cp_file" ]; then
-  tools_cp="$install_dir/clojure-scripts-${project.version}.jar"
+  tools_cp="$install_dir/libexec/clojure-scripts-${project.version}.jar"
   tools_args=()
 
   if [[ -n "$resolve_aliases" ]]; then
