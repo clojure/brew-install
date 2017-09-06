@@ -16,11 +16,7 @@ class Clojure < Formula
   depends_on "rlwrap"
 
   def install
-    prefix.install Dir["*.jar"]
-    prefix.install "deps.edn"
-    inreplace "clojure", /PREFIX/, prefix
-    bin.install "clojure"
-    bin.install "clj"
+    system("./install.sh #{prefix}")
   end
 
   def caveats; <<-EOS.undent
