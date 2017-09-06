@@ -1,6 +1,6 @@
 = clj Guide
 Alex Miller
-2017-08-14
+2017-09-06
 :type: guides
 :toc: macro
 :icons: font
@@ -18,7 +18,7 @@ Clojure "endeavors to be a general-purpose language suitable in those areas wher
 
 https://github.com/clojure/tools.deps.alpha[tools.deps.alpha] is a library providing a functional API to access these capabilities. tools.deps.alpha makes it simple and easy to interactively consume JVM libraries, without dragging in unrelated concerns of building programs or project management. (It should also be a useful shared resource for future work on project and build tools.)
 
-The Clojure 1.9 release for the first time requires multiple artifacts to run Clojure (clojure, spec.alpha, and core.specs.alpha) and thus the issues of transitive dependency are now immediately in front of a Clojure user in the first minute. A new script (`clj`) is provided by system-specific installers (e.g. brew, apt-get, etc) as a path for getting started with Clojure development.
+The Clojure 1.9 release for the first time requires multiple artifacts to run Clojure (clojure, spec.alpha, and core.specs.alpha) and thus the issues of transitive dependency are now immediately in front of a Clojure user in the first minute. A new script (`clojure`, and a wrapper for interactive use `clj`) is provided by system-specific installers (e.g. brew, apt-get, etc) as a path for getting started with Clojure development.
 
 Maven-artifacts-first orientation of current tooling has created great rigidity and friction for dev processes - making it hard to e.g. work with libs not yet building/publishing artifacts (new users!), work on speculative changes w/o artifacts, working on mutual changes across multiple libs, give control to a 3rd party tool to manage shared dependencies, and to directly leverage git which is now widely used as a source of truth for code lifecycles.
 
@@ -47,23 +47,26 @@ The following process can be used to manually install the `clj` script on a *nix
 
 [source,shell]
 ----
-# Set INSTALL to any directory where you want to install the scripts
-export INSTALL=$HOME/install-clj
-mkdir -p $INSTALL
-cd $INSTALL
-curl -O https://download.clojure.org/install/brew/install-clj.tar.gz
-tar xzf install-clj.tar.gz
-chmod +x install-clj clj
-perl -pi.bak -e "s,PREFIX,$INSTALL,g" install-clj
-export PATH=$PATH:$INSTALL
+# Set CLJ_SCRIPTS to any directory where you want to install the scripts
+export CLJ_SCRIPTS=$HOME/clojure-scripts
+mkdir -p $CLJ_SCRIPTS
+cd $CLJ_SCRIPTS
+curl -O https://download.clojure.org/install/brew/clojure-scripts.tar.gz
+tar xzf clojure-scripts.tar.gz
+chmod +x clojure clj
+perl -pi.bak -e "s,PREFIX,$CLJ_SCRIPTS,g" clojure
+export PATH=$PATH:$CLJ_SCRIPTS
 ----
 
 == Usage
 
-Usage: `clj [<jvm_opts>] [<dep_opts>] [<main_opts>]`
+Usage: 
+* `clojure [<jvm_opts>] [<dep_opts>] [<main_opts>]`
+* `clj [<jvm_opts>] [<dep_opts>] [<main_opts>]`
 
 where:
 
+* `clojure` is the primary script. `clj` is a wrapper for interactive repl use. 
 * `jvm_opts` is 0 or more of the following:
 ** `-D...` - sets a system property in the JVM, ex: `-Dfoo=bar`
 ** `-X...` - sets a JVM runtime setting, ex: `-Xmx256m`
@@ -75,7 +78,7 @@ where:
 ** `-S` - compute classpath and show it, without running Clojure
 * `main_opts` are the `clojure.main` arguments, see [docs](https://clojure.org/reference/repl_and_main)
 
-The `clj` script ultimately constructs and invokes a command-line of the form:
+The `clojure` and `clj` scripts ultimately construct and invokes a command-line of the form:
 
 [source,shell]
 ----
@@ -99,24 +102,6 @@ The `dep_opts` are used to compute the `<classpath>` in this final invocation. C
 ** `merge` the classpath-override alias maps
 * Invoke `make-classpath` with the libs map returned by `resolve-deps` and the classpath-overrides map
 * Write the classpath to the classpath cache
-* Print the computed classpath to stdout
-
-== clj.props
-
-The clj.props file is used to create the initial set of dependencies loaded for tools.deps.alpha when it is building claspaths. For information on where it is stored, see the Environment section.
-
-It has the following format:
-
-[source]
-----
-org.clojure/clojure=1.9.0-alpha17
-org.clojure/spec.alpha=0.1.123
-org.clojure/tools.deps.alpha=0.1.35
-----
-
-This is a Java properties file where the keys are libs (groupId/artifactId) and values are the version of the lib to install. This file is installed as part of the installation and does not need to be manually created.
-
-If you wish to change the versions manually, just edit the file. The next invocation of `clj` will detect that the tools.deps classpath is out of date and re-run `install-clj` to rebuild it. This should be a rare occurrence.
 
 == deps.edn
 
@@ -205,7 +190,7 @@ Example:
 
 === Running a Clojure namespace in the current directory
 
-* Invoke: `clj -m my.app 1 2 3`
+* Invoke: `clojure -m my.app 1 2 3`
 * Result: Load the my.app namespace and invoke my.app/-main with the arguments `1 2 3`. If a deps.edn file exists, use it, otherwise use the default deps file.
 
 === Add an optional dependency to your classpath
@@ -339,26 +324,24 @@ Mentions in source code of library (sub)components that must be in the classpath
 
 == Environment
 
-The `clj` script relies on several directories and optionally on several environment variables. In general, as a new user of `clj`, you can ignore this section as everything is taken care of by the `clj` and installer scripts.
+The `clojure` and `clj` scripts rely on several directories and optionally on several environment variables. In general, as a new user of `clj`, you can ignore this section as everything is taken care of by default.
 
-* install directory
-** Created by the installer or during the installation process
+* scripts directory
+** Created during installation
 ** Contents:
-*** `clj` - main script
-*** `install-clj` - a script used by `clj` to create and populate the config directory when needed
-*** `clj.props` - initial props file to be copied to the config directory
-*** `install-clj-X.Y.Z.jar` - uberjar installer jar invoked by `install-clj`
+*** `clojure` - main script
+*** `clj` - wrapper script for interactive repl use (uses `rlwrap`)
+*** `deps.edn` - initial user deps.edn file to be copied to the config directory
+*** `clojure-scripts-X.Y.Z.jar` - uberjar invoked by `clojure` to construct classpaths
 * config directory
-** Lazily created by `clj` if no config directory is detected. Locations checked in this order:
+** Lazily created by `clojure` if no config directory is detected. Locations checked in this order:
 *** If `$CLJ_CONFIG` is set, then use `$CLJ_CONFIG` (explicit override)
 *** If `$XDG_CONFIG_HOME` is set, then use `$XDG_CONFIG_HOME/clojure` (follows Freedesktop conventions)
 *** Else use `$HOME/.clojure`
 ** Contents:
-*** `clj.props` - defines the versions for the libraries used in the tools.deps.alpha classpath
-*** `clj.cp` - classpath to invoke tools.deps.alpha with (built from `clj.props`)
-*** `deps.edn` - system deps file, defines default Clojure version and provider defaults
+*** `deps.edn` - user deps file, defines default Clojure version and provider defaults
 * cache directory
-** Lazily created if `clj` is invoked without a local `deps.edn` file. Locations checked in this order:
+** Lazily created if `clojure` is invoked without a local `deps.edn` file. Locations checked in this order:
 *** If `$CLJ_CACHE` is set, then use `$CLJ_CACHE` (explicit override)
 *** If `$XDG_CACHE_HOME` is set, then use `$XDG_CACHE_HOME/clojure` (follows Freedesktop conventions)
 *** Else use `config_dir/.cpcache`
@@ -398,5 +381,4 @@ Resources:
 Repositories:
 
 * https://github.com/clojure/tools.deps.alpha[tools.deps.alpha] - library for walking dependencies and building classpaths
-* https://github.com/clojure/clojure-install[clojure-install] - a Java shim to facilitate building the tools.deps.alpha classpath
-* https://github.com/clojure/brew-install[brew-install] - the brew installer and scripts
+* https://github.com/clojure/brew-install[brew-install] - the clojure scripts and brew formula
