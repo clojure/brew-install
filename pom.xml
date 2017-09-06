@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.clojure</groupId>
-  <artifactId>install-clj</artifactId>
+  <artifactId>clojure-scripts</artifactId>
   <version>1.9.0-alpha19.142</version>
-  <name>install-clj</name>
-  <description>Clojure brew installer</description>
+  <name>clojure-scripts</name>
+  <description>Clojure scripts</description>
   <url>https://github.com/clojure/brew-install</url>
 
   <licenses>
@@ -25,15 +25,19 @@
 
   <properties>
     <clojure.version>1.9.0-alpha19</clojure.version>
-    <spec.version>0.1.123</spec.version>
     <tools.deps.version>0.1.73</tools.deps.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.clojure</groupId>
-      <artifactId>clojure-install</artifactId>
-      <version>0.1.21</version>
+      <artifactId>clojure</artifactId>
+      <version>${clojure.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.clojure</groupId>
+      <artifactId>tools.deps.alpha</artifactId>
+      <version>${tools.deps.version}</version>
     </dependency>
   </dependencies>
 	
