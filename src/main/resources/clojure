@@ -72,9 +72,15 @@ else
   config_dir="$HOME/.clojure"
 fi
 
-# Run install-clj if not yet run
+# Set dir containing the installed files
+install_dir=PREFIX
+
+# Create config directory and initial deps.edn config if needed
 if [[ ! -d "$config_dir" ]]; then
-  install-clj
+  mkdir -p "$config_dir"
+fi
+if [[ -e "$config_dir/deps.edn" ]]; then	
+  cp "$install_dir/deps.edn" "$config_dir/deps.edn"
 fi
 
 # Find deps.edn and cache directory to use (either project or system)
@@ -113,12 +119,7 @@ fi
 
 # Check cached cp file - if needed, make a new one
 if [ ! -f "$cp_file" ] || [ ! -f "$libs_file" ] || [ "$libs_file" -nt "$cp_file" ] || [ "$project_deps" -nt "$cp_file" ]; then
-  # Check whether the clj.cp itself is out of date and if so, rebuild it
-  if [ -f "$config_dir/clj.props" ] && [ "$config_dir/clj.props" -nt "$config_dir/clj.cp" ]; then
-    install-clj
-  fi
-
-  tools_cp=$(cat "$config_dir/clj.cp")
+  tools_cp="$install_dir/clojure-scripts-${project.version}.jar"
   tools_args=()
 
   if [[ -n "$resolve_aliases" ]]; then

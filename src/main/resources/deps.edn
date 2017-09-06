@@ -1,0 +1,20 @@
+{
+  :deps {
+    org.clojure/clojure {:type :mvn :version "${clojure.version}"}
+    local/src {:type :file :path "src"}
+  }
+
+  :aliases {
+    :deps {:extra-deps {org.clojure/tools.deps.alpha {:type :mvn :version "${tools.deps.version}"}}}
+    :test {:extra-deps {local/test-src {:type :file :path "test"}}}
+  }
+
+  :providers {
+    :mvn {
+           :repos {
+                    "central" {:url "https://repo1.maven.org/maven2/"}
+                    "clojars" {:url "https://clojars.org/repo/"}
+           }
+    }
+  }
+}

@@ -2,7 +2,7 @@ class Clojure < Formula
   desc "The Clojure Programming Language"
   homepage "https://clojure.org"
   version "${project.version}"
-  url "https://download.clojure.org/install/brew/install-clj-${project.version}.tar.gz"
+  url "https://download.clojure.org/install/brew/clojure-scripts-${project.version}.tar.gz"
   sha256 "SHA"
 
   bottle :unneeded
@@ -12,9 +12,8 @@ class Clojure < Formula
 
   def install
     prefix.install Dir["*.jar"]
-    prefix.install "clj.props"
-    inreplace "install-clj", /PREFIX/, prefix
-    bin.install "install-clj"
+    prefix.install "deps.edn"
+    inreplace "clojure", /PREFIX/, prefix
     bin.install "clojure"
     bin.install "clj"
   end
