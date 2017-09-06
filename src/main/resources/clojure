@@ -79,7 +79,7 @@ install_dir=PREFIX
 if [[ ! -d "$config_dir" ]]; then
   mkdir -p "$config_dir"
 fi
-if [[ -e "$config_dir/deps.edn" ]]; then	
+if [[ ! -e "$config_dir/deps.edn" ]]; then	
   cp "$install_dir/deps.edn" "$config_dir/deps.edn"
 fi
 
