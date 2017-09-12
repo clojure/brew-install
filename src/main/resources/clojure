@@ -75,37 +75,26 @@ fi
 # Set dir containing the installed files
 install_dir=PREFIX
 
-# Create config directory and initial deps.edn config if needed
-if [[ ! -d "$config_dir" ]]; then
-  mkdir -p "$config_dir"
-fi
-if [[ ! -e "$config_dir/deps.edn" ]]; then	
-  cp "$install_dir/deps.edn" "$config_dir/deps.edn"
-fi
+# Include install and config deps.edn in config paths
+config_paths=("$install_dir/deps.edn" "$config_dir/deps.edn")
 
-# Find deps.edn and cache directory to use (either project or system)
-system_deps="$config_dir/deps.edn"
-project_deps=deps.edn
-project_cache_dir=.cpcache
-
-# If project deps.edn is missing, use system deps and cache
-if [[ ! -f "$project_deps" ]]; then
-  project_deps="$system_deps"
-
-  if [[ -n "$CLJ_CACHE" ]]; then
-    project_cache_dir="$CLJ_CACHE"
-  elif [[ -n "$XDG_CACHE_HOME" ]]; then
-    project_cache_dir="$XDG_CACHE_HOME/clojure"
-  else
-    project_cache_dir="$config_dir/.cpcache"
-  fi
+# Determine whether we're in project context or not
+if [[ -f deps.edn ]]; then
+  config_paths+=("deps.edn")
+  cache_dir=.cpcache
+elif [[ -n "$CLJ_CACHE" ]]; then
+  cache_dir="$CLJ_CACHE"
+elif [[ -n "$XDG_CACHE_HOME" ]]; then
+  cache_dir="$XDG_CACHE_HOME/clojure"
+else
+  cache_dir="$config_dir/.cpcache"
 fi
 
 # Construct location of cached classpath file
 if [[ -n "$resolve_aliases" ]]; then
-  libs_root="$project_cache_dir/$resolve_aliases"
+  libs_root="$cache_dir/$resolve_aliases"
 else
-  libs_root="$project_cache_dir/default"
+  libs_root="$cache_dir/default"
 fi
 libs_file="$libs_root.libs"
 
@@ -117,8 +106,21 @@ else
   cp_file="$libs_root/default.cp"
 fi
 
-# Check cached cp file - if needed, make a new one
-if [ ! -f "$cp_file" ] || [ ! -f "$libs_file" ] || [ "$libs_file" -nt "$cp_file" ] || [ "$project_deps" -nt "$cp_file" ]; then
+# Check for stale classpath file
+stale=false
+if [ ! -f "$cp_file" ] || [ ! -f "$libs_file" ] || [ "$libs_file" -nt "$cp_file" ]; then
+  stale=true
+else
+  for config_path in "${config_paths[@]}"; do
+    if [ "$config_path" -nt "$cp_file" ]; then
+      stale=true
+      break
+    fi
+  done
+fi
+
+# If stale, run makecp to refresh cached classpath
+if "$stale"; then
   tools_cp="$install_dir/libexec/clojure-scripts-${project.version}.jar"
   tools_args=()
 
@@ -132,7 +134,9 @@ if [ ! -f "$cp_file" ] || [ ! -f "$libs_file" ] || [ "$libs_file" -nt "$cp_file"
     tools_args+=("-P$classpath_overrides")
   fi
 
-  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.makecp "$system_deps" "$project_deps" "$project_cache_dir" "${tools_args[@]}"
+  config_str=$(printf ",%s" "${config_paths[@]}")
+  config_str=${config_str:1}
+  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.makecp "--config-paths=$config_str" "--cache-path=$cache_dir" "${tools_args[@]}"
 fi
 
 cp=$(cat "$cp_file")
