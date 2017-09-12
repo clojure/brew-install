@@ -25,7 +25,7 @@
 
   <properties>
     <clojure.version>1.8.0</clojure.version>
-    <tools.deps.version>0.1.73</tools.deps.version>
+    <tools.deps.version>0.1.78</tools.deps.version>
   </properties>
 
   <dependencies>
