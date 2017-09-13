@@ -9,12 +9,8 @@
     :test {:extra-deps {local/test-src {:type :file :path "test"}}}
   }
 
-  :providers {
-    :mvn {
-           :repos {
-                    "central" {:url "https://repo1.maven.org/maven2/"}
-                    "clojars" {:url "https://clojars.org/repo/"}
-           }
-    }
+  :mvn/repos {
+    "central" {:url "https://repo1.maven.org/maven2/"}
+    "clojars" {:url "https://clojars.org/repo/"}
   }
 }
