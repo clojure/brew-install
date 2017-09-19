@@ -1,12 +1,13 @@
 {
+  :paths ["src"]
+
   :deps {
     org.clojure/clojure {:type :mvn :version "${clojure.version}"}
-    local/src {:type :file :path "src"}
   }
 
   :aliases {
     :deps {:extra-deps {org.clojure/tools.deps.alpha {:type :mvn :version "${tools.deps.version}"}}}
-    :test {:extra-deps {local/test-src {:type :file :path "test"}}}
+    :test {:extra-paths ["test"]}
   }
 
   :mvn/repos {

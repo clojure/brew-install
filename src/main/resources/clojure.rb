@@ -11,7 +11,7 @@ class Clojure < Formula
   depends_on "rlwrap"
 
   def install
-    system("./install.sh #{prefix}")
+    system "./install.sh", prefix
   end
 
   test do
