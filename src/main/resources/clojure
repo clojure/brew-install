@@ -142,7 +142,7 @@ fi
 cp=$(cat "$cp_file")
 
 if [[ -n "$show_classpath" ]]; then
-  echo $cp
+  echo "$cp"
 else
   "$JAVA_CMD" "${java_opts[@]}" -classpath "$cp" clojure.main "$@"
 fi
