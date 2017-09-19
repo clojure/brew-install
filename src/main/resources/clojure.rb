@@ -1,8 +1,8 @@
 class Clojure < Formula
   desc "The Clojure Programming Language"
   homepage "https://clojure.org"
-  url "https://download.clojure.org/install/brew/clojure-scripts-1.8.0.146.tar.gz"
-  sha256 "4e413ab0f304767d013e92819c18e11acbabb5244494c500ca8af05ea6b4dee4"
+  url "https://download.clojure.org/install/brew/clojure-scripts-1.8.0.148.tar.gz"
+  sha256 "ee7109a6a571095a0f42e456e0668e1ae66144da5cab0d235a2895ddda8dfbac"
 
   devel do
     url "https://download.clojure.org/install/brew/clojure-scripts-${project.version}.tar.gz"
