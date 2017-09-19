@@ -24,7 +24,7 @@
   </developers>
 
   <properties>
-    <clojure.version>1.9.0-alpha20</clojure.version>
+    <clojure.version>1.9.0-beta1</clojure.version>
     <tools.deps.version>0.1.90</tools.deps.version>
   </properties>
 
