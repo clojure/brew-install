@@ -31,7 +31,7 @@ do
       classpath_aliases="${1:2}"
       shift
       ;;
-    -S)
+    -Spath)
       show_classpath="$1"
       shift
       ;;
