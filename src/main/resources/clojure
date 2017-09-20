@@ -20,6 +20,9 @@ do
 done
 
 # Extract classpath opts
+show_classpath=false
+verbose=false
+force=false
 while [ $# -gt 0 ]
 do
   case "$1" in
@@ -31,8 +34,16 @@ do
       classpath_aliases="${1:2}"
       shift
       ;;
-    -S)
-      show_classpath="$1"
+    -Spath)
+      show_classpath=true
+      shift
+      ;;
+    -Sverbose)
+      verbose=true
+      shift
+      ;;
+    -Sforce)
+      force=true
       shift
       ;;
     *)
@@ -51,7 +62,10 @@ if [[ ! -n "$JAVA_CMD" ]]; then
   fi
 fi
 
-# Determine config directory
+# Set dir containing the installed files
+install_dir=PREFIX
+
+# Determine user config directory
 if [[ -n "$CLJ_CONFIG" ]]; then
   config_dir="$CLJ_CONFIG"
 elif [[ -n "$XDG_CONFIG_HOME" ]]; then
@@ -60,22 +74,23 @@ else
   config_dir="$HOME/.clojure"
 fi
 
-# Set dir containing the installed files
-install_dir=PREFIX
+# Determine user cache directory
+if [[ -n "$CLJ_CACHE" ]]; then
+  user_cache_dir="$CLJ_CACHE"
+elif [[ -n "$XDG_CACHE_HOME" ]]; then
+  user_cache_dir="$XDG_CACHE_HOME/clojure"
+else
+  user_cache_dir="$config_dir/.cpcache"
+fi
 
 # Include install and config deps.edn in config paths
-config_paths=("$install_dir/deps.edn" "$config_dir/deps.edn")
+config_paths=("$install_dir/deps.edn" "$config_dir/deps.edn" "deps.edn")
 
-# Determine whether we're in project context or not
+# Determine whether to use user or project cache
 if [[ -f deps.edn ]]; then
-  config_paths+=("deps.edn")
   cache_dir=.cpcache
-elif [[ -n "$CLJ_CACHE" ]]; then
-  cache_dir="$CLJ_CACHE"
-elif [[ -n "$XDG_CACHE_HOME" ]]; then
-  cache_dir="$XDG_CACHE_HOME/clojure"
 else
-  cache_dir="$config_dir/.cpcache"
+  cache_dir="$user_cache_dir"
 fi
 
 # Construct location of cached classpath file
@@ -92,9 +107,18 @@ else
   cp_file="$libs_root/default.cp"
 fi
 
+# Print paths in verbose mode
+if "$verbose"; then
+  echo "install_dir = $install_dir"
+  echo "config_dir  = $config_dir"
+  echo "cache_dir   = $cache_dir"
+  echo "libs_file   = $libs_file"
+  echo "cp_file     = $cp_file"
+fi
+
 # Check for stale classpath file
 stale=false
-if [ ! -f "$cp_file" ] || [ ! -f "$libs_file" ] || [ "$libs_file" -nt "$cp_file" ]; then
+if "$force" || [ ! -f "$cp_file" ] || [ ! -f "$libs_file" ] || [ "$libs_file" -nt "$cp_file" ]; then
   stale=true
 else
   for config_path in "${config_paths[@]}"; do
@@ -107,6 +131,9 @@ fi
 
 # If stale, run makecp to refresh cached classpath
 if "$stale"; then
+  if "$verbose"; then
+    echo "cp_file is stale"
+  fi
   tools_cp="$install_dir/libexec/clojure-scripts-${project.version}.jar"
   tools_args=()
 
@@ -124,7 +151,7 @@ fi
 
 cp=$(cat "$cp_file")
 
-if [[ -n "$show_classpath" ]]; then
+if "$show_classpath"; then
   echo "$cp"
 else
   "$JAVA_CMD" "${java_opts[@]}" -classpath "$cp" clojure.main "$@"
