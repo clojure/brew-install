@@ -9,14 +9,6 @@ java_opts=()
 while [ $# -gt 0 ]
 do
   case "$1" in
-    -X*)
-      java_opts+=("$1")
-      shift
-      ;;
-    -D*)
-      java_opts+=("$1")
-      shift
-      ;;
     -J*)
       java_opts+=("${1:2}")
       shift
