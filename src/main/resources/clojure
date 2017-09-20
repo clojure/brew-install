@@ -31,10 +31,6 @@ do
       classpath_aliases="${1:2}"
       shift
       ;;
-    -P*)
-      classpath_overrides="${1:2}"
-      shift
-      ;;
     -S)
       show_classpath="$1"
       shift
@@ -92,8 +88,6 @@ libs_file="$libs_root.libs"
 
 if [[ -n "$classpath_aliases" ]]; then
   cp_file="$libs_root/$classpath_aliases.cp"
-elif [[ -n "$classpath_overrides" ]]; then
-  cp_file="$libs_root/overrides.cp"
 else
   cp_file="$libs_root/default.cp"
 fi
@@ -121,9 +115,6 @@ if "$stale"; then
   fi
   if [[ -n "$classpath_aliases" ]]; then
     tools_args+=("-C$classpath_aliases")
-  fi
-  if [[ -n "$classpath_overrides" ]]; then
-    tools_args+=("-P$classpath_overrides")
   fi
 
   config_str=$(printf ",%s" "${config_paths[@]}")
