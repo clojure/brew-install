@@ -2,11 +2,11 @@
   :paths ["src"]
 
   :deps {
-    org.clojure/clojure {:type :mvn :version "${clojure.version}"}
+    org.clojure/clojure {:mvn/version "${clojure.version}"}
   }
 
   :aliases {
-    :deps {:extra-deps {org.clojure/tools.deps.alpha {:type :mvn :version "${tools.deps.version}"}}}
+    :deps {:extra-deps {org.clojure/tools.deps.alpha {:mvn/version "${tools.deps.version}"}}}
     :test {:extra-paths ["test"]}
   }
 
