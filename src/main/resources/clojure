@@ -84,7 +84,7 @@ fi
 
 # Chain deps.edn in config paths. repro=use only local.
 if "$repro"; then
-	config_paths=("deps.edn")
+  config_paths=("deps.edn")
 else
   config_paths=("$install_dir/deps.edn" "$config_dir/deps.edn" "deps.edn")
 fi
@@ -98,9 +98,9 @@ fi
 
 # Construct location of cached classpath file
 if "$repro"; then
-	cache_root="$cache_dir/repro"
+  cache_root="$cache_dir/repro"
 else
-	cache_root="$cache_dir"
+  cache_root="$cache_dir"
 fi
 if [[ -n "$resolve_aliases" ]]; then
   libs_root="$cache_root/$resolve_aliases"
