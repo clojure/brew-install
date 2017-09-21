@@ -41,6 +41,10 @@ do
       repro=true
       shift
       ;;
+    -S*)
+      echo "Invalid option:" $1
+      exit 1
+      ;;
     *)
       break
       ;;
@@ -93,10 +97,15 @@ else
 fi
 
 # Construct location of cached classpath file
-if [[ -n "$resolve_aliases" ]]; then
-  libs_root="$cache_dir/$resolve_aliases"
+if "$repro"; then
+	cache_root="$cache_dir/repro"
 else
-  libs_root="$cache_dir/default"
+	cache_root="$cache_dir"
+fi
+if [[ -n "$resolve_aliases" ]]; then
+  libs_root="$cache_root/$resolve_aliases"
+else
+  libs_root="$cache_root/default"
 fi
 libs_file="$libs_root.libs"
 if [[ -n "$classpath_aliases" ]]; then
@@ -109,7 +118,7 @@ fi
 if "$verbose"; then
   echo "install_dir  = $install_dir"
   echo "config_dir   = $config_dir"
-  echo "config_paths = " "${config_paths[@]}"
+  echo "config_paths =" "${config_paths[@]}"
   echo "cache_dir    = $cache_dir"
   echo "cp_file      = $cp_file"
 fi
