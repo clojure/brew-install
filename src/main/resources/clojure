@@ -73,6 +73,14 @@ else
   config_dir="$HOME/.clojure"
 fi
 
+# If user config directory does not exist, create it
+if [[ ! -d "$config_dir" ]]; then
+  mkdir -p "$config_dir"
+fi
+if [[ ! -e "$config_dir/deps.edn" ]]; then
+  cp "$install_dir/example_deps.edn" "$config_dir/deps.edn"
+fi
+
 # Determine user cache directory
 if [[ -n "$CLJ_CACHE" ]]; then
   user_cache_dir="$CLJ_CACHE"
@@ -117,6 +125,7 @@ if "$verbose"; then
   echo "config_paths =" "${config_paths[@]}"
   echo "cache_dir    = $cache_dir"
   echo "cp_file      = $cp_file"
+  echo
 fi
 
 # Check for stale classpath file

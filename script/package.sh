@@ -19,9 +19,10 @@ echo "Building scripts tar file"
 cp target/classes/clojure target
 cp target/classes/clj target
 cp target/classes/deps.edn target
+cp target/classes/example-deps.edn target
 cp target/classes/install.sh target
 chmod +x target/clojure target/clj target/install.sh
-tar -cvzf "target/clojure-scripts-${version}.tar.gz" -Ctarget "clojure-scripts-${version}.jar" clojure clj deps.edn install.sh
+tar -cvzf "target/clojure-scripts-${version}.tar.gz" -Ctarget "clojure-scripts-${version}.jar" clojure clj deps.edn example-deps.edn install.sh
 
 # Create formula file
 echo "Creating formula file"
