@@ -97,22 +97,18 @@ else
 fi
 
 # Construct location of cached classpath file
-if "$repro"; then
-  cache_root="$cache_dir/repro"
-else
-  cache_root="$cache_dir"
-fi
-if [[ -n "$resolve_aliases" ]]; then
-  libs_root="$cache_root/$resolve_aliases"
-else
-  libs_root="$cache_root/default"
-fi
-libs_file="$libs_root.libs"
-if [[ -n "$classpath_aliases" ]]; then
-  cp_file="$libs_root/$classpath_aliases.cp"
-else
-  cp_file="$libs_root/default.cp"
-fi
+val="$resolve_aliases|$classpath_aliases"
+for config_path in "${config_paths[@]}"; do
+  if [[ -f "$config_path" ]]; then
+    val="$val|$config_path"
+  else
+    val="$val|NIL"
+  fi
+done
+ck=$(echo "$val" | cksum | cut -d" " -f 1)
+
+libs_file="$cache_dir/$ck.libs"
+cp_file="$cache_dir/$ck.cp"
 
 # Print paths in verbose mode
 if "$verbose"; then
