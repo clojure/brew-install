@@ -4,6 +4,7 @@ prefix="$1"
 
 # default config file
 cp deps.edn "$prefix"
+cp example-deps.edn "$prefix"
 
 # jar needed by scripts
 mkdir "$prefix/libexec"
