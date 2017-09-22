@@ -78,7 +78,7 @@ if [[ ! -d "$config_dir" ]]; then
   mkdir -p "$config_dir"
 fi
 if [[ ! -e "$config_dir/deps.edn" ]]; then
-  cp "$install_dir/example_deps.edn" "$config_dir/deps.edn"
+  cp "$install_dir/example-deps.edn" "$config_dir/deps.edn"
 fi
 
 # Determine user cache directory
