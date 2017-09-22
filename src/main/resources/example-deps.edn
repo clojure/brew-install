@@ -1,7 +1,7 @@
 ;; The deps.edn file describes the information needed to build a classpath.
 ;;
 ;; When using the `clojure` or `clj` script, there are several deps.edn files
-;; that are combined: 
+;; that are combined:
 ;; - install-level
 ;; - user level (this file)
 ;; - project level (current directory when invoked)
@@ -10,13 +10,13 @@
 ;; Only the last :paths is kept and others are dropped.
 
 {
-  ;; Paths 	
-	;;   Directories in the current project to include in the classpath
-	
+  ;; Paths
+  ;;   Directories in the current project to include in the classpath
+
   ;; :paths ["src"]
 
   ;; External dependencies
-	 
+ 
   ;; :deps {
   ;;   org.clojure/clojure {:mvn/version "${clojure.version}"}
   ;; }
@@ -28,7 +28,7 @@
 	;;     :default-deps - specifies a coordinate to use for a lib if one isn't found
 	;;   make-classpath aliases (-C) affect the classpath generation, options:
 	;;     :extra-paths - vector of additional paths to add to the classpath
-	;;     :classpath-overrides - map of lib to path that overrides the result of resolving deps	
+	;;     :classpath-overrides - map of lib to path that overrides the result of resolving deps
 
   ;; :aliases {
   ;;   :deps {:extra-deps {org.clojure/tools.deps.alpha {:mvn/version "${tools.deps.version}"}}}
