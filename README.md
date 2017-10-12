@@ -42,6 +42,7 @@ Release history:
 
 See the following resources for more information:
 
+* https://clojure.org/guides/deps_and_cli - deps and CLI guide
 * https://github.com/clojure/tools.deps.alpha - dependency and classpath library
 
 ## Developer Information
