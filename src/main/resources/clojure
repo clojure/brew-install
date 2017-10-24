@@ -9,6 +9,7 @@ print_classpath=false
 verbose=false
 force=false
 repro=false
+pom=false
 java_opts=()
 while [ $# -gt 0 ]
 do
@@ -39,6 +40,10 @@ do
       ;;
     -Srepro)
       repro=true
+      shift
+      ;;
+    -Spom)
+      pom=true
       shift
       ;;
     -S*)
@@ -163,7 +168,9 @@ fi
 
 cp=$(cat "$cp_file")
 
-if "$print_classpath"; then
+if "$pom"; then
+  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.genmf "--config-paths=$config_str" --gen=pom
+elif "$print_classpath"; then
   echo "$cp"
 else
   "$JAVA_CMD" "${java_opts[@]}" -classpath "$cp" clojure.main "$@"
