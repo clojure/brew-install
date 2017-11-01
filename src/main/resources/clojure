@@ -146,14 +146,18 @@ else
   done
 fi
 
+# If going to use tools.deps, set up the tools_cp
+if "$stale" || "$pom"; then
+  tools_cp="$install_dir/libexec/clojure-scripts-1.9.0-beta3.240.jar"
+fi
+
 # If stale, run makecp to refresh cached classpath
 if "$stale"; then
   if "$verbose"; then
     echo "Refreshing classpath"
   fi
-  tools_cp="$install_dir/libexec/clojure-scripts-${project.version}.jar"
-  tools_args=()
 
+  tools_args=()
   if [[ -n "$resolve_aliases" ]]; then
     tools_args+=("-R$resolve_aliases")
   fi
