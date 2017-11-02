@@ -192,7 +192,7 @@ fi
 
 # If going to use tools.deps, set up the tools_cp
 if "$stale" || "$pom"; then
-  tools_cp="$install_dir/libexec/clojure-scripts-1.9.0-beta3.240.jar"
+  tools_cp="$install_dir/libexec/clojure-scripts-${project.version}.jar"
 fi
 
 # If stale, run makecp to refresh cached classpath
