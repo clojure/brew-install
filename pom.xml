@@ -24,8 +24,8 @@
   </developers>
 
   <properties>
-    <clojure.version>1.9.0-beta3</clojure.version>
-    <tools.deps.version>0.2.173</tools.deps.version>
+    <clojure.version>1.9.0-beta4</clojure.version>
+    <tools.deps.version>0.2.179</tools.deps.version>
   </properties>
 
   <dependencies>
