@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.clojure</groupId>
   <artifactId>clojure-scripts</artifactId>
-  <version>1.8.0.185</version>
+  <version>1.8.0.187</version>
   <name>clojure-scripts</name>
   <description>Clojure scripts</description>
   <url>https://github.com/clojure/brew-install</url>
