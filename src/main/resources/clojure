@@ -112,6 +112,7 @@ fi
 
 # Set dir containing the installed files
 install_dir=PREFIX
+tools_cp="$install_dir/libexec/clojure-scripts-${project.version}.jar"
 
 # Determine user config directory
 if [[ -n "$CLJ_CONFIG" ]]; then
@@ -145,6 +146,8 @@ if "$repro"; then
 else
   config_paths=("$install_dir/deps.edn" "$config_dir/deps.edn" "deps.edn")
 fi
+config_str=$(printf ",%s" "${config_paths[@]}")
+config_str=${config_str:1}
 
 # Determine whether to use user or project cache
 if [[ -f deps.edn ]]; then
@@ -190,11 +193,6 @@ else
   done
 fi
 
-# If going to use tools.deps, set up the tools_cp
-if "$stale" || "$pom"; then
-  tools_cp="$install_dir/libexec/clojure-scripts-${project.version}.jar"
-fi
-
 # If stale, run makecp to refresh cached classpath
 if "$stale"; then
   if "$verbose"; then
@@ -209,8 +207,6 @@ if "$stale"; then
     tools_args+=("-C$classpath_aliases")
   fi
 
-  config_str=$(printf ",%s" "${config_paths[@]}")
-  config_str=${config_str:1}
   "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.makecp "--config-paths=$config_str" "--libs-file=$libs_file" "--cp-file=$cp_file" "${tools_args[@]}"
 fi
 
