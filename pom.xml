@@ -25,7 +25,7 @@
 
   <properties>
     <clojure.version>1.9.0-RC1</clojure.version>
-    <tools.deps.version>0.2.179</tools.deps.version>
+    <tools.deps.version>0.2.183</tools.deps.version>
   </properties>
 
   <dependencies>
