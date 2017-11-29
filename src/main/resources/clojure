@@ -172,6 +172,7 @@ cp_file="$cache_dir/$ck.cp"
 
 # Print paths in verbose mode
 if "$verbose"; then
+  echo "version      = ${project.version}"
   echo "install_dir  = $install_dir"
   echo "config_dir   = $config_dir"
   echo "config_paths =" "${config_paths[@]}"
