@@ -7,11 +7,11 @@ cp deps.edn "$prefix"
 cp example-deps.edn "$prefix"
 
 # jar needed by scripts
-mkdir "$prefix/libexec"
+mkdir -p "$prefix/libexec"
 cp ./*.jar "$prefix/libexec"
 
 # scripts
 ruby -pi.bak -e "gsub(/PREFIX/, '$prefix')" clojure
-mkdir "$prefix/bin"
+mkdir -p "$prefix/bin"
 cp clojure "$prefix/bin"
 cp clj "$prefix/bin"
