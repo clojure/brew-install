@@ -112,7 +112,7 @@ fi
 
 # Set dir containing the installed files
 install_dir=PREFIX
-tools_cp="$install_dir/libexec/clojure-scripts-${project.version}.jar"
+tools_cp="$install_dir/libexec/clojure-tools-${project.version}.jar"
 
 # Determine user config directory
 if [[ -n "$CLJ_CONFIG" ]]; then

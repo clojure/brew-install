@@ -2,7 +2,7 @@ class Clojure < Formula
   desc "The Clojure Programming Language"
   homepage "https://clojure.org"
   version "${project.version}"
-  url "https://download.clojure.org/install/clojure-scripts-${project.version}.tar.gz"
+  url "https://download.clojure.org/install/clojure-tools-${project.version}.tar.gz"
   sha256 "SHA"
 
   bottle :unneeded
