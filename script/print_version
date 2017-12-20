@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -e
+
+version_template=$(cat VERSION_TEMPLATE)
+rev=$(git --no-replace-objects describe --match v0.0)
+rev=${rev:5} # drop the first 5 characters
+rev=${rev:0:${#rev}-9} # drop the last 9 characters
+v=${version_template/GENERATED_VERSION/$rev}
+echo "$v"
