@@ -208,7 +208,7 @@ if "$stale"; then
     tools_args+=("-C$classpath_aliases")
   fi
 
-  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.makecp "--config-paths=$config_str" "--libs-file=$libs_file" "--cp-file=$cp_file" "--cache-dir=$user_cache_dir" "${tools_args[@]}"
+  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.makecp "--config-paths=$config_str" "--libs-file=$libs_file" "--cp-file=$cp_file" "${tools_args[@]}"
 fi
 
 cp=$(cat "$cp_file")
