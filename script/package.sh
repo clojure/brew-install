@@ -27,7 +27,7 @@ cp target/classes/clojure.rb target
 sha=$(shasum -a 256 "target/clojure-tools-$version.tar.gz" | cut -c 1-64)
 perl -pi.bak -e "s,SHA,$sha,g" target/clojure.rb
 
-# Deploy to s3
+# Deploy to s3 and tag
 if [[ ! -z "$S3_BUCKET" ]]; then
   echo "Deploying https://download.clojure.org/install/clojure-tools-$version.tar.gz"
   aws s3 cp --only-show-errors "target/clojure-tools-$version.tar.gz" "$S3_BUCKET/install/clojure-tools.tar.gz"
@@ -38,4 +38,6 @@ if [[ ! -z "$S3_BUCKET" ]]; then
   echo "Deploying https://download.clojure.org/install/linux-install.sh"
   aws s3 cp --only-show-errors "target/classes/linux-install.sh" "$S3_BUCKET/install/linux-install.sh"
   aws s3 cp --only-show-errors "target/classes/linux-install.sh" "$S3_BUCKET/install/linux-install-$version.sh"
+
+  git tag -a -m "$version" "$version" HEAD
 fi
