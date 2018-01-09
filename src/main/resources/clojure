@@ -125,7 +125,7 @@ if "$resolve_tags"; then
   if [[ -e deps.edn ]]; then
     "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.resolve-tags "--deps-file=deps.edn"
     exit 0
-  elif
+  else
     echo "deps.edn does not exist"
     exit 1
   fi
