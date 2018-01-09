@@ -10,6 +10,7 @@ verbose=false
 force=false
 repro=false
 pom=false
+resolve_tags=false
 help=false
 java_opts=()
 while [ $# -gt 0 ]
@@ -45,6 +46,10 @@ do
       ;;
     -Spom)
       pom=true
+      shift
+      ;;
+    -Sresolve-tags)
+      resolve_tags=true
       shift
       ;;
     -S*)
@@ -83,14 +88,15 @@ if "$help"; then
 	java [java-opt*] -cp classpath clojure.main [init-opt*] [main-opt] [arg*]
 
 	The dep-opts are used to build the java-opts and classpath:
-	 -Jopt      Pass opt through in java_opts, ex: -J-Xmx512m
-	 -Ralias... Concatenated resolve-deps aliases, ex: -R:bench:1.9
-	 -Calias... Concatenated make-classpath aliases, ex: -C:dev
-	 -Spath     Compute classpath and echo to stdout only
-	 -Srepro    Use only the local deps.edn (ignore other config files)
-	 -Sforce    Force recomputation of the classpath (don't use the cache)
-	 -Spom      Generate (or update an existing) pom.xml with deps and paths
-	 -Sverbose  Print important path info to console
+	 -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
+	 -Ralias...     Concatenated resolve-deps aliases, ex: -R:bench:1.9
+	 -Calias...     Concatenated make-classpath aliases, ex: -C:dev
+	 -Spath         Compute classpath and echo to stdout only
+	 -Srepro        Use only the local deps.edn (ignore other config files)
+	 -Sforce        Force recomputation of the classpath (don't use the cache)
+	 -Spom          Generate (or update existing) pom.xml with deps and paths
+	 -Sresolve-tags Resolve git coordinate tags to shas and update deps.edn
+	 -Sverbose      Print important path info to console
 
 	init-opt:
 	 -i, --init path     Load a file or resource
@@ -113,6 +119,17 @@ fi
 # Set dir containing the installed files
 install_dir=PREFIX
 tools_cp="$install_dir/libexec/clojure-tools-${project.version}.jar"
+
+# Execute resolve-tags command
+if "$resolve_tags"; then
+  if [[ -e deps.edn ]]; then
+    "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.resolve-tags "--deps-file=deps.edn"
+    exit 0
+  elif
+    echo "deps.edn does not exist"
+    exit 1
+  fi
+fi
 
 # Determine user config directory
 if [[ -n "$CLJ_CONFIG" ]]; then
@@ -194,7 +211,7 @@ else
   done
 fi
 
-# If stale, run makecp to refresh cached classpath
+# If stale, run make-classpath to refresh cached classpath
 if "$stale"; then
   if "$verbose"; then
     echo "Refreshing classpath"
@@ -208,13 +225,13 @@ if "$stale"; then
     tools_args+=("-C$classpath_aliases")
   fi
 
-  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.makecp "--config-paths=$config_str" "--libs-file=$libs_file" "--cp-file=$cp_file" "${tools_args[@]}"
+  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath "--config-paths=$config_str" "--libs-file=$libs_file" "--cp-file=$cp_file" "${tools_args[@]}"
 fi
 
 cp=$(cat "$cp_file")
 
 if "$pom"; then
-  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.genmf "--config-paths=$config_str" --gen=pom
+  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest "--config-paths=$config_str" --gen=pom
 elif "$print_classpath"; then
   echo "$cp"
 else
