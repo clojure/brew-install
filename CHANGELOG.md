@@ -7,7 +7,7 @@ Changelog
   * FIX git deps now use :deps/root if specified
   * FIX  major updates to improve transitive version selection
   * ENHANCE git version resolution uses stricter rules in comparison
-  * ENHANCE dump stack on expected errors for debugging
+  * ENHANCE dump stack on unexpected errors for debugging
 * 1.9.0.302 on Jan 8, 2018
   * CHANGE git dep attributes (removed :rev, added :tag and :sha)
   * FIX Java 9 warning with -Spom
