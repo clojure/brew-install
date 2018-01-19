@@ -211,12 +211,8 @@ else
   done
 fi
 
-# If stale, run make-classpath to refresh cached classpath
-if "$stale"; then
-  if "$verbose"; then
-    echo "Refreshing classpath"
-  fi
-
+# Make tools args if needed
+if "$stale" || "$pom"; then
   tools_args=()
   if [[ -n "$resolve_aliases" ]]; then
     tools_args+=("-R$resolve_aliases")
@@ -224,14 +220,21 @@ if "$stale"; then
   if [[ -n "$classpath_aliases" ]]; then
     tools_args+=("-C$classpath_aliases")
   fi
+fi
 
-  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath "--config-paths=$config_str" "--libs-file=$libs_file" "--cp-file=$cp_file" "${tools_args[@]}"
+# If stale, run make-classpath to refresh cached classpath
+if "$stale"; then
+  if "$verbose"; then
+    echo "Refreshing classpath"
+  fi
+
+  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath --config-files "$config_str" --libs-file "$libs_file" --cp-file "$cp_file" "${tools_args[@]}"
 fi
 
 cp=$(cat "$cp_file")
 
 if "$pom"; then
-  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest "--config-paths=$config_str" --gen=pom
+  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest --config-files "$config_str" --gen=pom "${tools_args[@]}"
 elif "$print_classpath"; then
   echo "$cp"
 else
