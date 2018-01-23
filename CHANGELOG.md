@@ -1,11 +1,15 @@
 Changelog
 ===========
 
+* 1.9.0.315 on Jan 23, 2018
+  * NEW -Stree to print dependency tree
+  * NEW -Sdeps to supply a deps.edn on the command line as data
+  * FIX bug with git deps using :deps/root writing File objects to libs files
 * 1.9.0.309 on Jan 18, 2018
   * NEW -Spom emits dep exclusions and classifier
   * NEW pom file reader for local and git deps
   * FIX git deps now use :deps/root if specified
-  * FIX  major updates to improve transitive version selection
+  * FIX major updates to improve transitive version selection
   * ENHANCE git version resolution uses stricter rules in comparison
   * ENHANCE dump stack on unexpected errors for debugging
 * 1.9.0.302 on Jan 8, 2018
