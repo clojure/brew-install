@@ -101,12 +101,12 @@ if "$help"; then
 	 -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
 	 -Ralias...     Concatenated resolve-deps aliases, ex: -R:bench:1.9
 	 -Calias...     Concatenated make-classpath aliases, ex: -C:dev
-         -Sdeps EDN     Deps data to use as the final deps file
+	 -Sdeps EDN     Deps data to use as the final deps file
 	 -Spath         Compute classpath and echo to stdout only
 	 -Srepro        Use only the local deps.edn (ignore other config files)
 	 -Sforce        Force recomputation of the classpath (don't use the cache)
 	 -Spom          Generate (or update existing) pom.xml with deps and paths
-         -Stree         Print dependency tree
+	 -Stree         Print dependency tree
 	 -Sresolve-tags Resolve git coordinate tags to shas and update deps.edn
 	 -Sverbose      Print important path info to console
 
