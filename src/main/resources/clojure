@@ -9,6 +9,7 @@ print_classpath=false
 verbose=false
 force=false
 repro=false
+tree=false
 pom=false
 resolve_tags=false
 help=false
@@ -28,6 +29,11 @@ do
       classpath_aliases="${1:2}"
       shift
       ;;
+    -Sdeps)
+      shift
+      deps_data="${1}"
+      shift
+      ;;
     -Spath)
       print_classpath=true
       shift
@@ -42,6 +48,10 @@ do
       ;;
     -Srepro)
       repro=true
+      shift
+      ;;
+    -Stree)
+      tree=true
       shift
       ;;
     -Spom)
@@ -91,10 +101,12 @@ if "$help"; then
 	 -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
 	 -Ralias...     Concatenated resolve-deps aliases, ex: -R:bench:1.9
 	 -Calias...     Concatenated make-classpath aliases, ex: -C:dev
+         -Sdeps EDN     Deps data to use as the final deps file
 	 -Spath         Compute classpath and echo to stdout only
 	 -Srepro        Use only the local deps.edn (ignore other config files)
 	 -Sforce        Force recomputation of the classpath (don't use the cache)
 	 -Spom          Generate (or update existing) pom.xml with deps and paths
+         -Stree         Print dependency tree
 	 -Sresolve-tags Resolve git coordinate tags to shas and update deps.edn
 	 -Sverbose      Print important path info to console
 
@@ -200,7 +212,7 @@ fi
 
 # Check for stale classpath file
 stale=false
-if "$force" || [ ! -f "$cp_file" ]; then
+if "$force" || [ -n "$deps_data" ] || [ ! -f "$cp_file" ]; then
   stale=true
 else
   for config_path in "${config_paths[@]}"; do
@@ -214,6 +226,9 @@ fi
 # Make tools args if needed
 if "$stale" || "$pom"; then
   tools_args=()
+  if [[ -n "$deps_data" ]]; then
+    tools_args+=("--config-data" "$deps_data")
+  fi
   if [[ -n "$resolve_aliases" ]]; then
     tools_args+=("-R$resolve_aliases")
   fi
@@ -237,6 +252,8 @@ if "$pom"; then
   "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest --config-files "$config_str" --gen=pom "${tools_args[@]}"
 elif "$print_classpath"; then
   echo "$cp"
+elif "$tree"; then
+  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file "$libs_file"
 else
   "$JAVA_CMD" "${java_opts[@]}" -classpath "$cp" clojure.main "$@"
 fi
