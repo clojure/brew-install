@@ -295,5 +295,5 @@ else
   if [[ -e "$main_file" ]]; then
     main_cache_opts=($(cat "$main_file"))
   fi
-  "$JAVA_CMD" "$jvm_cache_opts" "${jvm_opts[@]}" -classpath "$cp" clojure.main "$main_cache_opts" "$@"
+  "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" -classpath "$cp" clojure.main "${main_cache_opts[@]}" "$@"
 fi
