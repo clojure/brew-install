@@ -1,6 +1,12 @@
 Changelog
 ===========
 
+* next on Feb 2, 2018
+  * NEW -O - Java option aliases (append if multiple)
+  * NEW -M - clojure.main option aliases (replace if multiple)
+  * NEW -A - generic alias can combine any kind of alias and all are applied
+  * FIX - if multiple alias switches supplied, they combine
+  * FIX - whitespace in help fixed
 * 1.9.0.315 on Jan 23, 2018
   * NEW -Stree to print dependency tree
   * NEW -Sdeps to supply a deps.edn on the command line as data
