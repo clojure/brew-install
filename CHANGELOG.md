@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next on Feb 2, 2018
+* 1.9.0.326 on Feb 2, 2018
   * NEW -O - Java option aliases (append if multiple)
   * NEW -M - clojure.main option aliases (replace if multiple)
   * NEW -A - generic alias can combine any kind of alias and all are applied
