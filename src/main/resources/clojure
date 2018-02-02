@@ -15,14 +15,17 @@ tree=false
 pom=false
 resolve_tags=false
 help=false
-java_opts=()
+jvm_opts=()
 resolve_aliases=()
 classpath_aliases=()
+jvm_aliases=()
+main_aliases=()
+all_aliases=()
 while [ $# -gt 0 ]
 do
   case "$1" in
     -J*)
-      java_opts+=("${1:2}")
+      jvm_opts+=("${1:2}")
       shift
       ;;
     -R*)
@@ -31,6 +34,18 @@ do
       ;;
     -C*)
       classpath_aliases+=("${1:2}")
+      shift
+      ;;
+    -O*)
+      jvm_aliases+=("${1:2}")
+      shift
+      ;;
+    -M*)
+      main_aliases+=("${1:2}")
+      shift
+      ;;
+    -A*)
+      all_aliases+=("${1:2}")
       shift
       ;;
     -Sdeps)
@@ -103,8 +118,11 @@ if "$help"; then
 
 	The dep-opts are used to build the java-opts and classpath:
 	 -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
+	 -Oalias...     Concatenated jvm option aliases, ex: -O:mem
 	 -Ralias...     Concatenated resolve-deps aliases, ex: -R:bench:1.9
 	 -Calias...     Concatenated make-classpath aliases, ex: -C:dev
+	 -Malias...     Concatenated main option aliases, ex: -M:test
+	 -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
 	 -Sdeps EDN     Deps data to use as the final deps file
 	 -Spath         Compute classpath and echo to stdout only
 	 -Srepro        Use only the local deps.edn (ignore other config files)
@@ -190,7 +208,7 @@ else
 fi
 
 # Construct location of cached classpath file
-val="$(join '' ${resolve_aliases[@]})|$(join '' ${classpath_aliases[@]})"
+val="$(join '' ${resolve_aliases[@]})|$(join '' ${classpath_aliases[@]})|$(join '' ${all_aliases[@]})|$(join '' ${jvm_aliases[@]})|$(join '' ${main_aliases[@]})"
 for config_path in "${config_paths[@]}"; do
   if [[ -f "$config_path" ]]; then
     val="$val|$config_path"
@@ -202,6 +220,8 @@ ck=$(echo "$val" | cksum | cut -d" " -f 1)
 
 libs_file="$cache_dir/$ck.libs"
 cp_file="$cache_dir/$ck.cp"
+jvm_file="$cache_dir/$ck.jvm"
+main_file="$cache_dir/$ck.main"
 
 # Print paths in verbose mode
 if "$verbose"; then
@@ -239,6 +259,15 @@ if "$stale" || "$pom"; then
   if [[ ${#classpath_aliases[@]} -gt 0 ]]; then
     tools_args+=("-C$(join '' ${classpath_aliases[@]})")
   fi
+  if [[ ${#jvm_aliases[@]} -gt 0 ]]; then
+    tools_args+=("-J$(join '' ${jvm_aliases[@]})")
+  fi
+  if [[ ${#main_aliases[@]} -gt 0 ]]; then
+    tools_args+=("-M$(join '' ${main_aliases[@]})")
+  fi
+  if [[ ${#all_aliases[@]} -gt 0 ]]; then
+    tools_args+=("-A$(join '' ${all_aliases[@]})")
+  fi
 fi
 
 # If stale, run make-classpath to refresh cached classpath
@@ -247,7 +276,7 @@ if "$stale"; then
     echo "Refreshing classpath"
   fi
 
-  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath --config-files "$config_str" --libs-file "$libs_file" --cp-file "$cp_file" "${tools_args[@]}"
+  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath --config-files "$config_str" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" "${tools_args[@]}"
 fi
 
 cp=$(cat "$cp_file")
@@ -259,5 +288,12 @@ elif "$print_classpath"; then
 elif "$tree"; then
   "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file "$libs_file"
 else
-  "$JAVA_CMD" "${java_opts[@]}" -classpath "$cp" clojure.main "$@"
+  set -f
+  if [[ -e "$jvm_file" ]]; then
+    jvm_cache_opts=$(cat "$jvm_file")
+  fi
+  if [[ -e "$main_file" ]]; then
+    main_cache_opts=$(cat "$main_file")
+  fi
+  "$JAVA_CMD" "$jvm_cache_opts" "${jvm_opts[@]}" -classpath "$cp" clojure.main "$main_cache_opts" "$@"
 fi
