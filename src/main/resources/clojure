@@ -53,6 +53,11 @@ do
       deps_data="${1}"
       shift
       ;;
+    -Scp)
+      shift
+      force_cp="${1}"
+      shift
+      ;;
     -Spath)
       print_classpath=true
       shift
@@ -125,6 +130,7 @@ if "$help"; then
 	 -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
 	 -Sdeps EDN     Deps data to use as the final deps file
 	 -Spath         Compute classpath and echo to stdout only
+	 -Scp CP        Do NOT compute or cache classpath, use this one instead
 	 -Srepro        Use only the local deps.edn (ignore other config files)
 	 -Sforce        Force recomputation of the classpath (don't use the cache)
 	 -Spom          Generate (or update existing) pom.xml with deps and paths
@@ -268,6 +274,9 @@ if "$stale" || "$pom"; then
   if [[ ${#all_aliases[@]} -gt 0 ]]; then
     tools_args+=("-A$(join '' ${all_aliases[@]})")
   fi
+  if [[ -n "$force_cp" ]]; then
+    tools_args+=("--skip-cp")
+  fi
 fi
 
 # If stale, run make-classpath to refresh cached classpath
@@ -279,7 +288,11 @@ if "$stale"; then
   "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath --config-files "$config_str" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" "${tools_args[@]}"
 fi
 
-cp=$(cat "$cp_file")
+if [[ -n "$force_cp" ]]; then
+  cp="$force_cp"
+else
+  cp=$(cat "$cp_file")
+fi
 
 if "$pom"; then
   "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest --config-files "$config_str" --gen=pom "${tools_args[@]}"
