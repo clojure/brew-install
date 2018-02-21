@@ -66,6 +66,10 @@ do
       verbose=true
       shift
       ;;
+    -Senv)
+      print_env=true
+      shift
+      ;;
     -Sforce)
       force=true
       shift
@@ -137,6 +141,7 @@ if "$help"; then
 	 -Stree         Print dependency tree
 	 -Sresolve-tags Resolve git coordinate tags to shas and update deps.edn
 	 -Sverbose      Print important path info to console
+	 -Senv          Print environment info as data
 
 	init-opt:
 	 -i, --init path     Load a file or resource
@@ -298,6 +303,19 @@ if "$pom"; then
   "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest --config-files "$config_str" --gen=pom "${tools_args[@]}"
 elif "$print_classpath"; then
   echo "$cp"
+elif "$print_env"; then
+  for config_path in "${config_paths[@]}"; do
+    if [[ -f "$config_path" ]]; then
+      path_vector="$path_vector\"$config_path\" "
+    fi
+  done
+  cat <<-END
+	{:version "${project.version}"
+	 :config-files [$path_vector]
+	 :install-dir "$install_dir"
+	 :config-dir "$config_dir"
+	 :cache-dir "$cache_dir"}
+END
 elif "$tree"; then
   "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file "$libs_file"
 else
