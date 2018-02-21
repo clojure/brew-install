@@ -135,7 +135,7 @@ if "$help"; then
 	 -Sdeps EDN     Deps data to use as the final deps file
 	 -Spath         Compute classpath and echo to stdout only
 	 -Scp CP        Do NOT compute or cache classpath, use this one instead
-	 -Srepro        Use only the local deps.edn (ignore other config files)
+	 -Srepro        Ignore the ~/.clojure/deps.edn config file
 	 -Sforce        Force recomputation of the classpath (don't use the cache)
 	 -Spom          Generate (or update existing) pom.xml with deps and paths
 	 -Stree         Print dependency tree
@@ -202,9 +202,9 @@ else
   user_cache_dir="$config_dir/.cpcache"
 fi
 
-# Chain deps.edn in config paths. repro=use only local.
+# Chain deps.edn in config paths. repro=skip config dir
 if "$repro"; then
-  config_paths=("deps.edn")
+  config_paths=("$install_dir/deps.edn" "deps.edn")
 else
   config_paths=("$install_dir/deps.edn" "$config_dir/deps.edn" "deps.edn")
 fi
