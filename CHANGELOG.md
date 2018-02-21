@@ -1,6 +1,8 @@
 Changelog
 ===========
 
+* 1.9.0.341 on Feb 21, 2018
+  * CHANGE -Scp to -Sdescribe
 * 1.9.0.338 on Feb 20, 2018
   * NEW -Senv - print edn for Clojure config, similar to -Sverbose info
   * NEW -Scp - provide a custom classpath and ignore classpath gen
