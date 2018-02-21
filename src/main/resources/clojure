@@ -8,6 +8,7 @@ function join { local d=$1; shift; echo -n "$1"; shift; printf "%s" "${@/#/$d}";
 
 # Extract opts
 print_classpath=false
+print_env=false
 verbose=false
 force=false
 repro=false
