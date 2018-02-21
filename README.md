@@ -53,4 +53,4 @@ See the following resources for more information:
 
 Copyright © 2017 Rich Hickey, Alex Miller and contributors
 
-Distributed under the Eclipse Public License, the same as Clojure.
+Distributed under the Eclipse Public License 1.0, the same as Clojure.
