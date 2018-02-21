@@ -8,7 +8,7 @@ function join { local d=$1; shift; echo -n "$1"; shift; printf "%s" "${@/#/$d}";
 
 # Extract opts
 print_classpath=false
-print_env=false
+describe=false
 verbose=false
 force=false
 repro=false
@@ -67,8 +67,8 @@ do
       verbose=true
       shift
       ;;
-    -Senv)
-      print_env=true
+    -Sdescribe)
+      describe=true
       shift
       ;;
     -Sforce)
@@ -142,7 +142,7 @@ if "$help"; then
 	 -Stree         Print dependency tree
 	 -Sresolve-tags Resolve git coordinate tags to shas and update deps.edn
 	 -Sverbose      Print important path info to console
-	 -Senv          Print environment info as data
+	 -Sdescribe     Print environment and command parsing info as data
 
 	init-opt:
 	 -i, --init path     Load a file or resource
@@ -304,7 +304,7 @@ if "$pom"; then
   "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest --config-files "$config_str" --gen=pom "${tools_args[@]}"
 elif "$print_classpath"; then
   echo "$cp"
-elif "$print_env"; then
+elif "$describe"; then
   for config_path in "${config_paths[@]}"; do
     if [[ -f "$config_path" ]]; then
       path_vector="$path_vector\"$config_path\" "
@@ -315,7 +315,14 @@ elif "$print_env"; then
 	 :config-files [$path_vector]
 	 :install-dir "$install_dir"
 	 :config-dir "$config_dir"
-	 :cache-dir "$cache_dir"}
+	 :cache-dir "$cache_dir"
+	 :force $force
+	 :repro $repro
+	 :resolve-aliases "$(join '' ${resolve_aliases[@]})"
+	 :classpath-aliases "$(join '' ${classpath_aliases[@]})"
+	 :jvm-aliases "$(join '' ${jvm_aliases[@]})"
+	 :main-aliases "$(join '' ${main_aliases[@]})"
+	 :all-aliases "$(join '' ${all_aliases[@]})"}
 END
 elif "$tree"; then
   "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file "$libs_file"
