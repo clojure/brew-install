@@ -1,6 +1,9 @@
 Changelog
 ===========
 
+* 1.9.0.338 on Feb 20, 2018
+  * NEW -Senv - print edn for Clojure config, similar to -Sverbose info
+  * NEW -Scp - provide a custom classpath and ignore classpath gen
 * 1.9.0.326 on Feb 2, 2018
   * NEW -O - Java option aliases (append if multiple)
   * NEW -M - clojure.main option aliases (replace if multiple)
