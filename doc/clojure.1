@@ -1,0 +1,198 @@
+.\"to render: groff -Tascii -man doc/clojure.1 > clojure.man"
+.TH CLOJURE 1 "2018 February 22"
+.SH NAME
+clj, clojure \- runners to invoke the Clojure compiler
+
+.SH SYNOPSIS
+
+.B clj
+[\fBdep-opts...\fR] [\fBinit-opts...\fR] [\fBmain-opt\fR]
+[\fBargs...\fR]
+.br
+.B clojure
+[\fBdep-opts...\fR] [\fBinit-opts...\fR] [\fBmain-opt\fR]
+[\fBargs...\fR]
+
+.SH DESCRIPTION
+
+The
+.B clojure
+script is a runner to invoke the Clojure compiler and REPL.
+The
+.B clj
+script is a wrapper around
+.B clojure
+that uses rlwrap to provide a better interactive experience.
+Users will typically run
+.BR clj .
+
+Using the tools.deps library to build a classpath, these
+scripts ultimately construct and invoke a command-line of the
+form:
+
+.B java
+[\fBjava-opt*\fR] -cp classpath clojure.main [\fBinit-opt*\fR]
+[\fBmain-opt\fR] [\fBarg*\fR]
+
+.SH EXAMPLES
+
+You can launch a Clojure REPL by running
+.BR clj .
+
+See the Deps and CLI Guide below for more complex usage.
+
+.SH OPTIONS
+
+The
+.B clj
+and
+.B clojure
+scripts can take three types of options, as shown in the
+synopsis.
+.B dep-opts
+are used to build the java-opts and
+classpath.
+.B init-opts
+refer to Clojure code to execute.
+.B main-opts
+are options to clojure.main.
+
+.SS dep-opts
+
+.TP
+.BI \-J opt
+Pass opt through in java_opts, ex: -J-Xmx512m
+
+.TP
+.BI \-O: alias
+Concatenated jvm option aliases, ex: -O:mem
+
+.TP
+.BI \-R: alias
+Concatenated resolve-deps aliases, ex: -R:bench:1.9
+
+.TP
+.BI \-C: alias
+Concatenated make-classpath aliases, ex: -C:dev
+
+.TP
+.BI \-M: alias
+Concatenated main option aliases, ex: -M:test
+
+.TP
+.BI \-A: alias
+Concatenated aliases of any kind, ex: -A:dev:mem
+
+.TP
+.BI \-Sdeps\  EDN
+Deps data to use as the final deps file
+
+.TP
+.BI \-Spath
+Compute classpath and echo to stdout only
+
+.TP
+.BI \-Scp\  CP
+Do NOT compute or cache classpath, use this one instead
+
+.TP
+.BI \-Srepro
+Ignore the ~/.clojure/deps.edn config file
+
+.TP
+.BI \-Sforce
+Force recomputation of the classpath (don't use the cache)
+
+.TP
+.BI \-Spom
+Generate (or update existing) pom.xml with deps and paths
+
+.TP
+.BI \-Stree
+Print dependency tree
+
+.TP
+.BI \-Sresolve-tags
+Resolve git coordinate tags to shas and update deps.edn
+
+.TP
+.BI \-Sverbose
+Print important path info to console
+
+.TP
+.BI \-Sdescribe
+Print environment and command parsing info as data
+
+.SS init-opts
+
+
+.TP
+.BR \-i ", " \-\-init\  \fIpath\fR
+Load a file or resource located at \fIpath\fR
+
+.TP
+.BR \-e ", " \-\-eval\  \fIstring\fR
+Eval exprs in \fIstring\fR; print non-nil values
+
+.SS main-opts
+
+
+.TP
+.BR \-m ", " \-\-main\  \fIns-name \fR
+Call the -main function from namespace w/args
+
+.TP
+.BR \-r ", " \-\-repl
+Run a repl
+
+.TP
+.I path
+Run a script from a file or resource located at \fIpath\fR
+
+.TP
+.B \-
+Run a script from standard input
+
+.TP
+.BR \-h ", " \-? ",  " \-\-help
+Print this help message and exit
+
+.SH CONFIGURATION
+
+This script reads configuration from
+.B deps.edn
+files. It will check against
+.B deps.edn
+files in the system default location, the configuration
+directory (usually
+.BR ~/.clojure ),
+and the local directory. Files in each of these locations, if
+they exist, are merged to form one combined configuration
+file. The last specified configuration file's options
+overwrites any earlier files (e.g. local configs take
+priority).
+
+.SH SEE ALSO
+
+.IP https://clojure.org/guides/deps_and_cli
+Deps and CLI Guide
+.IP https://clojure.org/reference/deps_and_cli
+Deps and CLI Reference
+.IP https://clojure.org/reference/repl_and_main
+REPL and Main Entrypoints
+
+.SH BUGS
+
+Visit the bug tracker at
+https://dev.clojure.org/jira/browse/INST to file an issue.
+
+.SH AUTHOR
+
+This reference is written by Elana Hashman <ehashman@debian.org>
+
+.SH COPYRIGHT
+
+Copyright \(co 2018 Rich Hickey, Alex Miller and contributors.
+
+Distributed under the Eclipse Public License 1.0, the same as
+Clojure.
