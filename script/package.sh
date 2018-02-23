@@ -18,7 +18,8 @@ mvn -B clean package -Dmaven.test.skip=true
 echo "Building scripts tar file"
 mkdir -p target/clojure-tools
 chmod +x target/classes/clojure target/classes/clj target/classes/install.sh target/classes/linux-install.sh
-cp target/classes/clojure target/classes/clj target/classes/deps.edn target/classes/example-deps.edn target/classes/install.sh "target/clojure-tools-$version.jar" target/clojure-tools
+cp target/classes/clojure target/classes/clj target/classes/deps.edn target/classes/example-deps.edn target/classes/install.sh "target/clojure-tools-$version.jar" doc/clojure.1 target/clojure-tools
+cp doc/clojure.1 target/clojure-tools/clj.1
 tar -cvzf "target/clojure-tools-$version.tar.gz" -Ctarget clojure-tools
 
 # Create formula file

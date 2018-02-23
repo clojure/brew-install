@@ -16,6 +16,10 @@ echo "Installing clojure and clj into /usr/local/bin"
 sed -i -e 's@PREFIX@/usr/local/lib/clojure@g' clojure-tools/clojure
 cp -f clojure-tools/clojure clojure-tools/clj /usr/local/bin
 
+echo "Installing man pages into /usr/local/share/man/man1"
+cp -f clojure-tools/clojure.1 /usr/local/share/man/man1/
+cp -f clojure-tools/clj.1 /usr/local/share/man/man1/
+
 echo "Removing download"
 rm -rf clojure-tools
 rm -rf clojure-tools-${project.version}.tar.gz
