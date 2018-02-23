@@ -2,8 +2,8 @@ Changelog
 ===========
 
 * 1.9.0.348 on Feb 23, 2018
-  * NEW Add --prefix to linux-install
-  * NEW Add man page to installation (INST-9)
+  * NEW Add --prefix to linux-install (INST-9)
+  * NEW Add man page to installation (INST-18)
   * FIX Fix uberjar construction to avoid overlap of file and directory with same name
   * FIX Add missing license file
 * 1.9.0.341 on Feb 21, 2018
