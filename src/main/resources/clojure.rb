@@ -11,8 +11,6 @@ class Clojure < Formula
 
   def install
     system "./install.sh", prefix
-    man1.install "clojure.1"
-    man1.install "clj.1"
   end
 
   test do
