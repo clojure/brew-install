@@ -38,14 +38,14 @@ clojure_lib_dir="$lib_dir/clojure"
 # folder should not be created but the necessary subfolders should.
 
 echo "Installing libs into $clojure_lib_dir"
-[[ ! -d "$lib_dir" ]] && mkdir "$lib_dir"
-[[ ! -d "$clojure_lib_dir" ]] && mkdir "$clojure_lib_dir"
+[[ ! -d "$lib_dir" ]] && mkdir -p "$lib_dir"
+[[ ! -d "$clojure_lib_dir" ]] && mkdir -p "$clojure_lib_dir"
 cp -f clojure-tools/deps.edn clojure-tools/example-deps.edn "$clojure_lib_dir"
-[[ ! -d "$clojure_lib_dir/libexec" ]] && mkdir "$clojure_lib_dir/libexec"
+[[ ! -d "$clojure_lib_dir/libexec" ]] && mkdir -p "$clojure_lib_dir/libexec"
 cp -f clojure-tools/clojure-tools-${project.version}.jar "$clojure_lib_dir/libexec"
 
 echo "Installing clojure and clj into $bin_dir"
-[[ ! -d "$bin_dir" ]] && mkdir "$bin_dir"
+[[ ! -d "$bin_dir" ]] && mkdir -p "$bin_dir"
 sed -i -e 's@PREFIX@'"$clojure_lib_dir"'@g' clojure-tools/clojure
 cp -f clojure-tools/clojure clojure-tools/clj "$bin_dir"
 
