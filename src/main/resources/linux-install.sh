@@ -50,7 +50,7 @@ sed -i -e 's@PREFIX@'"$clojure_lib_dir"'@g' clojure-tools/clojure
 cp -f clojure-tools/clojure clojure-tools/clj "$bin_dir"
 
 echo "Installing man pages into $man_dir"
-[[ ! -d "$man_dir" ]] && mkdir "$man_dir"
+[[ ! -d "$man_dir" ]] && mkdir -p "$man_dir"
 cp -f clojure-tools/clojure.1 "$man_dir"
 cp -f clojure-tools/clj.1 "$man_dir"
 
