@@ -1,6 +1,10 @@
 Changelog
 ===========
 
+* next
+  * FIX linux-install - use mkdir -p to ensure parent dirs are created
+  * FIX brew install - move man page installation from formula to install.sh
+  * FIX TDEPS-45 - don't swipe -h flag if main aliases are in effect
 * 1.9.0.348 on Feb 23, 2018
   * NEW Add --prefix to linux-install (INST-9)
   * NEW Add man page to installation (INST-18)
