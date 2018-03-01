@@ -96,8 +96,12 @@ do
       exit 1
       ;;
     -h|--help|"-?")
-      help=true
-      shift
+      if [[ ${#main_aliases[@]} -gt 0 ]] || [[ ${#all_aliases[@]} -gt 0 ]]; then
+        break
+      else
+        help=true
+        shift
+      fi
       ;;
     *)
       break
