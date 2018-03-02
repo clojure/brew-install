@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* 1.9.0.358 on Mar 2, 2018 
   * FIX linux-install - use mkdir -p to ensure parent dirs are created
   * FIX brew install - move man page installation from formula to install.sh
   * FIX TDEPS-45 - don't swipe -h flag if main aliases are in effect
