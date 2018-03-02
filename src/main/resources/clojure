@@ -224,7 +224,7 @@ else
 fi
 
 # Construct location of cached classpath file
-val="$(join '' ${resolve_aliases[@]})|$(join '' ${classpath_aliases[@]})|$(join '' ${all_aliases[@]})|$(join '' ${jvm_aliases[@]})|$(join '' ${main_aliases[@]})"
+val="$(join '' ${resolve_aliases[@]})|$(join '' ${classpath_aliases[@]})|$(join '' ${all_aliases[@]})|$(join '' ${jvm_aliases[@]})|$(join '' ${main_aliases[@]})|$deps_data"
 for config_path in "${config_paths[@]}"; do
   if [[ -f "$config_path" ]]; then
     val="$val|$config_path"
@@ -252,7 +252,7 @@ fi
 
 # Check for stale classpath file
 stale=false
-if "$force" || [ -n "$deps_data" ] || [ ! -f "$cp_file" ]; then
+if "$force" || [ ! -f "$cp_file" ]; then
   stale=true
 else
   for config_path in "${config_paths[@]}"; do
