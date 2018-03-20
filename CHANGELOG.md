@@ -12,7 +12,7 @@ Changelog
   * FIX Fix uberjar construction to avoid overlap of file and directory with same name
   * FIX Add missing license file
 * 1.9.0.341 on Feb 21, 2018
-  * CHANGE -Scp to -Sdescribe
+  * CHANGE -Senv to -Sdescribe
 * 1.9.0.338 on Feb 20, 2018
   * NEW -Senv - print edn for Clojure config, similar to -Sverbose info
   * NEW -Scp - provide a custom classpath and ignore classpath gen
