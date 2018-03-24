@@ -38,21 +38,18 @@ clojure_lib_dir="$lib_dir/clojure"
 # folder should not be created but the necessary subfolders should.
 
 echo "Installing libs into $clojure_lib_dir"
-[[ ! -d "$lib_dir" ]] && mkdir -p "$lib_dir"
-[[ ! -d "$clojure_lib_dir" ]] && mkdir -p "$clojure_lib_dir"
-cp -f clojure-tools/deps.edn clojure-tools/example-deps.edn "$clojure_lib_dir"
-[[ ! -d "$clojure_lib_dir/libexec" ]] && mkdir -p "$clojure_lib_dir/libexec"
-cp -f clojure-tools/clojure-tools-${project.version}.jar "$clojure_lib_dir/libexec"
+install -Dm644 clojure-tools/deps.edn "$clojure_lib_dir/deps.edn"
+install -Dm644 clojure-tools/example-deps.edn "$clojure_lib_dir/example-deps.edn"
+install -Dm644 clojure-tools/clojure-tools-${project.version}.jar "$clojure_lib_dir/libexec/clojure-tools-${project.version}.jar"
 
 echo "Installing clojure and clj into $bin_dir"
-[[ ! -d "$bin_dir" ]] && mkdir -p "$bin_dir"
 sed -i -e 's@PREFIX@'"$clojure_lib_dir"'@g' clojure-tools/clojure
-cp -f clojure-tools/clojure clojure-tools/clj "$bin_dir"
+install -Dm755 clojure-tools/clojure "$bin_dir/clojure"
+install -Dm755 clojure-tools/clj "$bin_dir/clj"
 
 echo "Installing man pages into $man_dir"
-[[ ! -d "$man_dir" ]] && mkdir -p "$man_dir"
-cp -f clojure-tools/clojure.1 "$man_dir"
-cp -f clojure-tools/clj.1 "$man_dir"
+install -Dm644 clojure-tools/clojure.1 "$man_dir/clojure.1"
+install -Dm644 clojure-tools/clj.1 "$man_dir/clj.1"
 
 echo "Removing download"
 rm -rf clojure-tools
