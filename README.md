@@ -47,7 +47,7 @@ See the following resources for more information:
 
 * [GitHub project](https://github.com/clojure/brew-install)
 * [How to contribute](https://dev.clojure.org/display/community/Contributing)
-* [Bug Tracker](https://dev.clojure.org/jira/browse/INST)
+* [Bug Tracker](https://dev.clojure.org/jira/browse/TDEPS)
 
 ## License
 
