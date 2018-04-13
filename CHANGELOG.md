@@ -1,6 +1,9 @@
 Changelog
 ===========
 
+* next
+  * FIX TDEPS-65 - specify permissions on installed files
+  * FIX Make rlwrap dependency optional in brew install
 * 1.9.0.358 on Mar 2, 2018 
   * FIX linux-install - use mkdir -p to ensure parent dirs are created
   * FIX brew install - move man page installation from formula to install.sh
