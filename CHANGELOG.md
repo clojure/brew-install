@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* 1.9.0.372 on Apr 13, 2018
   * FIX TDEPS-61 - switch to use Clojars CDN repo
   * FIX TDEPS-71 - better error if Java not installed
   * FIX TDEPS-65 - specify permissions on installed files
