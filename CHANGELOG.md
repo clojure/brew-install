@@ -2,6 +2,7 @@ Changelog
 ===========
 
 * next
+  * FIX TDEPS-61 - switch to use Clojars CDN repo
   * FIX TDEPS-71 - better error if Java not installed
   * FIX TDEPS-65 - specify permissions on installed files
   * FIX Make rlwrap dependency optional in brew install
