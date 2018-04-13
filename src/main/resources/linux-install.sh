@@ -34,9 +34,6 @@ bin_dir="$prefix_dir/bin"
 man_dir="$prefix_dir/share/man/man1"
 clojure_lib_dir="$lib_dir/clojure"
 
-# we don't want to use -p because prefix dir should exist already, the prefix
-# folder should not be created but the necessary subfolders should.
-
 echo "Installing libs into $clojure_lib_dir"
 install -Dm644 clojure-tools/deps.edn "$clojure_lib_dir/deps.edn"
 install -Dm644 clojure-tools/example-deps.edn "$clojure_lib_dir/example-deps.edn"
