@@ -1,6 +1,9 @@
 Changelog
 ===========
 
+* next
+  * FIX TDEPS-76 - use exec for finally Java invocation in script
+  * NEW Convey lib map via Java system property
 * 1.9.0.375 on Apr 14, 2018
   * FIX TDEPS-61 - switch to use Clojars CDN repo
   * FIX TDEPS-71 - better error if Java not installed
