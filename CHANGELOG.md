@@ -1,8 +1,8 @@
 Changelog
 ===========
 
-* next
-  * FIX TDEPS-76 - use exec for finally Java invocation in script
+* 1.9.0.381 on May 11, 2018
+  * FIX TDEPS-76 - use exec for final Java invocation in script
   * NEW Convey lib map via Java system property
 * 1.9.0.375 on Apr 14, 2018
   * FIX TDEPS-61 - switch to use Clojars CDN repo
