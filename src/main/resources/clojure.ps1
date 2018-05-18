@@ -243,7 +243,7 @@ if ($Verbose) {
 }
 
 $Stale=$FALSE
-if ($Force -or $DepsData -or !(Test-Path "$CpFile")) {
+if ($Force -or !(Test-Path "$CpFile")) {
   $Stale=$TRUE
 } else {
   foreach ($ConfigPath in $ConfigPaths) {
@@ -322,5 +322,5 @@ if ($Pom) {
   & "$JavaCmd" -Xmx256m -classpath "$ToolsCp" clojure.main -m clojure.tools.deps.alpha.script.print-tree "--libs-file=$LibsFile"
 } else {
   # TODO handle jvm and main cache opts
-  & "$JavaCmd" @JvmOpts -classpath "$CP" clojure.main @ClojureArgs
+  & "$JavaCmd" @JvmOpts -classpath "$CP" "-Dclojure.libfile=$LibsFile" clojure.main @ClojureArgs
 }
