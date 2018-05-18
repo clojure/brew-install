@@ -1,6 +1,13 @@
 Changelog
 ===========
 
+* 1.9.0.381 on May 11, 2018
+  * FIX TDEPS-76 - use exec for final Java invocation in script
+  * NEW Convey lib map via Java system property
+* 1.9.0.375 on Apr 14, 2018
+  * FIX TDEPS-61 - switch to use Clojars CDN repo
+  * FIX TDEPS-71 - better error if Java not installed
+  * FIX TDEPS-65 - specify permissions on installed files
 * 1.9.0.358 on Mar 2, 2018 
   * FIX linux-install - use mkdir -p to ensure parent dirs are created
   * FIX brew install - move man page installation from formula to install.sh

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if type -p rlwrap >/dev/null 2>&1; then
-  rlwrap -r -q '\"' -b "(){}[],^%3@\";:'" clojure "$@"
+  exec rlwrap -r -q '\"' -b "(){}[],^%3@\";:'" clojure "$@"
 else
   echo "Please install rlwrap for command editing or use \"clojure\" instead."
 fi
