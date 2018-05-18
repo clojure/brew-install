@@ -12,7 +12,7 @@ function IsNewerFile($file1, $file2) {
   }
   if (!(Test-Path $file2)) {
     return $TRUE
-  }  
+  }
   $mod1 = (Get-ChildItem $file1).LastWriteTimeUtc
   $mod2 = (Get-ChildItem $file2).LastWriteTimeUtc
   return $mod1 -gt $mod2
@@ -70,7 +70,7 @@ while ($params.Count -gt 0) {
       exit 1
     }
   } elseif ($arg.StartsWith("-M")) {
-    $aliases, $params = $params		
+    $aliases, $params = $params
     if ($aliases) {
       $MainAliases = += $aliases
     } else {
@@ -78,7 +78,7 @@ while ($params.Count -gt 0) {
       exit 1
     }
   } elseif ($arg.StartsWith("-A")) {
-    $aliases, $params = $params		
+    $aliases, $params = $params
     if ($aliases) {
       $AllAliases = += $aliases
     } else {
@@ -86,23 +86,23 @@ while ($params.Count -gt 0) {
       exit 1
     }
   } elseif ($arg -eq "-Sdeps") {
-    $DepsData, $params = $params 
+    $DepsData, $params = $params
     if (!($DepsData)) {
       echo "Missing deps"
       exit 1
     }
   } elseif ($arg -eq "-Scp") {
-	  $ForceCP, $params = $params
-		if (!($ForceCP)) {
-		  echo "Missing path"
-			exit 1
-		}
+    $ForceCP, $params = $params
+    if (!($ForceCP)) {
+      echo "Missing path"
+      exit 1
+    }
   } elseif ($arg -eq "-Spath") {
     $PrintClassPath=$TRUE
   } elseif ($arg -eq "-Sverbose") {
     $Verbose=$TRUE
   } elseif ($arg -eq "-Sdescribe") {
-	  $Describe=$TRUE
+    $Describe=$TRUE
   } elseif ($arg -eq "-Sforce") {
     $Force=$TRUE
   } elseif ($arg -eq "-Srepro") {
@@ -117,12 +117,12 @@ while ($params.Count -gt 0) {
     echo "Invalid option: $arg"
     exit 1
   } elseif (($arg -eq "-h") -or ($arg -eq "--help") -or ($arg -eq "-?")) {
-	  if ($MainAliases.count -gt 0 -or $AllAliases.count -gt 0) {
+    if ($MainAliases.count -gt 0 -or $AllAliases.count -gt 0) {
       $ClojureArgs += @($arg) + $params
-		  break
-		} else {
+      break
+    } else {
       $Help=$TRUE
-		}    
+    }
   } else {
     $ClojureArgs += @($arg) + $params
     break
@@ -275,9 +275,9 @@ if ($Stale -or $Pom) {
   if ($AllAliases) {
     $ToolsArgs += "-A$AllAliases"
   }
-	if ($ForceCp) {
+  if ($ForceCp) {
     $ToolsArgs += "--skip-cp"
-	}
+  }
 }
 
 if ($Stale) {
@@ -305,22 +305,22 @@ if ($Pom) {
     }
   }
   echo "
-	  {:version \"${project.version}\"
-	   :config-files [$PathVector]
-	   :install-dir $InstallDir
-	   :config-dir $ConfigDir
-	   :cache-dir $CacheDir
-	   :force $Force
-	   :repro $Repro
-	   :resolve-aliases "$(join '' ${resolve_aliases[@]})"
-	   :classpath-aliases "$(join '' ${classpath_aliases[@]})"
-	   :jvm-aliases "$(join '' ${jvm_aliases[@]})"
-	   :main-aliases "$(join '' ${main_aliases[@]})"
-	   :all-aliases "$(join '' ${all_aliases[@]})"}
+    {:version \"${project.version}\"
+     :config-files [$PathVector]
+     :install-dir $InstallDir
+     :config-dir $ConfigDir
+     :cache-dir $CacheDir
+     :force $Force
+     :repro $Repro
+     :resolve-aliases "$(join '' ${resolve_aliases[@]})"
+     :classpath-aliases "$(join '' ${classpath_aliases[@]})"
+     :jvm-aliases "$(join '' ${jvm_aliases[@]})"
+     :main-aliases "$(join '' ${main_aliases[@]})"
+     :all-aliases "$(join '' ${all_aliases[@]})"}
   "
 } elseif ($Tree) {
   & "$JavaCmd" -Xmx256m -classpath "$ToolsCp" clojure.main -m clojure.tools.deps.alpha.script.print-tree "--libs-file=$LibsFile"
 } else {
   # TODO handle jvm and main cache opts
-	& "$JavaCmd" @JvmOpts -classpath "$CP" clojure.main @ClojureArgs
+  & "$JavaCmd" @JvmOpts -classpath "$CP" clojure.main @ClojureArgs
 }

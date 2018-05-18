@@ -16,7 +16,7 @@ if ($PSVersionTable.Platform -eq "Unix") {
     $DestinationPath="/usr/local"
 } else {
     $DestinationPath="$env:APPDATA\Clojure"
-}    
+}
 
 echo "Installing libs into $DestinationPath"
 @("clojure-tools/deps.edn", "clojure-tools/example-deps.edn") | Copy-Item -Destination $DestinationPath
@@ -33,7 +33,7 @@ if ($PSVersionTable.Platform -eq "Unix") {
     Copy-Item "clojure-tools/clj.ps1" "$DestinationPath\clj.ps1"
     Copy-Item "clojure-tools/clj.bat" "$DestinationPath/clj.bat"
     Copy-Item "clojure-tools/clojure.bat" "$DestinationPath/clojure.bat"
-		
+
     $userPath=[Environment]::GetEnvironmentVariable("Path", [System.EnvironmentVariableTarget]::User)
     if (!($userPath -contains $DestinationPath)) {
         $env:PATH += ";$DestinationPath"
