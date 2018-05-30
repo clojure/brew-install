@@ -1,6 +1,8 @@
 Changelog
 ===========
 
+* next
+  * FIX TDEPS-77 - fix bad break character in rlwrap
 * 1.9.0.381 on May 11, 2018
   * FIX TDEPS-76 - use exec for final Java invocation in script
   * NEW Convey lib map via Java system property
