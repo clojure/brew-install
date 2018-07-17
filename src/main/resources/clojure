@@ -140,7 +140,7 @@ if "$help"; then
 	 -Calias...     Concatenated make-classpath aliases, ex: -C:dev
 	 -Malias...     Concatenated main option aliases, ex: -M:test
 	 -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
-	 -Sdeps EDN     Deps data to use as the final deps file
+	 -Sdeps EDN     Deps data to use as the last deps file to be merged
 	 -Spath         Compute classpath and echo to stdout only
 	 -Scp CP        Do NOT compute or cache classpath, use this one instead
 	 -Srepro        Ignore the ~/.clojure/deps.edn config file
