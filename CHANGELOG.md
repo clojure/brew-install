@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* 1.9.0.391 on July 19, 2018
   * FIX TDEPS-77 - fix bad break character in rlwrap
   * FIX TDEPS-86 - use non-0 exit code in clj if rlwrap doesn't exist
   * FIX TDEPS-87 - change wording describing -Sdeps in help and man
