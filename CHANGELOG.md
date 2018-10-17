@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* 1.9.0.397 on Oct 18, 2018
+* 1.9.0.397 on Oct 17, 2018
   * Update to tools.deps.alpha 0.5.460
 * 1.9.0.394 on Sept 15, 2018
   * Update to tools.deps.alpha 0.5.452
