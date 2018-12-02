@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail && cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+bash -x out/inst/bin/clojure -Srepro -Sdeps '{:paths ["demo/src"] :aliases {:space {:main-opts ["-m" "foo.core" "-co" "{:aot-cache true}"]}}}' -Aspace
