@@ -339,7 +339,7 @@ else
     jvm_cache_opts=($(cat "$jvm_file"))
   fi
   if [[ -e "$main_file" ]]; then
-    main_cache_opts=($(cat "$main_file"))
+    eval "main_cache_opts=($(cat "$main_file"))"
   fi
   exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.libfile=$libs_file" -classpath "$cp" clojure.main "${main_cache_opts[@]}" "$@"
 fi
