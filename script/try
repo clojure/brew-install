@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail && cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+set -x
+
+pushd ../tools.deps.alpha
+mvn install
+popd
+
+script/package.sh
+rm -rf out
+mkdir -p out
+tar xfzv target/*.tar.gz -C out
+mkdir -p out/inst
+cd out/clojure-tools
+./install.sh "$(realpath ../inst)"
