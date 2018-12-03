@@ -19,33 +19,47 @@ function unquote() {
         s=${s:0:${#s}-1}
     fi
 
+    dump-args "$s"
+
     args=()
-    arg=""
 
-    for (( i=0; i<${#s}; i++ )); do
-        c="${s:$i:1}"
+    if [[ "s" != "" ]]; then
+        arg=""
 
-        if [[ "$c" == $'\n' ]]; then
-            args+=("$arg")
-            arg=""
-        elif [[ "$c" == "\\" ]]; then
-            i=$((i + 1))
+        for (( i=0; i<${#s}; i++ )); do
             c="${s:$i:1}"
-            arg="${arg}${c}"
-        else
-            arg="${arg}${c}"
-        fi
-    done
 
-    args+=("$arg")
+            if [[ "$c" == $'\n' ]]; then
+                args+=("$arg")
+                arg=""
+            elif [[ "$c" == "\\" ]]; then
+                i=$((i + 1))
+                c="${s:$i:1}"
+                arg="${arg}${c}"
+            else
+                arg="${arg}${c}"
+            fi
+        done
+
+        args+=("$arg")
+    fi
 }
+
+# ---------------
+# Unit tests
 
 function dump() {
     python -c "import sys, json; sys.stdout.write(json.dumps(sys.argv[1:]))" "$@"
 }
 
 function check() {
-    actual="$(dump ${args[@]+"${args[@]}"})"
+    if [[ "${args[@]+"${args[@]}"}" == "" ]]; then
+        # Corner case, Bash array oddity
+        actual="[]"
+    else
+        # Normal casek
+        actual="$(dump "${args[@]+"${args[@]}"}")"
+    fi
     if [[ "$actual" != "$expected" ]]; then
         echo "Assertion failed"
         printf "actual:   %s\n" "$actual"
