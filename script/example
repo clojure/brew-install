@@ -1,27 +1,59 @@
 #!/usr/bin/env bash
 set -euo pipefail && cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-s="$(cat test.main)"
+# Unquotes the first argument passed
+#
+# Results are written to global array `args'
+#
 
-args=()
-arg=""
-
-for (( i=0; i<${#s}; i++ )); do
-    c="${s:$i:1}"
-
-    if [[ "$c" == " " ]]; then
-        if [[ "$arg" != "" ]]; then
-            args+=("$arg")
-            arg=""
-        fi
-    else
-        arg="${arg}${c}"
-    fi
-done
-
-if [[ "$arg" != "" ]]; then
-    args+=("$arg")
+function unquote() {
+    s="$1"
+    args=()
     arg=""
-fi
 
-dump-args "${args[@]}"
+    for (( i=0; i<${#s}; i++ )); do
+        c="${s:$i:1}"
+
+        if [[ "$c" == $'\n' ]]; then
+            if [[ "$arg" != "" ]]; then
+                args+=("$arg")
+                arg=""
+            fi
+        elif [[ "$c" == "\\" ]]; then
+            i=$((i + 1))
+            c="${s:$i:1}"
+            arg="${arg}${c}"
+        else
+            arg="${arg}${c}"
+        fi
+    done
+
+    if [[ "$arg" != "" ]]; then
+        args+=("$arg")
+        arg=""
+    fi
+}
+
+function dump() {
+    python -c "import sys, json; sys.stdout.write(json.dumps(sys.argv))" "$@"
+}
+
+function check() {
+    actual="$(dump "${args[@]}")"
+    if [[ "$actual" != "$expected" ]]; then
+        echo "Assertion failed"
+        printf "actual:   %s\n" "$actual"
+        printf "expected: %s\n" "$expected"
+        exit 1
+    else
+        echo "Ok"
+    fi
+}
+
+unquote $'foo bar'
+expected='["-c", "foo bar"]'
+check
+
+unquote $'-co\n{:aot-cache true}'
+expected='["-c", "-co", "{:aot-cache true}"]'
+check
