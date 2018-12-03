@@ -3,10 +3,9 @@ set -euo pipefail && cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 # Explodes the first argument passed, string, into an array
 #
-# Newlines are separated by newlines. A literal newline must be escaped
-# with a backslash. A backslah needs to be escaped as \\.
-#
-# Results are written to global array `args'
+# Arguments are separated by newlines. A literal newline must be escaped with a
+# backslash. A backslah needs to be escaped as \\. A single trailing newline
+# will be ignored. Results are written to global array `args'.
 
 function explode() {
     s="$1"
