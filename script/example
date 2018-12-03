@@ -39,7 +39,7 @@ function dump() {
 }
 
 function check() {
-    actual="$(dump "${args[@]}")"
+    actual="$(dump ${args[@]+"${args[@]}"})"
     if [[ "$actual" != "$expected" ]]; then
         echo "Assertion failed"
         printf "actual:   %s\n" "$actual"
@@ -68,4 +68,8 @@ check
 
 unquote $'-co\n{:aot-cache true}'
 expected='["-co", "{:aot-cache true}"]'
+check
+
+unquote $''
+expected='[]'
 check
