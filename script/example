@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail && cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+s="$(cat test.main)"
+
+args=()
+arg=""
+
+for (( i=0; i<${#s}; i++ )); do
+    c="${s:$i:1}"
+
+    if [[ "$c" == " " ]]; then
+        if [[ "$arg" != "" ]]; then
+            args+=("$arg")
+            arg=""
+        fi
+    else
+        arg="${arg}${c}"
+    fi
+done
+
+if [[ "$arg" != "" ]]; then
+    args+=("$arg")
+    arg=""
+fi
+
+dump-args "${args[@]}"
