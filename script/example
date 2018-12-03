@@ -1,13 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail && cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-# Unquotes the first argument passed
+# Unquotes the first argument passed, building up an array
+#
+# Arguments are separated by newlines. A newline can appear quoted.
+#
+# Backslashes need to be escape as \\
 #
 # Results are written to global array `args'
 #
 
 function unquote() {
     s="$1"
+
+    # Remove trailing newline
+
+    if [[ "${s:$((${#s}-1)):1}" == $'\n' ]]; then
+        s=${s:0:${#s}-1}
+    fi
+
     args=()
     arg=""
 
@@ -15,10 +26,8 @@ function unquote() {
         c="${s:$i:1}"
 
         if [[ "$c" == $'\n' ]]; then
-            if [[ "$arg" != "" ]]; then
-                args+=("$arg")
-                arg=""
-            fi
+            args+=("$arg")
+            arg=""
         elif [[ "$c" == "\\" ]]; then
             i=$((i + 1))
             c="${s:$i:1}"
@@ -28,10 +37,7 @@ function unquote() {
         fi
     done
 
-    if [[ "$arg" != "" ]]; then
-        args+=("$arg")
-        arg=""
-    fi
+    args+=("$arg")
 }
 
 function dump() {
@@ -72,4 +78,12 @@ check
 
 unquote $''
 expected='[]'
+check
+
+unquote $'\nfoo'
+expected='["foo"]'
+check
+
+unquote $'\nfoo\n\nbar'
+expected='["foo"]'
 check
