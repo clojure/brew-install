@@ -19,8 +19,6 @@ function unquote() {
         s=${s:0:${#s}-1}
     fi
 
-    dump-args "$s"
-
     args=()
 
     if [[ "s" != "" ]]; then
@@ -95,9 +93,9 @@ expected='[]'
 check
 
 unquote $'\nfoo'
-expected='["foo"]'
+expected='["", "foo"]'
 check
 
 unquote $'\nfoo\n\nbar'
-expected='["foo"]'
+expected='["", "foo", "", "bar"]'
 check
