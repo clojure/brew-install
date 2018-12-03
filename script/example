@@ -58,6 +58,14 @@ unquote $'foo\nbar'
 expected='["foo", "bar"]'
 check
 
+unquote $'foo\nbar\n'
+expected='["foo", "bar"]'
+check
+
+unquote $'foo\nbar '
+expected='["foo", "bar "]'
+check
+
 unquote $'-co\n{:aot-cache true}'
 expected='["-co", "{:aot-cache true}"]'
 check
