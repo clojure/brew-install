@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail && cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-# Unquotes the first argument passed, building up an array
+# Explodes the first argument passed, string, into an array
 #
 # Newlines are separated by newlines. A literal newline must be escaped
 # with a backslash. A backslah needs to be escaped as \\.
 #
 # Results are written to global array `args'
 
-function unquote() {
+function explode() {
     s="$1"
 
     # Remove trailing newline
@@ -67,42 +67,42 @@ function check() {
     fi
 }
 
-unquote $'foo bar'
+explode $'foo bar'
 expected='["foo bar"]'
 check
 
-unquote $'foo\nbar'
+explode $'foo\nbar'
 expected='["foo", "bar"]'
 check
 
-unquote $'foo\nbar\n'
+explode $'foo\nbar\n'
 expected='["foo", "bar"]'
 check
 
-unquote $'foo\nbar '
+explode $'foo\nbar '
 expected='["foo", "bar "]'
 check
 
-unquote $'-co\n{:aot-cache true}'
+explode $'-co\n{:aot-cache true}'
 expected='["-co", "{:aot-cache true}"]'
 check
 
-unquote $''
+explode $''
 expected='[]'
 check
 
-unquote $'\nfoo'
+explode $'\nfoo'
 expected='["", "foo"]'
 check
 
-unquote $'\nfoo\n\nbar'
+explode $'\nfoo\n\nbar'
 expected='["", "foo", "", "bar"]'
 check
 
-unquote $'foo\\\nbar'
+explode $'foo\\\nbar'
 expected='["foo\nbar"]'
 check
 
-unquote $'foo\\'
+explode $'foo\\'
 expected='["foo"]'
 check
