@@ -99,3 +99,7 @@ check
 unquote $'\nfoo\n\nbar'
 expected='["", "foo", "", "bar"]'
 check
+
+unquote $'foo\\\nbar'
+expected='["foo\nbar"]'
+check
