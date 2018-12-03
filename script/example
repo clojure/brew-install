@@ -35,7 +35,7 @@ function unquote() {
 }
 
 function dump() {
-    python -c "import sys, json; sys.stdout.write(json.dumps(sys.argv))" "$@"
+    python -c "import sys, json; sys.stdout.write(json.dumps(sys.argv[1:]))" "$@"
 }
 
 function check() {
@@ -51,9 +51,13 @@ function check() {
 }
 
 unquote $'foo bar'
-expected='["-c", "foo bar"]'
+expected='["foo bar"]'
+check
+
+unquote $'foo\nbar'
+expected='["foo", "bar"]'
 check
 
 unquote $'-co\n{:aot-cache true}'
-expected='["-c", "-co", "{:aot-cache true}"]'
+expected='["-co", "{:aot-cache true}"]'
 check
