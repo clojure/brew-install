@@ -18,7 +18,7 @@ function explode() {
 
     args=()
 
-    if [[ "s" != "" ]]; then
+    if [[ "$s" != "" ]]; then
         arg=""
 
         for (( i=0; i<${#s}; i++ )); do
