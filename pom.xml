@@ -24,7 +24,7 @@
   </developers>
 
   <properties>
-    <clojure.version>1.10.0-RC4</clojure.version>
+    <clojure.version>1.10.0</clojure.version>
     <tools.deps.version>0.5.460</tools.deps.version>
   </properties>
 
