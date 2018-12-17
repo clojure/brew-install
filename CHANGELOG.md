@@ -1,6 +1,8 @@
 Changelog
 ===========
 
+* 1.10.0.403 on Dec 17, 2018
+  * Changed default Clojure version to 1.10
 * 1.9.0.397 on Oct 17, 2018
   * Update to tools.deps.alpha 0.5.460
 * 1.9.0.394 on Sept 15, 2018
