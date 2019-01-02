@@ -2,6 +2,7 @@ Changelog
 ===========
 
 * next
+  * Update to tools.deps.alpha 0.6.474
   * FIX TDEPS-82 - ensure -Sdescribe doesn't trigger resolution
 * 1.10.0.403 on Dec 17, 2018
   * Changed default Clojure version to 1.10
