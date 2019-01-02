@@ -1,6 +1,8 @@
 Changelog
 ===========
 
+* next
+  * FIX TDEPS-82 - ensure -Sdescribe doesn't trigger resolution
 * 1.10.0.403 on Dec 17, 2018
   * Changed default Clojure version to 1.10
 * 1.9.0.397 on Oct 17, 2018
