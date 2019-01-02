@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* 1.10.0.408 on Jan 2, 2019 
   * Update to tools.deps.alpha 0.6.474
   * FIX TDEPS-82 - ensure -Sdescribe doesn't trigger resolution
 * 1.10.0.403 on Dec 17, 2018
