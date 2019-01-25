@@ -140,7 +140,7 @@ if "$help"; then
 	 -Calias...     Concatenated make-classpath aliases, ex: -C:dev
 	 -Malias...     Concatenated main option aliases, ex: -M:test
 	 -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
-	 -Sdeps EDN     Deps data to use as the final deps file
+	 -Sdeps EDN     Deps data to use as the last deps file to be merged
 	 -Spath         Compute classpath and echo to stdout only
 	 -Scp CP        Do NOT compute or cache classpath, use this one instead
 	 -Srepro        Ignore the ~/.clojure/deps.edn config file
@@ -293,7 +293,7 @@ if "$stale" || "$pom"; then
 fi
 
 # If stale, run make-classpath to refresh cached classpath
-if "$stale"; then
+if [[ "$stale" = true && "$describe" = false ]]; then
   if "$verbose"; then
     echo "Refreshing classpath"
   fi
@@ -301,7 +301,9 @@ if "$stale"; then
   "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath --config-files "$config_str" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" "${tools_args[@]}"
 fi
 
-if [[ -n "$force_cp" ]]; then
+if "$describe"; then
+  cp=
+elif [[ -n "$force_cp" ]]; then
   cp="$force_cp"
 else
   cp=$(cat "$cp_file")

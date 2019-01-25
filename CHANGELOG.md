@@ -1,6 +1,21 @@
 Changelog
 ===========
 
+* 1.10.0.411 on Jan 4, 2019
+  * Update to tools.deps.alpha 0.6.480
+* 1.10.0.408 on Jan 2, 2019 
+  * Update to tools.deps.alpha 0.6.474
+  * FIX TDEPS-82 - ensure -Sdescribe doesn't trigger resolution
+* 1.10.0.403 on Dec 17, 2018
+  * Changed default Clojure version to 1.10
+* 1.9.0.397 on Oct 17, 2018
+  * Update to tools.deps.alpha 0.5.460
+* 1.9.0.394 on Sept 15, 2018
+  * Update to tools.deps.alpha 0.5.452
+* 1.9.0.391 on July 19, 2018
+  * FIX TDEPS-77 - fix bad break character in rlwrap
+  * FIX TDEPS-86 - use non-0 exit code in clj if rlwrap doesn't exist
+  * FIX TDEPS-87 - change wording describing -Sdeps in help and man
 * 1.9.0.381 on May 11, 2018
   * FIX TDEPS-76 - use exec for final Java invocation in script
   * NEW Convey lib map via Java system property
