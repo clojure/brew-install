@@ -24,10 +24,10 @@ tar -cvzf "target/clojure-tools-$version.tar.gz" -Ctarget clojure-tools
 
 # Make zip file of jar and windows scripts
 echo "Building scripts zip file"
-mkdir -p target/win/clojure-tools
-cp target/classes/clojure.ps1 target/classes/clj.ps1 target/classes/clojure.bat target/classes/clj.bat target/classes/deps.edn target/classes/example-deps.edn target/classes/win-install.ps1 "target/clojure-tools-$version.jar" target/win/clojure-tools
+mkdir -p target/win/ClojureTools
+cp target/classes/ClojureTools.psd1 target/classes/ClojureTools.psm1 target/classes/deps.edn target/classes/example-deps.edn "target/clojure-tools-$version.jar" target/win/ClojureTools
 cd target/win
-zip -r "../clojure-tools-$version.zip" clojure-tools
+zip -r "../clojure-tools-$version.zip" ClojureTools
 cd ../..
 
 # Create formula file (brew)
