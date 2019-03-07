@@ -1,0 +1,8 @@
+*              text=auto
+
+# Unix Shell Scripts
+*.sh           text eol=lf
+clj            text eol=lf
+clojure        text eol=lf
+print_version  text eol=lf
+update_version text eol=lf
