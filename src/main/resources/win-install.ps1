@@ -3,7 +3,7 @@
 $ErrorActionPreference = 'Stop'
 
 $Version = '${project.version}'
-$ClojureToolsUrl = 'https://download.clojure.org/install/clojure-tools-$Version.zip'
+$ClojureToolsUrl = "https://download.clojure.org/install/clojure-tools-$Version.zip"
 
 Write-Host 'Downloading Clojure tools' -ForegroundColor Gray
 Invoke-WebRequest -Uri $ClojureToolsUrl -OutFile clojure-tools.zip
