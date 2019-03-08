@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.clojure</groupId>
   <artifactId>clojure-tools</artifactId>
-  <version>1.10.0.411</version>
+  <version>1.10.0.414</version>
   <name>clojure-tools</name>
   <description>Clojure command line tools</description>
   <url>https://github.com/clojure/brew-install</url>
@@ -25,7 +25,7 @@
 
   <properties>
     <clojure.version>1.10.0</clojure.version>
-    <tools.deps.version>0.6.480</tools.deps.version>
+    <tools.deps.version>0.6.488</tools.deps.version>
   </properties>
 
   <dependencies>
