@@ -1,6 +1,9 @@
 Changelog
 ===========
 
+* 1.10.0.442 on Mar 16, 2019
+  * Update to tools.deps.alpha 0.6.496
+  * Early release of Windows clj
 * 1.10.0.414 on Feb 13, 2019
   * Update to tools.deps.alpha 0.6.488
 * 1.10.0.411 on Jan 4, 2019
