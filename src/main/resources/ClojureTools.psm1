@@ -222,6 +222,7 @@ For more info, see:
 
   $LibsFile = "$CacheDir\$CacheKeyHash.libs"
   $CpFile = "$CacheDir\$CacheKeyHash.cp"
+  $CpJarFile = "$CacheDir\$CacheKeyHash.jar"
   $JvmFile = "$CacheDir\$CacheKeyHash.jvm"
   $MainFile = "$CacheDir\$CacheKeyHash.main"
 
@@ -234,6 +235,7 @@ config_dir   = $ConfigDir
 config_paths = $ConfigPaths
 cache_dir    = $CacheDir
 cp_file      = $CpFile
+cp_jar       = $CpJarFile
 "@
   }
 
@@ -277,7 +279,7 @@ cp_file      = $CpFile
     if ($Verbose) {
       Write-Host "Refreshing classpath"
     }
-    & $JavaCmd -Xmx256m -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.make-classpath --config-files $ConfigStr --libs-file $LibsFile --cp-file $CpFile --jvm-file $JvmFile --main-file $MainFile @ToolsArgs
+    & $JavaCmd -Xmx256m -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.make-classpath --config-files $ConfigStr --libs-file $LibsFile --cp-file $CpFile --cp-jar $CpJarFile --jvm-file $JvmFile --main-file $MainFile $ToolsArgs
     if ($LastExitCode -ne 0) {
       return
     }
@@ -322,7 +324,12 @@ cp_file      = $CpFile
       # TODO this seems dangerous
       $MainCacheOpts = ((Get-Content $MainFile) -split '\s+') -replace '"', '\"'
     }
-    & $JavaCmd @JvmCacheOpts @JvmOpts "-Dclojure.libfile=$LibsFile" -classpath $CP clojure.main @MainCacheOpts @ClojureArgs
+    if ((Test-Path $CpJarFile) -and -not($ForceCP)) {
+      $ExecCP = $CpJarFile
+    } else {
+      $ExecCP = $CP
+    }
+    & $JavaCmd @JvmCacheOpts @JvmOpts "-Dclojure.libfile=$LibsFile" -classpath $ExecCP clojure.main @MainCacheOpts @ClojureArgs
   }
 }
 
