@@ -1,6 +1,8 @@
 Changelog
 ===========
 
+* 1.10.1.447 on Jun3 6, 2019
+  * Add new clj option to man page and clj help
 * 1.10.1.445 on June 6, 2019
   * Change default Clojure to 1.10.1
 * 1.10.0.442 on Mar 16, 2019
