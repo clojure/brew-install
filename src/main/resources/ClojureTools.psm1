@@ -151,6 +151,8 @@ The dep-opts are used to build the java-opts and classpath:
 init-opt:
   -i, --init path     Load a file or resource
   -e, --eval string   Eval exprs in string; print non-nil values
+  --report target     Report uncaught exception to "file" (default), "stderr", or "none",
+                      overrides System property clojure.main.report
 
 main-opt:
   -m, --main ns-name  Call the -main function from namespace w/args

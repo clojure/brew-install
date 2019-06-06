@@ -1,5 +1,5 @@
 .\"to render: groff -Tascii -man doc/clojure.1 > clojure.man"
-.TH CLOJURE 1 "2018 February 22"
+.TH CLOJURE 1 "2019 June 6"
 .SH NAME
 clj, clojure \- runners to invoke the Clojure compiler
 
@@ -133,6 +133,10 @@ Load a file or resource located at \fIpath\fR
 .TP
 .BR \-e ", " \-\-eval\  \fIstring\fR
 Eval exprs in \fIstring\fR; print non-nil values
+
+.TP
+.BR " \-\-report\  \fItarget\fR
+Report uncaught exception to \fItarget\fR: "file" (default), "stderr", or "none", overrides System property clojure.main.report
 
 .SS main-opts
 

@@ -1,6 +1,8 @@
 Changelog
 ===========
 
+* 1.10.1.445 on June 6, 2019
+  * Change default Clojure to 1.10.1
 * 1.10.0.442 on Mar 16, 2019
   * Update to tools.deps.alpha 0.6.496
   * Early release of Windows clj
