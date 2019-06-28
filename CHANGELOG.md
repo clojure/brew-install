@@ -1,8 +1,10 @@
 Changelog
 ===========
 
-* next
+* 1.10.1.455 on June 28, 2019
+  * Fix some manpage/help formatting
   * TDEPS-131 Fix bug tracker link in man page
+  * Update to tools.deps 0.7.505
 * 1.10.1.447 on June 6, 2019
   * Add new clj option to man page and clj help
 * 1.10.1.445 on June 6, 2019
