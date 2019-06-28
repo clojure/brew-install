@@ -205,9 +205,9 @@ For more info, see:
 
   # Chain deps.edn in config paths. repro=skip config dir
   if ($Repro) {
-    $ConfigPaths = "$InstallDir\deps.edn", 'deps.edn'
+    $ConfigPaths = @('deps.edn')
   } else {
-    $ConfigPaths = "$InstallDir\deps.edn", "$ConfigDir\deps.edn", 'deps.edn'
+    $ConfigPaths = "$ConfigDir\deps.edn", 'deps.edn'
   }
   $ConfigStr = $ConfigPaths -join ','
 

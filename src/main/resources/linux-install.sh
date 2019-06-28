@@ -35,7 +35,6 @@ man_dir="$prefix_dir/share/man/man1"
 clojure_lib_dir="$lib_dir/clojure"
 
 echo "Installing libs into $clojure_lib_dir"
-install -Dm644 clojure-tools/deps.edn "$clojure_lib_dir/deps.edn"
 install -Dm644 clojure-tools/example-deps.edn "$clojure_lib_dir/example-deps.edn"
 install -Dm644 clojure-tools/clojure-tools-${project.version}.jar "$clojure_lib_dir/libexec/clojure-tools-${project.version}.jar"
 

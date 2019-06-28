@@ -214,9 +214,9 @@ fi
 
 # Chain deps.edn in config paths. repro=skip config dir
 if "$repro"; then
-  config_paths=("$install_dir/deps.edn" "deps.edn")
+  config_paths=("deps.edn")
 else
-  config_paths=("$install_dir/deps.edn" "$config_dir/deps.edn" "deps.edn")
+  config_paths=("$config_dir/deps.edn" "deps.edn")
 fi
 config_str=$(printf ",%s" "${config_paths[@]}")
 config_str=${config_str:1}

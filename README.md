@@ -9,7 +9,6 @@ brew central tap.
 The tar file contains:
 
 * clojure-tools jar - an uberjar for constructing classpaths via tools.deps
-* deps.edn - the initial user deps.edn file
 * clojure script - the main Clojure runner
 * clj script - a clojure wrapper for interactive repl use (adds rlwrap)
 
@@ -46,8 +45,8 @@ See the following resources for more information:
 ## Developer Information
 
 * [GitHub project](https://github.com/clojure/brew-install)
-* [How to contribute](https://dev.clojure.org/display/community/Contributing)
-* [Bug Tracker](https://dev.clojure.org/jira/browse/TDEPS)
+* [How to contribute](https://clojure.org/community/contributing)
+* [Bug Tracker](https://clojure.atlassian.net/browse/TDEPS)
 
 ## License
 

@@ -18,14 +18,14 @@ mvn -B clean package -Dmaven.test.skip=true
 echo "Building scripts tar file"
 mkdir -p target/clojure-tools
 chmod +x target/classes/clojure target/classes/clj target/classes/install.sh target/classes/linux-install.sh
-cp target/classes/clojure target/classes/clj target/classes/deps.edn target/classes/example-deps.edn target/classes/install.sh "target/clojure-tools-$version.jar" doc/clojure.1 target/clojure-tools
+cp target/classes/clojure target/classes/clj target/classes/example-deps.edn target/classes/install.sh "target/clojure-tools-$version.jar" doc/clojure.1 target/clojure-tools
 cp doc/clojure.1 target/clojure-tools/clj.1
 tar -cvzf "target/clojure-tools-$version.tar.gz" -Ctarget clojure-tools
 
 # Make zip file of jar and windows scripts
 echo "Building scripts zip file"
 mkdir -p target/win/ClojureTools
-cp target/classes/ClojureTools.psd1 target/classes/ClojureTools.psm1 target/classes/deps.edn target/classes/example-deps.edn "target/clojure-tools-$version.jar" target/win/ClojureTools
+cp target/classes/ClojureTools.psd1 target/classes/ClojureTools.psm1 target/classes/example-deps.edn "target/clojure-tools-$version.jar" target/win/ClojureTools
 cd target/win
 zip -r "../clojure-tools-$version.zip" ClojureTools
 cd ../..
