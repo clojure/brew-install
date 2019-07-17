@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* 1.10.1.466 on July 17, 2019
   * Use min heap setting, not max, on internal tool calls
   * Update to tools.deps 0.7.527
 * 1.10.1.462 on July 3, 2019
