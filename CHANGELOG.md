@@ -3,6 +3,7 @@ Changelog
 
 * next
   * Use min heap setting, not max, on internal tool calls
+  * Update to tools.deps 0.7.527
 * 1.10.1.462 on July 3, 2019
   * Rollback deps.edn install changes and install again
 * 1.10.1.458 on June 29, 2019
