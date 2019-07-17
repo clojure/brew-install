@@ -279,7 +279,7 @@ cp_file      = $CpFile
     if ($Verbose) {
       Write-Host "Refreshing classpath"
     }
-    & $JavaCmd -Xmx256m -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.make-classpath --config-files $ConfigStr --libs-file $LibsFile --cp-file $CpFile --jvm-file $JvmFile --main-file $MainFile @ToolsArgs
+    & $JavaCmd -Xms256m -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.make-classpath --config-files $ConfigStr --libs-file $LibsFile --cp-file $CpFile --jvm-file $JvmFile --main-file $MainFile @ToolsArgs
     if ($LastExitCode -ne 0) {
       return
     }
@@ -294,7 +294,7 @@ cp_file      = $CpFile
   }
 
   if ($Pom) {
-    & $JavaCmd -Xmx256m -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.generate-manifest --config-files=$ConfigStr --gen=pom @ToolsArgs
+    & $JavaCmd -Xms256m -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.generate-manifest --config-files=$ConfigStr --gen=pom @ToolsArgs
   } elseif ($PrintClassPath) {
     Write-Host $CP
   } elseif ($Describe) {
@@ -314,7 +314,7 @@ cp_file      = $CpFile
  :all-aliases "$($AllAliases -join ' ')"}
 "@
   } elseif ($Tree) {
-    & $JavaCmd -Xmx256m -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file $LibsFile
+    & $JavaCmd -Xms256m -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file $LibsFile
   } else {
     if (Test-Path $JvmFile) {
       # TODO this seems dangerous

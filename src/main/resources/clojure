@@ -178,7 +178,7 @@ tools_cp="$install_dir/libexec/clojure-tools-${project.version}.jar"
 # Execute resolve-tags command
 if "$resolve_tags"; then
   if [[ -e deps.edn ]]; then
-    "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.resolve-tags "--deps-file=deps.edn"
+    "$JAVA_CMD" -Xms256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.resolve-tags "--deps-file=deps.edn"
     exit 0
   else
     echo "deps.edn does not exist"
@@ -300,7 +300,7 @@ if [[ "$stale" = true && "$describe" = false ]]; then
     echo "Refreshing classpath"
   fi
 
-  "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath --config-files "$config_str" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" "${tools_args[@]}"
+  "$JAVA_CMD" -Xms256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath --config-files "$config_str" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" "${tools_args[@]}"
 fi
 
 if "$describe"; then
@@ -312,7 +312,7 @@ else
 fi
 
 if "$pom"; then
-  exec "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest --config-files "$config_str" --gen=pom "${tools_args[@]}"
+  exec "$JAVA_CMD" -Xms256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest --config-files "$config_str" --gen=pom "${tools_args[@]}"
 elif "$print_classpath"; then
   echo "$cp"
 elif "$describe"; then
@@ -336,7 +336,7 @@ elif "$describe"; then
 	 :all-aliases "$(join '' ${all_aliases[@]})"}
 END
 elif "$tree"; then
-  exec "$JAVA_CMD" -Xmx256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file "$libs_file"
+  exec "$JAVA_CMD" -Xms256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file "$libs_file"
 else
   set -f
   if [[ -e "$jvm_file" ]]; then
