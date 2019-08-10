@@ -25,7 +25,7 @@
 
   <properties>
     <clojure.version>1.10.1</clojure.version>
-    <tools.deps.version>0.7.527</tools.deps.version>
+    <tools.deps.version>0.7.541</tools.deps.version>
   </properties>
 
   <dependencies>
@@ -38,6 +38,11 @@
       <groupId>org.clojure</groupId>
       <artifactId>tools.deps.alpha</artifactId>
       <version>${tools.deps.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-nop</artifactId>
+      <version>1.6.2</version>
     </dependency>
   </dependencies>
 	
