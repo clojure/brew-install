@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* 1.10.1.469 on Aug 9, 2019 
   * Update to tools.deps.alpha 0.7.541
   * Add slf4j-nop which was removed from tools.deps.alpha
 * 1.10.1.466 on July 17, 2019
