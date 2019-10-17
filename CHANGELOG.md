@@ -1,6 +1,8 @@
 Changelog
 ===========
 
+* next
+  * Update to tools.deps.alpha 0.8.567
 * 1.10.1.472 on Oct 15, 2019
   * Update to tools.deps.alpha 0.8.559
 * 1.10.1.469 on Aug 9, 2019 
