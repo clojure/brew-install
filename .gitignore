@@ -1,5 +1,7 @@
 dependency-reduced-pom.xml
 target
+.idea/
+clojure-tools.iml
 
 # Eclipse
 /.classpath
