@@ -204,9 +204,11 @@ For more info, see:
   }
 
   # Chain deps.edn in config paths. repro=skip config dir
+  $ConfigProject='deps.edn'
   if ($Repro) {
     $ConfigPaths = "$InstallDir\deps.edn", 'deps.edn'
   } else {
+    $ConfigUser = "$ConfigDir\deps.edn"
     $ConfigPaths = "$InstallDir\deps.edn", "$ConfigDir\deps.edn", 'deps.edn'
   }
   $ConfigStr = $ConfigPaths -join ','
@@ -279,7 +281,7 @@ cp_file      = $CpFile
     if ($Verbose) {
       Write-Host "Refreshing classpath"
     }
-    & $JavaCmd -Xms256m -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.make-classpath --config-files $ConfigStr --libs-file $LibsFile --cp-file $CpFile --jvm-file $JvmFile --main-file $MainFile @ToolsArgs
+    & $JavaCmd -Xms256m -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user $ConfigUser --config-project $ConfigProject --libs-file $LibsFile --cp-file $CpFile --jvm-file $JvmFile --main-file $MainFile @ToolsArgs
     if ($LastExitCode -ne 0) {
       return
     }
@@ -294,7 +296,7 @@ cp_file      = $CpFile
   }
 
   if ($Pom) {
-    & $JavaCmd -Xms256m -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.generate-manifest --config-files=$ConfigStr --gen=pom @ToolsArgs
+    & $JavaCmd -Xms256m -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.generate-manifest2 --config-user $ConfigUser --config-project $ConfigProject --gen=pom @ToolsArgs
   } elseif ($PrintClassPath) {
     Write-Host $CP
   } elseif ($Describe) {
@@ -302,6 +304,8 @@ cp_file      = $CpFile
     Write-Output @"
 {:version "$Version"
  :config-files [$PathVector]
+ :config-user "$ConfigUser"
+ :config-project "$ConfigProject"
  :install-dir "$InstallDir"
  :config-dir "$ConfigDir"
  :cache-dir "$CacheDir"
