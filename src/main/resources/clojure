@@ -213,9 +213,11 @@ else
 fi
 
 # Chain deps.edn in config paths. repro=skip config dir
+config_project="deps.edn"
 if "$repro"; then
   config_paths=("$install_dir/deps.edn" "deps.edn")
 else
+  config_user="$config_dir/deps.edn"
   config_paths=("$install_dir/deps.edn" "$config_dir/deps.edn" "deps.edn")
 fi
 config_str=$(printf ",%s" "${config_paths[@]}")
@@ -300,7 +302,7 @@ if [[ "$stale" = true && "$describe" = false ]]; then
     echo "Refreshing classpath"
   fi
 
-  "$JAVA_CMD" -Xms256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath --config-files "$config_str" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" "${tools_args[@]}"
+  "$JAVA_CMD" -Xms256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" "${tools_args[@]}"
 fi
 
 if "$describe"; then
@@ -312,7 +314,7 @@ else
 fi
 
 if "$pom"; then
-  exec "$JAVA_CMD" -Xms256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest --config-files "$config_str" --gen=pom "${tools_args[@]}"
+  exec "$JAVA_CMD" -Xms256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest2 --config-user "$config_user" --config-project "$config_project" --gen=pom "${tools_args[@]}"
 elif "$print_classpath"; then
   echo "$cp"
 elif "$describe"; then
@@ -324,6 +326,8 @@ elif "$describe"; then
   cat <<-END
 	{:version "${project.version}"
 	 :config-files [$path_vector]
+	 :config-user "$config_user"
+	 :config-project "$config_project"
 	 :install-dir "$install_dir"
 	 :config-dir "$config_dir"
 	 :cache-dir "$cache_dir"
