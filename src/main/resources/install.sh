@@ -11,7 +11,11 @@ mkdir -p "$prefix/libexec"
 cp ./*.jar "$prefix/libexec"
 
 # scripts
-ruby -pi.bak -e "gsub(/PREFIX/, '$prefix')" clojure
+# ${HOMEBREW_RUBY_PATH} is the full path name of a ruby executable,
+# installed internally within Homebrew's files, both on a Linux system
+# that does not have ruby installed anywhere else, and on a macOS system
+# that already had /usr/bin/ruby installed before Homebrew was installed.
+${HOMEBREW_RUBY_PATH} -pi.bak -e "gsub(/PREFIX/, '$prefix')" clojure
 mkdir -p "$prefix/bin"
 cp clojure "$prefix/bin"
 cp clj "$prefix/bin"
