@@ -8,9 +8,11 @@ class Clojure < Formula
 
   depends_on :java => "1.8+"
   depends_on "rlwrap"
+  depends_on "coreutils" => :build
+  depends_on "gnu-sed" => :build
 
   def install
-    system "./install.sh", prefix
+    system "./install.sh", "-p", prefix
   end
 
   test do

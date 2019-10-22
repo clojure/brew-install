@@ -17,7 +17,7 @@ mvn -B clean package -Dmaven.test.skip=true
 # Make tar file of jar and script
 echo "Building scripts tar file"
 mkdir -p target/clojure-tools
-chmod +x target/classes/clojure target/classes/clj target/classes/install.sh target/classes/linux-install.sh
+chmod +x target/classes/clojure target/classes/clj target/classes/install.sh
 cp target/classes/clojure target/classes/clj target/classes/deps.edn target/classes/example-deps.edn target/classes/install.sh "target/clojure-tools-$version.jar" doc/clojure.1 target/clojure-tools
 cp doc/clojure.1 target/clojure-tools/clj.1
 tar -cvzf "target/clojure-tools-$version.tar.gz" -Ctarget clojure-tools
@@ -44,9 +44,12 @@ if [[ ! -z "$S3_BUCKET" ]]; then
   echo "Deploying https://download.clojure.org/install/clojure-$version.rb"
   aws s3 cp --only-show-errors "target/clojure.rb" "$S3_BUCKET/install/clojure.rb"
   aws s3 cp --only-show-errors "target/clojure.rb" "$S3_BUCKET/install/clojure-$version.rb"
-  echo "Deploying https://download.clojure.org/install/linux-install-$version.sh"
-  aws s3 cp --only-show-errors "target/classes/linux-install.sh" "$S3_BUCKET/install/linux-install.sh"
-  aws s3 cp --only-show-errors "target/classes/linux-install.sh" "$S3_BUCKET/install/linux-install-$version.sh"
+  echo "Deploying https://download.clojure.org/install/linux-install-$version.sh for compatibility."
+  aws s3 cp --only-show-errors "target/classes/install.sh" "$S3_BUCKET/install/linux-install.sh"
+  aws s3 cp --only-show-errors "target/classes/install.sh" "$S3_BUCKET/install/linux-install-$version.sh"
+  echo "Deploying https://download.clojure.org/install/install-$version.sh"
+  aws s3 cp --only-show-errors "target/classes/install.sh" "$S3_BUCKET/install/install.sh"
+  aws s3 cp --only-show-errors "target/classes/install.sh" "$S3_BUCKET/install/install-$version.sh"
   echo "Deploying https://download.clojure.org/install/clojure-tools-$version.zip"
   aws s3 cp --only-show-errors "target/clojure-tools-$version.zip" "$S3_BUCKET/install/clojure-tools.zip"
   aws s3 cp --only-show-errors "target/clojure-tools-$version.zip" "$S3_BUCKET/install/clojure-tools-$version.zip"
