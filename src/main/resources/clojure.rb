@@ -12,7 +12,7 @@ class Clojure < Formula
   depends_on "gnu-sed" => :build
 
   def install
-    system "./install.sh", "-p", prefix
+    system "./install.sh", "-p", prefix, "--local"
   end
 
   test do
