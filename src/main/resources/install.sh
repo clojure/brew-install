@@ -14,10 +14,9 @@ do_usage() {
 case "$(uname -s)" in
     Linux*)
         install=$(which install)
-        sed=$(which sed);;
+        ;;
     Darwin*)
         install=$(command -v ginstall 2>&1 || { echo >&2 "ginstall command not found. Please install coreutils package. Aborting."; exit 1; })
-        sed=$(command -v gsed 2>&1 || { echo >&2 "gsed command not found. Please install gnu-sed package. Aborting."; exit 1; })
 esac
 
 default_prefix_dir="/usr/local"
@@ -51,7 +50,18 @@ do
 done
 
 if [ $use_local = true ]; then
-    tools_dir="$(pwd)"
+    # Set dir containing the installed files
+    SCRIPT="${BASH_SOURCE[0]}"
+    while [ -h "$SCRIPT" ]; do # resolve $SCRIPT until the file is no longer a symlink
+        TARGET="$(readlink "$SCRIPT")"
+        if [[ $TARGET == /* ]]; then
+            SCRIPT="$TARGET"
+        else
+            DIR="$( dirname "$SCRIPT" )"
+            SCRIPT="$DIR/$TARGET" # if $SCRIPT was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+        fi
+    done
+    tools_dir="$( cd -P "$( dirname "$SCRIPT" )" >/dev/null 2>&1 && pwd )"
 else
     tools_dir=clojure-tools
     echo "Downloading and expanding tar"
@@ -70,7 +80,6 @@ $install -Dm644 "$tools_dir/example-deps.edn" "$clojure_lib_dir/example-deps.edn
 $install -Dm644 "$tools_dir/clojure-tools-${project.version}.jar" "$clojure_lib_dir/libexec/clojure-tools-${project.version}.jar"
 
 echo "Installing clojure and clj into $bin_dir"
-$sed -i -e 's@PREFIX@'"$clojure_lib_dir"'@g' "$tools_dir/clojure"
 $install -Dm755 "$tools_dir/clojure" "$bin_dir/clojure"
 $install -Dm755 "$tools_dir/clj" "$bin_dir/clj"
 

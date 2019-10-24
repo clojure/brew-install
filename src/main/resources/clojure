@@ -172,7 +172,19 @@ END
 fi
 
 # Set dir containing the installed files
-install_dir=PREFIX
+SCRIPT="${BASH_SOURCE[0]}"
+while [ -h "$SCRIPT" ]; do # resolve $SCRIPT until the file is no longer a symlink
+    TARGET="$(readlink "$SCRIPT")"
+    if [[ $TARGET == /* ]]; then
+        SCRIPT="$TARGET"
+    else
+        DIR="$( dirname "$SCRIPT" )"
+        SCRIPT="$DIR/$TARGET" # if $SCRIPT was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+    fi
+done
+SCRIPT_DIR="$( cd -P "$( dirname "$SCRIPT" )" >/dev/null 2>&1 && pwd )"
+
+install_dir=$(dirname "$SCRIPT_DIR")/lib/clojure
 tools_cp="$install_dir/libexec/clojure-tools-${project.version}.jar"
 
 # Execute resolve-tags command

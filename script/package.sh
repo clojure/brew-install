@@ -36,6 +36,19 @@ cp target/classes/clojure.rb target
 sha=$(shasum -a 256 "target/clojure-tools-$version.tar.gz" | cut -c 1-64)
 perl -pi.bak -e "s,SHA,$sha,g" target/clojure.rb
 
+if [ -x "$(command -v rpmbuild)" ]; then
+    # Create rpm package (CentOS's yum)
+    echo "Building RPM file"
+    mkdir -p target/rpmbuild/SOURCES
+    cp target/classes/clojure.spec target
+    cp "target/clojure-tools-$version.tar.gz" target/rpmbuild/SOURCES
+    perl -pi.bak -e "s,VERSION,$version,g" target/clojure.spec
+    rpmbuild --define "_topdir $(pwd)/target/rpmbuild" -ba target/clojure.spec
+else
+    echo "Skip RPM build."
+    echo "Missing rpmbuild tool is required to build the package."
+fi
+
 # Deploy to s3
 if [[ ! -z "$S3_BUCKET" ]]; then
   echo "Deploying https://download.clojure.org/install/clojure-tools-$version.tar.gz"
