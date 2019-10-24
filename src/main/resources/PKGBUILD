@@ -1,0 +1,16 @@
+pkgname=clojure
+pkgver=PKGVERSION
+pkgrel=TOOLVERSION
+pkgdesc='The Clojure Programming Language'
+url='https://clojure.org/'
+arch=(any)
+license=(EPL)
+depends=(java-environment)
+optdepends=('rlwrap: friendly shell with readline support')
+source=("https://download.clojure.org/install/clojure-tools-$pkgver.$pkgrel.tar.gz")
+sha256sums=('SHA')
+
+package() {
+  cd clojure-tools
+  ./install.sh --prefix "$pkgdir" --local
+}
