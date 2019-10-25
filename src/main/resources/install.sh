@@ -13,13 +13,13 @@ do_usage() {
 
 case "$(uname -s)" in
     Linux*)
-        install=$(which install)
+        install=$(command -v install)
         ;;
     Darwin*)
         install=$(command -v ginstall 2>&1 || { echo >&2 "ginstall command not found. Please install coreutils package. Aborting."; exit 1; })
 esac
 
-default_prefix_dir="/usr/local"
+prefix_dir="/usr/local"
 use_local=
 
 while [[ $# -gt 0 ]]
