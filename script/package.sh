@@ -42,8 +42,11 @@ if [ -x "$(command -v rpmbuild)" ]; then
     mkdir -p target/rpmbuild/SOURCES
     cp target/classes/clojure.spec target
     cp "target/clojure-tools-$version.tar.gz" target/rpmbuild/SOURCES
-    perl -pi.bak -e "s,VERSION,$version,g" target/clojure.spec
-    rpmbuild --define "_topdir $(pwd)/target/rpmbuild" -ba target/clojure.spec
+    rpmbuild --target i386--linux \
+             --define "_topdir $(pwd)/target/rpmbuild" \
+             --define "_target %{nil}" \
+             --define "VERSION $version" \
+             -ba target/clojure.spec
 else
     echo "Skip RPM build."
     echo "Missing rpmbuild tool is required to build the package."

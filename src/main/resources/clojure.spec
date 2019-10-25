@@ -1,13 +1,15 @@
 Name:       clojure
-Version:    VERSION
+Version:    %{VERSION}
 Release:    1%{?dist}
 Summary:    The Clojure Programming Language
 
-License:    FIXME
+License:    EPL
 URL:        https://clojure.org
 Source0:    clojure-tools-%{version}.tar.gz
 
 Requires:   bash
+Requires:   java
+
 BuildArch:  noarch
 
 %description
@@ -31,9 +33,6 @@ mkdir -p "%{buildroot}"
 tar -C %{buildroot} -xf %{SOURCE0}
 %{buildroot}/clojure-tools/install.sh --prefix %{buildroot}%{_prefix} --local
 rm -rf %{buildroot}/clojure-tools
-
-%clean
-rm -rf %{buildroot}
 
 %files
 %{_bindir}/clj
