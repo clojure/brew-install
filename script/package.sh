@@ -49,15 +49,21 @@ else
     echo "Missing rpmbuild tool is required to build the package."
 fi
 
-# Create PKGBUILD file (Archlinux)
-echo "Building PKGBUILD file"
-semver=( ${version//./ } )
-pkg_version=${semver[0]}.${semver[1]}.${semver[2]}
-tool_version=${semver[3]}
-cp target/classes/PKGBUILD target/PKGBUILD
-perl -pi.bak -e "s,PKGVERSION,$pkg_version,g" target/PKGBUILD
-perl -pi.bak -e "s,TOOLVERSION,$tool_version,g" target/PKGBUILD
-perl -pi.bak -e "s,SHA,$sha,g" target/PKGBUILD
+if [ -x "$(command -v makepkg)" ]; then
+    # Create PKGBUILD file (Archlinux)
+    echo "Building PKGBUILD file"
+    mkdir -p target/aurbuild
+    cp target/classes/PKGBUILD target/aurbuild/PKGBUILD
+    cp "target/clojure-tools-$version.tar.gz" target/aurbuild
+    perl -pi.bak -e "s,VERSION,$version,g" target/aurbuild/PKGBUILD
+    perl -pi.bak -e "s,SHA,$sha,g" target/aurbuild/PKGBUILD
+    pushd target/aurbuild
+    makepkg -d -c
+    popd
+else
+    echo "Skip PKGBUILD build."
+    echo "Missing makepkg tool is required to build the package."
+fi
 
 # Deploy to s3
 if [[ ! -z "$S3_BUCKET" ]]; then
