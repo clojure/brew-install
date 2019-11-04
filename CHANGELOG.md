@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* 1.10.1.483 on Nov 4, 2019 
   * Update to tools.deps.alpha 0.8.584
   * Use homebrew ruby to minimize env conflicts
 * 1.10.1.478 on Oct 18, 2019
