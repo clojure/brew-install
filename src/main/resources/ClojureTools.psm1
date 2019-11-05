@@ -257,19 +257,19 @@ cp_file      = $CpFile
       $ToolsArgs += $DepsData
     }
     if ($ResolveAliases) {
-      $ToolsArgs += "-R$ResolveAliases"
+      $ToolsArgs += "-R$($ResolveAliases -join '')"
     }
     if ($ClassPathAliases) {
-      $ToolsArgs += "-C$ClassPathAliases"
+      $ToolsArgs += "-C$($ClassPathAliases -join '')"
     }
     if ($JvmAliases) {
-      $ToolsArgs += "-J$JvmAliases"
+      $ToolsArgs += "-J$($JvmAliases -join '')"
     }
     if ($MainAliases) {
-      $ToolsArgs += "-M$MainAliases"
+      $ToolsArgs += "-M$($MainAliases -join '')"
     }
     if ($AllAliases) {
-      $ToolsArgs += "-A$AllAliases"
+      $ToolsArgs += "-A$($AllAliases -join '')"
     }
     if ($ForceCp) {
       $ToolsArgs += '--skip-cp'
