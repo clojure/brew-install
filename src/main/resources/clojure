@@ -10,6 +10,7 @@ function join { local d=$1; shift; echo -n "$1"; shift; printf "%s" "${@/#/$d}";
 print_classpath=false
 describe=false
 verbose=false
+trace=false
 force=false
 repro=false
 tree=false
@@ -65,6 +66,10 @@ do
       ;;
     -Sverbose)
       verbose=true
+      shift
+      ;;
+    -Strace)
+      trace=true
       shift
       ;;
     -Sdescribe)
@@ -150,6 +155,7 @@ if "$help"; then
 	 -Sresolve-tags Resolve git coordinate tags to shas and update deps.edn
 	 -Sverbose      Print important path info to console
 	 -Sdescribe     Print environment and command parsing info as data
+	 -Strace        Write a trace.edn file that traces deps expansion
 
 	init-opt:
 	 -i, --init path     Load a file or resource
@@ -259,7 +265,7 @@ fi
 
 # Check for stale classpath file
 stale=false
-if "$force" || [ ! -f "$cp_file" ]; then
+if "$force" || "$trace" || [ ! -f "$cp_file" ]; then
   stale=true
 else
   for config_path in "${config_paths[@]}"; do
@@ -293,6 +299,9 @@ if "$stale" || "$pom"; then
   fi
   if [[ -n "$force_cp" ]]; then
     tools_args+=("--skip-cp")
+  fi
+  if [[ -n "$trace" ]]; then
+    tools_args+=("--trace")
   fi
 fi
 
@@ -341,6 +350,8 @@ elif "$describe"; then
 END
 elif "$tree"; then
   exec "$JAVA_CMD" -Xms256m -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file "$libs_file"
+elif "$trace"; then
+  echo "Writing trace.edn"
 else
   set -f
   if [[ -e "$jvm_file" ]]; then

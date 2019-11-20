@@ -29,6 +29,7 @@ function Invoke-Clojure {
   $PrintClassPath = $FALSE
   $Describe = $FALSE
   $Verbose = $FALSE
+  $Trace = $FALSE
   $Force = $FALSE
   $Repro = $FALSE
   $Tree = $FALSE
@@ -80,6 +81,8 @@ function Invoke-Clojure {
       $PrintClassPath = $TRUE
     } elseif ($arg -eq '-Sverbose') {
       $Verbose = $TRUE
+    } elseif ($arg -eq '-Strace') {
+	  $Trace = $TRUE
     } elseif ($arg -eq '-Sdescribe') {
       $Describe = $TRUE
     } elseif ($arg -eq '-Sforce') {
@@ -147,6 +150,7 @@ The dep-opts are used to build the java-opts and classpath:
   -Sresolve-tags Resolve git coordinate tags to shas and update deps.edn
   -Sverbose      Print important path info to console
   -Sdescribe     Print environment and command parsing info as data
+  -Strace        Write a trace.edn file that traces deps expansion
 
 init-opt:
   -i, --init path     Load a file or resource
@@ -243,7 +247,7 @@ cp_file      = $CpFile
 
   # Check for stale classpath file
   $Stale = $FALSE
-  if ($Force -or !(Test-Path $CpFile)) {
+  if ($Force -or $Trace -or !(Test-Path $CpFile)) {
     $Stale = $TRUE
   } elseif ($ConfigPaths | Where-Object { Test-NewerFile $_ $CpFile }) {
     $Stale = $TRUE
@@ -273,6 +277,9 @@ cp_file      = $CpFile
     }
     if ($ForceCp) {
       $ToolsArgs += '--skip-cp'
+    }
+    if ($Trace) {
+      $ToolsArgs += '--trace'
     }
   }
 
@@ -319,6 +326,8 @@ cp_file      = $CpFile
 "@
   } elseif ($Tree) {
     & $JavaCmd -Xms256m -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file $LibsFile
+  } elseif ($Trace) {
+    Write-Host "Writing trace.edn"
   } else {
     if (Test-Path $JvmFile) {
       # TODO this seems dangerous

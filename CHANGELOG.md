@@ -4,6 +4,7 @@ Changelog
 * next
   * Update to tools.deps.alpha 0.8.599
   * Join aliases in windows script without spaces
+  * Added -Strace option
 * 1.10.1.483 on Nov 4, 2019 
   * Update to tools.deps.alpha 0.8.584
   * Use homebrew ruby to minimize env conflicts
