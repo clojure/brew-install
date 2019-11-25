@@ -300,7 +300,7 @@ if "$stale" || "$pom"; then
   if [[ -n "$force_cp" ]]; then
     tools_args+=("--skip-cp")
   fi
-  if [[ -n "$trace" ]]; then
+  if "$trace"; then
     tools_args+=("--trace")
   fi
 fi
