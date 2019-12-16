@@ -288,7 +288,7 @@ cp_file      = $CpFile
     if ($Verbose) {
       Write-Host "Refreshing classpath"
     }
-    & $JavaCmd -Xms256m -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user $ConfigUser --config-project $ConfigProject --libs-file $LibsFile --cp-file $CpFile --jvm-file $JvmFile --main-file $MainFile @ToolsArgs
+    & $JavaCmd -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user $ConfigUser --config-project $ConfigProject --libs-file $LibsFile --cp-file $CpFile --jvm-file $JvmFile --main-file $MainFile @ToolsArgs
     if ($LastExitCode -ne 0) {
       return
     }
@@ -303,7 +303,7 @@ cp_file      = $CpFile
   }
 
   if ($Pom) {
-    & $JavaCmd -Xms256m -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.generate-manifest2 --config-user $ConfigUser --config-project $ConfigProject --gen=pom @ToolsArgs
+    & $JavaCmd -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.generate-manifest2 --config-user $ConfigUser --config-project $ConfigProject --gen=pom @ToolsArgs
   } elseif ($PrintClassPath) {
     Write-Host $CP
   } elseif ($Describe) {
@@ -325,7 +325,7 @@ cp_file      = $CpFile
  :all-aliases "$($AllAliases -join ' ')"}
 "@
   } elseif ($Tree) {
-    & $JavaCmd -Xms256m -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file $LibsFile
+    & $JavaCmd -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file $LibsFile
   } elseif ($Trace) {
     Write-Host "Writing trace.edn"
   } else {
