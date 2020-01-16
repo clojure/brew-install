@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* 1.10.1.496 on Jan 16, 2020
   * Update to tools.deps.alpha 0.8.624
   * Remove -Xms on tool jvms
 * 1.10.1.492 on Nov 25, 2019
