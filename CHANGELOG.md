@@ -1,6 +1,8 @@
 Changelog
 ===========
 
+* next
+  * Report clj version in clj -h
 * 1.10.1.496 on Jan 16, 2020
   * Update to tools.deps.alpha 0.8.624
   * Remove -Xms on tool jvms
