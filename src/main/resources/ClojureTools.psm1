@@ -124,6 +124,8 @@ function Invoke-Clojure {
 
   if ($Help) {
     Write-Host @'
+Version: ${project.version}
+
 Usage: clojure [dep-opt*] [init-opt*] [main-opt] [arg*]
         clj     [dep-opt*] [init-opt*] [main-opt] [arg*]
 

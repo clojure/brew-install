@@ -129,6 +129,8 @@ fi
 
 if "$help"; then
   cat <<-END
+	Version: ${project.version}
+
 	Usage: clojure [dep-opt*] [init-opt*] [main-opt] [arg*]
 	       clj     [dep-opt*] [init-opt*] [main-opt] [arg*]
 
