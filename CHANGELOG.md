@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* 1.10.1.502 on Jan 20, 2020
   * Report clj version in clj -h
   * Update to tools.deps.alpha 0.8.640
 * 1.10.1.496 on Jan 16, 2020
