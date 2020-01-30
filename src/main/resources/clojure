@@ -68,6 +68,11 @@ do
       verbose=true
       shift
       ;;
+    -Sthreads)
+      shift
+      threads="${1}"
+      shift
+      ;;
     -Strace)
       trace=true
       shift
@@ -157,6 +162,7 @@ if "$help"; then
 	 -Sresolve-tags Resolve git coordinate tags to shas and update deps.edn
 	 -Sverbose      Print important path info to console
 	 -Sdescribe     Print environment and command parsing info as data
+	 -Sthreads      Set specific number of download threads
 	 -Strace        Write a trace.edn file that traces deps expansion
 
 	init-opt:
@@ -301,6 +307,9 @@ if "$stale" || "$pom"; then
   fi
   if [[ -n "$force_cp" ]]; then
     tools_args+=("--skip-cp")
+  fi
+  if [[ -n "$threads" ]]; then
+    tools_args+=("--threads" "$threads")
   fi
   if "$trace"; then
     tools_args+=("--trace")

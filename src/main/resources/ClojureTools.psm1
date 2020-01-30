@@ -81,6 +81,8 @@ function Invoke-Clojure {
       $PrintClassPath = $TRUE
     } elseif ($arg -eq '-Sverbose') {
       $Verbose = $TRUE
+    } elseif ($arg -eq '-Sthreads') {
+      $Threads, $params = $params
     } elseif ($arg -eq '-Strace') {
 	  $Trace = $TRUE
     } elseif ($arg -eq '-Sdescribe') {
@@ -152,6 +154,7 @@ The dep-opts are used to build the java-opts and classpath:
   -Sresolve-tags Resolve git coordinate tags to shas and update deps.edn
   -Sverbose      Print important path info to console
   -Sdescribe     Print environment and command parsing info as data
+  -Sthreads      Set specific number of download threads
   -Strace        Write a trace.edn file that traces deps expansion
 
 init-opt:
@@ -279,6 +282,10 @@ cp_file      = $CpFile
     }
     if ($ForceCp) {
       $ToolsArgs += '--skip-cp'
+    }
+    if ($Threads) {
+      $ToolsArgs += '--threads'
+      $ToolsArgs += $Threads
     }
     if ($Trace) {
       $ToolsArgs += '--trace'
