@@ -4,6 +4,7 @@ Changelog
 * next
   * Update to tools.deps.alpha 0.8.661
   * Add -Sthreads option for concurrent downloads
+  * Use -- to separate dep options and clojure.main options
 * 1.10.1.502 on Jan 20, 2020
   * Report clj version in clj -h
   * Update to tools.deps.alpha 0.8.640
