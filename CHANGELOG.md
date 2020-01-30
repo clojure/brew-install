@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* 1.10.1.507 on Jan 30, 2020
   * Update to tools.deps.alpha 0.8.661
   * Add -Sthreads option for concurrent downloads
   * Use -- to separate dep options and clojure.main options
