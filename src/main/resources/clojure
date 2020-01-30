@@ -113,6 +113,10 @@ do
         shift
       fi
       ;;
+    --)
+      shift
+      break
+      ;;
     *)
       break
       ;;
@@ -136,8 +140,8 @@ if "$help"; then
   cat <<-END
 	Version: ${project.version}
 
-	Usage: clojure [dep-opt*] [init-opt*] [main-opt] [arg*]
-	       clj     [dep-opt*] [init-opt*] [main-opt] [arg*]
+	Usage: clojure [dep-opt*] [--] [init-opt*] [main-opt] [arg*]
+	       clj     [dep-opt*] [--] [init-opt*] [main-opt] [arg*]
 
 	The clojure script is a runner for Clojure. clj is a wrapper
 	for interactive repl use. These scripts ultimately construct and
@@ -164,6 +168,7 @@ if "$help"; then
 	 -Sdescribe     Print environment and command parsing info as data
 	 -Sthreads      Set specific number of download threads
 	 -Strace        Write a trace.edn file that traces deps expansion
+	 --             Stop parsing dep options and pass remaining arguments to clojure.main
 
 	init-opt:
 	 -i, --init path     Load a file or resource

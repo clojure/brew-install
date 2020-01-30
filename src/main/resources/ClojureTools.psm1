@@ -107,6 +107,9 @@ function Invoke-Clojure {
       } else {
         $Help = $TRUE
       }
+    } elseif ($arg -eq '--') {
+      $ClojureArgs += $params
+      break
     } else {
       $ClojureArgs += $arg, $params
       break
@@ -156,6 +159,7 @@ The dep-opts are used to build the java-opts and classpath:
   -Sdescribe     Print environment and command parsing info as data
   -Sthreads      Set specific number of download threads
   -Strace        Write a trace.edn file that traces deps expansion
+  --             Stop parsing dep options and pass remaining arguments to clojure.main
 
 init-opt:
   -i, --init path     Load a file or resource
