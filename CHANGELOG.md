@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* 1.10.1.510 on Feb 14, 2020
   * Update to tools.deps.alpha 0.8.677
 * 1.10.1.507 on Jan 30, 2020
   * Update to tools.deps.alpha 0.8.661
