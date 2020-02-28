@@ -28,4 +28,3 @@ cp devel.properties stable.properties
 
 git add stable.properties
 git commit -m "update stable to $devel_version"
-git push
