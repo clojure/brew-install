@@ -13,8 +13,8 @@ mkdir target
 git clone git@github.com:clojure/homebrew-tools.git target/homebrew-tools
 
 # Update the formula to replace stable with devel
-perl -pi.bak -e "s,$stable_version,$devel_version,g" target/homebrew-tools/clojure.rb
-perl -pi.bak -e "s,$stable_sha,$devel_sha,g" target/homebrew-tools/clojure.rb
+perl -pi.bak -e "s,$stable_version,$devel_version,g" target/homebrew-tools/Formula/clojure.rb
+perl -pi.bak -e "s,$stable_sha,$devel_sha,g" target/homebrew-tools/Formula/clojure.rb
 
 # Commit
 cd target/homebrew-tools
