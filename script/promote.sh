@@ -15,11 +15,12 @@ git clone git@github.com:clojure/homebrew-tools.git target/homebrew-tools
 # Update the formula to replace stable with devel
 perl -pi.bak -e "s,$stable_version,$devel_version,g" target/homebrew-tools/Formula/clojure.rb
 perl -pi.bak -e "s,$stable_sha,$devel_sha,g" target/homebrew-tools/Formula/clojure.rb
+rm target/homebrew-tools/Formula/clojure.rb.bak
 
 # Commit
 cd target/homebrew-tools
 git add Formula/clojure.rb
-git commit -m "Promote $devel_version to stable"
+git commit --allow-empty -m "Promote $devel_version to stable"
 git push
 cd ../..
 
