@@ -19,7 +19,7 @@ perl -pi.bak -e "s,$stable_sha,$devel_sha,g" target/homebrew-tools/Formula/cloju
 # Commit
 cd target/homebrew-tools
 git add Formula/clojure.rb
-git commit -m "Promote $devel_version"
+git commit -m "Promote $devel_version to stable"
 git push
 cd ../..
 
@@ -28,3 +28,4 @@ cp devel.properties stable.properties
 
 git add stable.properties
 git commit -m "update stable to $devel_version"
+git push
