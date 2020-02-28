@@ -1,14 +1,8 @@
-class Clojure < Formula
+class ClojureAT${version.short} < Formula
   desc "The Clojure Programming Language"
   homepage "https://clojure.org"
-  url "https://download.clojure.org/install/clojure-tools-${stable.version}.tar.gz"
-  sha256 "${stable.sha}"
-
-  devel do
-    url "https://download.clojure.org/install/clojure-tools-${project.version}.tar.gz"
-    sha256 "SHA"
-    version "${project.version}"
-  end
+  url "https://download.clojure.org/install/clojure-tools-${project.version}.tar.gz"
+  sha256 "SHA"
 
   bottle :unneeded
 

@@ -8,11 +8,21 @@ rm -rf target
 
 # Grab version
 version=$(mvn -B help:evaluate -Dexpression=project.version 2>/dev/null| grep -v "^\[")
+version_short=${version//.}
 echo "Building scripts version $version"
+
+if [[ -z "$STABLE" ]]; then
+  echo "Running devel build"
+  read stable_version stable_sha < stable.properties
+else
+  echo "Running stable build"
+  stable_version="$version"
+  stable_sha=SHA
+fi
 
 # Build uberjar and filter resources
 echo "Building uberjar"
-mvn -B clean package -Dmaven.test.skip=true
+mvn -B clean package -Dmaven.test.skip=true "-Dversion.short=$version_short" "-Dstable.sha=$stable_sha" "-Dstable.version=$stable_version"
 
 # Make tar file of jar and script
 echo "Building scripts tar file"
@@ -31,19 +41,27 @@ zip -r "../clojure-tools-$version.zip" ClojureTools
 cd ../..
 
 # Create formula file (brew)
-echo "Creating formula file"
+echo "Creating formula files"
 cp target/classes/clojure.rb target
 sha=$(shasum -a 256 "target/clojure-tools-$version.tar.gz" | cut -c 1-64)
 perl -pi.bak -e "s,SHA,$sha,g" target/clojure.rb
+
+cp target/classes/clojure@version.rb "target/clojure@$version.rb"
+perl -pi.bak -e "s,SHA,$sha,g" "target/clojure@$version.rb"
+
+# Write new stable properties
+if [[ ! -z "$STABLE" ]]; then
+  echo "$version $sha" > stable.properties
+fi
 
 # Deploy to s3
 if [[ ! -z "$S3_BUCKET" ]]; then
   echo "Deploying https://download.clojure.org/install/clojure-tools-$version.tar.gz"
   aws s3 cp --only-show-errors "target/clojure-tools-$version.tar.gz" "$S3_BUCKET/install/clojure-tools.tar.gz"
   aws s3 cp --only-show-errors "target/clojure-tools-$version.tar.gz" "$S3_BUCKET/install/clojure-tools-$version.tar.gz"
-  echo "Deploying https://download.clojure.org/install/clojure-$version.rb"
+  echo "Deploying https://download.clojure.org/install/clojure@$version.rb"
   aws s3 cp --only-show-errors "target/clojure.rb" "$S3_BUCKET/install/clojure.rb"
-  aws s3 cp --only-show-errors "target/clojure.rb" "$S3_BUCKET/install/clojure-$version.rb"
+  aws s3 cp --only-show-errors "target/clojure@$version.rb" "$S3_BUCKET/install/clojure@$version.rb"
   echo "Deploying https://download.clojure.org/install/linux-install-$version.sh"
   aws s3 cp --only-show-errors "target/classes/linux-install.sh" "$S3_BUCKET/install/linux-install.sh"
   aws s3 cp --only-show-errors "target/classes/linux-install.sh" "$S3_BUCKET/install/linux-install-$version.sh"
