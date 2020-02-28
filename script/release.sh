@@ -9,16 +9,8 @@ rm -rf target
 # Grab version
 version=$(mvn -B help:evaluate -Dexpression=project.version 2>/dev/null| grep -v "^\[")
 version_short=${version//.}
+read stable_version stable_sha < stable.properties
 echo "Building scripts version $version"
-
-if [[ -z "$STABLE" ]]; then
-  echo "Running devel build"
-  read stable_version stable_sha < stable.properties
-else
-  echo "Running stable build"
-  stable_version="$version"
-  stable_sha=SHA
-fi
 
 # Build uberjar and filter resources
 echo "Building uberjar"
@@ -49,12 +41,10 @@ perl -pi.bak -e "s,SHA,$sha,g" target/clojure.rb
 cp target/classes/clojure@version.rb "target/clojure@$version.rb"
 perl -pi.bak -e "s,SHA,$sha,g" "target/clojure@$version.rb"
 
-# Write new stable properties
-if [[ ! -z "$STABLE" ]]; then
-  echo "$version $sha" > stable.properties
-  git add stable.properties
-  git commit -m 'update stable version'
-fi
+# Write devel properties
+echo "$version $sha" > devel.properties
+git add devel.properties
+git commit -m "update devel to $version"
 
 # Deploy to s3
 if [[ ! -z "$S3_BUCKET" ]]; then
