@@ -16,7 +16,7 @@ cp "target/clojure@$version.rb" target/homebrew-tools/Formula
 
 # Commit
 cd target/homebrew-tools
-git add clojure.rb "clojure@$version.rb"
+git add Formula/clojure.rb "Formula/clojure@$version.rb"
 git commit -m 'Publish $version'
 git push
 cd ../..
