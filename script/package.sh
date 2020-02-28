@@ -52,6 +52,8 @@ perl -pi.bak -e "s,SHA,$sha,g" "target/clojure@$version.rb"
 # Write new stable properties
 if [[ ! -z "$STABLE" ]]; then
   echo "$version $sha" > stable.properties
+  git add stable.properties
+  git commit -m 'update stable version'
 fi
 
 # Deploy to s3
