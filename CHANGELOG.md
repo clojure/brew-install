@@ -1,6 +1,8 @@
 Changelog
 ===========
 
+*Also see [tools.deps changelog](https://github.com/clojure/tools.deps.alpha/blob/master/CHANGELOG.md)*
+
 * 1.10.1.524-1.10.1.536 on Feb 28, 2020
   * Working on release automation, no changes
 * 1.10.1.510 on Feb 14, 2020
