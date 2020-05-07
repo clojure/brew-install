@@ -41,6 +41,7 @@ function Invoke-Clojure {
   $ClasspathAliases = @()
   $JvmAliases = @()
   $MainAliases = @()
+  $ToolAliases = @()
   $AllAliases = @()
 
   $params = $args
@@ -67,6 +68,11 @@ function Invoke-Clojure {
       $aliases, $params = $params
       if ($aliases) {
         $MainAliases += ":$aliases"
+      }
+    } elseif ($arg.StartsWith('-T')) {
+      $aliases, $params = $params
+      if ($aliases) {
+        $ToolAliases += ":$aliases"
       }
     } elseif ($arg.StartsWith('-A')) {
       $aliases, $params = $params
@@ -134,8 +140,8 @@ Version: ${project.version}
 Usage: clojure [dep-opt*] [init-opt*] [main-opt] [arg*]
         clj     [dep-opt*] [init-opt*] [main-opt] [arg*]
 
-The clojure script is a runner for Clojure. clj is a wrapper
-for interactive repl use. These scripts ultimately construct and
+The clojure tool is a runner for Clojure. clj is a wrapper
+for interactive repl use. These tools ultimately construct and
 invoke a command-line of the form:
 
 java [java-opt*] -cp classpath clojure.main [init-opt*] [main-opt] [arg*]
@@ -146,6 +152,7 @@ The dep-opts are used to build the java-opts and classpath:
   -Ralias...     Concatenated resolve-deps aliases, ex: -R:bench:1.9
   -Calias...     Concatenated make-classpath aliases, ex: -C:dev
   -Malias...     Concatenated main option aliases, ex: -M:test
+  -Talias...     Concatenated tool aliases, ex: -T:format-src
   -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
   -Sdeps EDN     Deps data to use as the final deps file
   -Spath         Compute classpath and echo to stdout only
@@ -234,13 +241,14 @@ For more info, see:
   }
 
   # Construct location of cached classpath file
-  $CacheKey = "$($ResolveAliases -join '')|$($ClassPathAliases -join '')|$($AllAliases -join '')|$($JvmAliases -join '')|$($MainAliases -join '')|$DepsData|$($ConfigPaths -join '|')"
+  $CacheKey = "$($ResolveAliases -join '')|$($ClassPathAliases -join '')|$($AllAliases -join '')|$($JvmAliases -join '')|$($MainAliases -join '')|$($ToolAliases -join '')|$DepsData|$($ConfigPaths -join '|')"
   $CacheKeyHash = (Get-StringHash $CacheKey) -replace '-', ''
 
   $LibsFile = "$CacheDir\$CacheKeyHash.libs"
   $CpFile = "$CacheDir\$CacheKeyHash.cp"
   $JvmFile = "$CacheDir\$CacheKeyHash.jvm"
   $MainFile = "$CacheDir\$CacheKeyHash.main"
+  $BasisFile = "$CacheDir\$CacheKeyHash.basis"
 
   # Print paths in verbose mode
   if ($Verbose) {
@@ -281,6 +289,9 @@ cp_file      = $CpFile
     if ($MainAliases) {
       $ToolsArgs += "-M$($MainAliases -join '')"
     }
+    if ($ToolAliases) {
+      $ToolsArgs += "-T$($ToolAliases -join '')"
+    }
     if ($AllAliases) {
       $ToolsArgs += "-A$($AllAliases -join '')"
     }
@@ -301,7 +312,7 @@ cp_file      = $CpFile
     if ($Verbose) {
       Write-Host "Refreshing classpath"
     }
-    & $JavaCmd -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user $ConfigUser --config-project $ConfigProject --libs-file $LibsFile --cp-file $CpFile --jvm-file $JvmFile --main-file $MainFile @ToolsArgs
+    & $JavaCmd -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user $ConfigUser --config-project $ConfigProject --basis-file $BasisFile --libs-file $LibsFile --cp-file $CpFile --jvm-file $JvmFile --main-file $MainFile @ToolsArgs
     if ($LastExitCode -ne 0) {
       return
     }
@@ -335,6 +346,7 @@ cp_file      = $CpFile
  :classpath-aliases "$($ClasspathAliases -join ' ')"
  :jvm-aliases "$($JvmAliases -join ' ')"
  :main-aliases "$($MainAliases -join ' ')"
+ :tool-aliases "$($ToolAliases -join ' ')"
  :all-aliases "$($AllAliases -join ' ')"}
 "@
   } elseif ($Tree) {
@@ -350,7 +362,7 @@ cp_file      = $CpFile
       # TODO this seems dangerous
       $MainCacheOpts = ((Get-Content $MainFile) -split '\s+') -replace '"', '\"'
     }
-    & $JavaCmd @JvmCacheOpts @JvmOpts "-Dclojure.libfile=$LibsFile" -classpath $CP clojure.main @MainCacheOpts @ClojureArgs
+    & $JavaCmd @JvmCacheOpts @JvmOpts "-Dclojure.basis=$BasisFile" "-Dclojure.libfile=$LibsFile" -classpath $CP clojure.main @MainCacheOpts @ClojureArgs
   }
 }
 

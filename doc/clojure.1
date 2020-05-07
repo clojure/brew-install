@@ -1,7 +1,7 @@
 .\"to render: groff -Tascii -man doc/clojure.1 > clojure.man"
 .TH CLOJURE 1 "2019 June 6"
 .SH NAME
-clj, clojure \- runners to invoke the Clojure compiler
+clj, clojure \- runners to launch Clojure programs
 
 .SH SYNOPSIS
 
@@ -17,10 +17,9 @@ clj, clojure \- runners to invoke the Clojure compiler
 
 The
 .B clojure
-script is a runner to invoke the Clojure compiler and REPL.
-The
+tool is a runner for Clojure programs.
 .B clj
-script is a wrapper around
+is a wrapper for
 .B clojure
 that uses rlwrap to provide a better interactive experience.
 Users will typically run
@@ -78,6 +77,10 @@ Concatenated make-classpath aliases, ex: -C:dev
 .TP
 .BI \-M: alias
 Concatenated main option aliases, ex: -M:test
+
+.TP
+.BI \-T: alias
+Concatenated tool aliases, ex: -T:format-src
 
 .TP
 .BI \-A: alias

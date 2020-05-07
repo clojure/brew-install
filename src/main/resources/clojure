@@ -22,6 +22,7 @@ resolve_aliases=()
 classpath_aliases=()
 jvm_aliases=()
 main_aliases=()
+tool_aliases=()
 all_aliases=()
 while [ $# -gt 0 ]
 do
@@ -44,6 +45,10 @@ do
       ;;
     -M*)
       main_aliases+=("${1:2}")
+      shift
+      ;;
+    -T*)
+      tool_aliases+=("${1:2}")
       shift
       ;;
     -A*)
@@ -143,8 +148,8 @@ if "$help"; then
 	Usage: clojure [dep-opt*] [--] [init-opt*] [main-opt] [arg*]
 	       clj     [dep-opt*] [--] [init-opt*] [main-opt] [arg*]
 
-	The clojure script is a runner for Clojure. clj is a wrapper
-	for interactive repl use. These scripts ultimately construct and
+	The clojure tool is a runner for Clojure. clj is a wrapper
+	for interactive repl use. These tools ultimately construct and
 	invoke a command-line of the form:
 
 	java [java-opt*] -cp classpath clojure.main [init-opt*] [main-opt] [arg*]
@@ -155,6 +160,7 @@ if "$help"; then
 	 -Ralias...     Concatenated resolve-deps aliases, ex: -R:bench:1.9
 	 -Calias...     Concatenated make-classpath aliases, ex: -C:dev
 	 -Malias...     Concatenated main option aliases, ex: -M:test
+	 -Talias...     Concatenated tool option aliases, ex: -T:format-src
 	 -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
 	 -Sdeps EDN     Deps data to use as the last deps file to be merged
 	 -Spath         Compute classpath and echo to stdout only
@@ -250,7 +256,7 @@ else
 fi
 
 # Construct location of cached classpath file
-val="$(join '' ${resolve_aliases[@]})|$(join '' ${classpath_aliases[@]})|$(join '' ${all_aliases[@]})|$(join '' ${jvm_aliases[@]})|$(join '' ${main_aliases[@]})|$deps_data"
+val="$(join '' ${resolve_aliases[@]})|$(join '' ${classpath_aliases[@]})|$(join '' ${all_aliases[@]})|$(join '' ${jvm_aliases[@]})|$(join '' ${main_aliases[@]})|$(join '' ${tool_aliases[@]})|$deps_data"
 for config_path in "${config_paths[@]}"; do
   if [[ -f "$config_path" ]]; then
     val="$val|$config_path"
@@ -264,6 +270,7 @@ libs_file="$cache_dir/$ck.libs"
 cp_file="$cache_dir/$ck.cp"
 jvm_file="$cache_dir/$ck.jvm"
 main_file="$cache_dir/$ck.main"
+basis_file="$cache_dir/$ck.basis"
 
 # Print paths in verbose mode
 if "$verbose"; then
@@ -307,6 +314,9 @@ if "$stale" || "$pom"; then
   if [[ ${#main_aliases[@]} -gt 0 ]]; then
     tools_args+=("-M$(join '' ${main_aliases[@]})")
   fi
+  if [[ ${#tool_aliases[@]} -gt 0 ]]; then
+    tools_args+=("-T$(join '' ${tool_aliases[@]})")
+  fi
   if [[ ${#all_aliases[@]} -gt 0 ]]; then
     tools_args+=("-A$(join '' ${all_aliases[@]})")
   fi
@@ -327,7 +337,7 @@ if [[ "$stale" = true && "$describe" = false ]]; then
     echo "Refreshing classpath"
   fi
 
-  "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" "${tools_args[@]}"
+  "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" "${tools_args[@]}"
 fi
 
 if "$describe"; then
@@ -362,6 +372,7 @@ elif "$describe"; then
 	 :classpath-aliases "$(join '' ${classpath_aliases[@]})"
 	 :jvm-aliases "$(join '' ${jvm_aliases[@]})"
 	 :main-aliases "$(join '' ${main_aliases[@]})"
+	 :tool-aliases "$(join '' ${tool_aliases[@]})"
 	 :all-aliases "$(join '' ${all_aliases[@]})"}
 END
 elif "$tree"; then
@@ -376,5 +387,5 @@ else
   if [[ -e "$main_file" ]]; then
     main_cache_opts=($(cat "$main_file"))
   fi
-  exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.libfile=$libs_file" -classpath "$cp" clojure.main "${main_cache_opts[@]}" "$@"
+  exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.libfile=$libs_file" "-Dclojure.basis=$basis_file" -classpath "$cp" clojure.main "${main_cache_opts[@]}" "$@"
 fi
