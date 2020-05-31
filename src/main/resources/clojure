@@ -24,6 +24,7 @@ jvm_aliases=()
 main_aliases=()
 tool_aliases=()
 all_aliases=()
+exec_alias=()
 while [ $# -gt 0 ]
 do
   case "$1" in
@@ -54,6 +55,15 @@ do
     -A*)
       all_aliases+=("${1:2}")
       shift
+      ;;
+    -X*)
+      exec_alias+=("${1}")
+      shift
+      while ! [[ "${1}" =~ ^-.* ]]
+      do
+        exec_alias+=("${1}")
+        shift
+      done
       ;;
     -Sdeps)
       shift
@@ -162,6 +172,7 @@ if "$help"; then
 	 -Malias...     Concatenated main option aliases, ex: -M:test
 	 -Talias...     Concatenated tool option aliases, ex: -T:format-src
 	 -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
+	 -Xalias...     Exec alias to invoke a function that takes a map
 	 -Sdeps EDN     Deps data to use as the last deps file to be merged
 	 -Spath         Compute classpath and echo to stdout only
 	 -Scp CP        Do NOT compute or cache classpath, use this one instead
@@ -336,7 +347,9 @@ if [[ "$stale" = true && "$describe" = false ]]; then
   if "$verbose"; then
     echo "Refreshing classpath"
   fi
-
+  if "$trace"; then
+    echo "Writing trace.edn"
+  fi
   "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" "${tools_args[@]}"
 fi
 
@@ -377,15 +390,18 @@ elif "$describe"; then
 END
 elif "$tree"; then
   exec "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file "$libs_file"
-elif "$trace"; then
-  echo "Writing trace.edn"
 else
   set -f
   if [[ -e "$jvm_file" ]]; then
     jvm_cache_opts=($(cat "$jvm_file"))
   fi
-  if [[ -e "$main_file" ]]; then
-    main_cache_opts=($(cat "$main_file"))
+
+  if [[ ${#exec_alias[@]} -gt 0 ]]; then
+    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp" clojure.main -m clojure.tools.deps.alpha.run "${exec_alias[@]}"
+  else
+    if [[ -e "$main_file" ]]; then
+      main_cache_opts=($(cat "$main_file"))
+    fi
+    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.libfile=$libs_file" "-Dclojure.basis=$basis_file" -classpath "$cp" clojure.main "${main_cache_opts[@]}" "$@"
   fi
-  exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.libfile=$libs_file" "-Dclojure.basis=$basis_file" -classpath "$cp" clojure.main "${main_cache_opts[@]}" "$@"
 fi
