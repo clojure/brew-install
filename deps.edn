@@ -1,0 +1,7 @@
+{:deps
+ {org.clojure/clojure {:mvn/version "1.10.1"}
+  org.clojure/tools.deps.alpha {:mvn/version "0.8.678-SNAPSHOT"}
+  org.slf4j/slf4j-nop {:mvn/version "1.6.2"}
+  org.clojure/tools.build {:mvn/version "0.1.0-SNAPSHOT"}}
+ :aliases
+ {:package {:paths ["script"]}}}
