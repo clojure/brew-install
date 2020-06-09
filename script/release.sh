@@ -2,11 +2,7 @@
 
 set -e
 
-# Clean
-echo "Cleaning"
-rm -rf target
-
-# Grab version
+# Grab version properties
 version=$(mvn -B help:evaluate -Dexpression=project.version 2>/dev/null| grep -v "^\[")
 version_short=${version//.}
 clojure_version=$(mvn -B help:evaluate -Dexpression=clojure.version 2>/dev/null| grep -v "^\[")
@@ -15,8 +11,8 @@ read stable_version stable_sha < stable.properties
 echo "Building scripts version $version"
 
 # Build uberjar and filter resources
-echo "Building uberjar"
-java -cp $(clj -A:package -Spath) clojure.main -m build :build/version "$version" :clj/version-short "$version_short" :clj/stable-sha "$stable_sha" :clj/stable-version "$stable_version" :clj/clojure-version "$clojure_version" :clj/tdeps-version "$tdeps_version"
+echo "Building"
+java -cp $(clojure -A:package -Spath) clojure.main -m build :build/version "$version" :clj/version-short "$version_short" :clj/stable-sha "$stable_sha" :clj/stable-version "$stable_version" :clj/clojure-version "$clojure_version" :clj/tdeps-version "$tdeps_version"
 
 # Make tar file of jar and script
 echo "Building scripts tar file"
