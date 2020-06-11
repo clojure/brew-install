@@ -5,6 +5,7 @@ Changelog
 
 * next
   * In Windows impl, use Write-Output when returning values like with -Spath
+  * Update to tools.deps.alpha 0.8.695
 * 1.10.1.524-1.10.1.536 on Feb 28, 2020
   * Working on release automation, no changes
 * 1.10.1.510 on Feb 14, 2020
