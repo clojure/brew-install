@@ -244,7 +244,7 @@ For more info, see:
 
   # Print paths in verbose mode
   if ($Verbose) {
-    Write-Host @"
+    Write-Output @"
 version      = $Version
 install_dir  = $InstallDir
 config_dir   = $ConfigDir
@@ -318,7 +318,7 @@ cp_file      = $CpFile
   if ($Pom) {
     & $JavaCmd -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.generate-manifest2 --config-user $ConfigUser --config-project $ConfigProject --gen=pom @ToolsArgs
   } elseif ($PrintClassPath) {
-    Write-Host $CP
+    Write-Output $CP
   } elseif ($Describe) {
     $PathVector = ($ConfigPaths | ForEach-Object { "`"$_`"" }) -join ' '
     Write-Output @"
