@@ -33,7 +33,6 @@ function Invoke-Clojure {
   $Force = $FALSE
   $Repro = $FALSE
   $Tree = $FALSE
-  $Pom = $FALSE
   $ResolveTags = $FALSE
   $Help = $FALSE
   $JvmOpts = @()
@@ -100,7 +99,8 @@ function Invoke-Clojure {
     } elseif ($arg -eq '-Stree') {
       $Tree = $TRUE
     } elseif ($arg -eq '-Spom') {
-      $Pom = $TRUE
+      Write-Error "-Spom is no longer supported, use tools.build"
+      return
     } elseif ($arg -eq '-Sresolve-tags') {
       $ResolveTags = $TRUE
     } elseif ($arg.StartsWith('-S')) {
@@ -159,7 +159,6 @@ The dep-opts are used to build the java-opts and classpath:
   -Scp CP        Do NOT compute or cache classpath, use this one instead
   -Srepro        Use only the local deps.edn (ignore other config files)
   -Sforce        Force recomputation of the classpath (don't use the cache)
-  -Spom          Generate (or update existing) pom.xml with deps and paths
   -Stree         Print dependency tree
   -Sresolve-tags Resolve git coordinate tags to shas and update deps.edn
   -Sverbose      Print important path info to console
@@ -271,7 +270,7 @@ cp_file      = $CpFile
   }
 
   # Make tools args if needed
-  if ($Stale -or $Pom) {
+  if ($Stale) {
     $ToolsArgs = @()
     if ($DepsData) {
       $ToolsArgs += '--config-data'
@@ -326,9 +325,7 @@ cp_file      = $CpFile
     $CP = Get-Content $CpFile
   }
 
-  if ($Pom) {
-    & $JavaCmd -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.generate-manifest2 --config-user $ConfigUser --config-project $ConfigProject --gen=pom @ToolsArgs
-  } elseif ($PrintClassPath) {
+  if ($PrintClassPath) {
     Write-Host $CP
   } elseif ($Describe) {
     $PathVector = ($ConfigPaths | ForEach-Object { "`"$_`"" }) -join ' '

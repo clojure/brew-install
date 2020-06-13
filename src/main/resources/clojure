@@ -14,7 +14,6 @@ trace=false
 force=false
 repro=false
 tree=false
-pom=false
 resolve_tags=false
 help=false
 jvm_opts=()
@@ -108,8 +107,8 @@ do
       shift
       ;;
     -Spom)
-      pom=true
-      shift
+      echo "-Spom is no longer supported; use tools.build"
+      exit 1
       ;;
     -Sresolve-tags)
       resolve_tags=true
@@ -177,7 +176,6 @@ if "$help"; then
 	 -Scp CP        Do NOT compute or cache classpath, use this one instead
 	 -Srepro        Ignore the ~/.clojure/deps.edn config file
 	 -Sforce        Force recomputation of the classpath (don't use the cache)
-	 -Spom          Generate (or update existing) pom.xml with deps and paths
 	 -Stree         Print dependency tree
 	 -Sresolve-tags Resolve git coordinate tags to shas and update deps.edn
 	 -Sverbose      Print important path info to console
@@ -307,7 +305,7 @@ else
 fi
 
 # Make tools args if needed
-if "$stale" || "$pom"; then
+if "$stale"; then
   tools_args=()
   if [[ -n "$deps_data" ]]; then
     tools_args+=("--config-data" "$deps_data")
@@ -357,9 +355,7 @@ else
   cp=$(cat "$cp_file")
 fi
 
-if "$pom"; then
-  exec "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest2 --config-user "$config_user" --config-project "$config_project" --gen=pom "${tools_args[@]}"
-elif "$print_classpath"; then
+if "$print_classpath"; then
   echo "$cp"
 elif "$describe"; then
   for config_path in "${config_paths[@]}"; do
