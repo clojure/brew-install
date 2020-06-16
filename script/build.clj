@@ -14,12 +14,9 @@
   (let [vals (map #(if (= ":" (subs % 0 1)) (keyword (subs % 1)) %) args)
         params (apply hash-map vals)]
     (build/build
-      {:tasks '[[clean] [sync-pom] [compile-clj] [copy] [jar] [uber]]
+      {:tasks '[[dirs] [clean] [sync-pom] [compile-clj] [copy] [jar] [uber]]
        :params (merge
-                 '{:build/target-dir "target"
-                   :build/class-dir "classes"
-                   :build/src-pom "pom.xml"
-                   :build/ns-compile [clojure.tools.deps.alpha
+                 '{:build/ns-compile [clojure.tools.deps.alpha
                                       clojure.tools.build.tasks]
                    :build/compiler-opts {:elide-meta [:doc :file :line]
                                          :direct-linking true}
