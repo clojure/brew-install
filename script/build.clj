@@ -16,11 +16,23 @@
     (build/build
       {:tasks '[[dirs] [clean] [sync-pom] [compile-clj] [copy] [jar] [uber]]
        :params (merge
-                 '{:build/ns-compile [clojure.tools.deps.alpha
-                                      clojure.tools.build.tasks]
+                 '{:build/ns-compile [clojure.tools.build
+                                      clojure.tools.build.tasks.clean
+                                      clojure.tools.build.tasks.compile-clj
+                                      clojure.tools.build.tasks.copy
+                                      clojure.tools.build.tasks.dirs
+                                      clojure.tools.build.tasks.format-str
+                                      clojure.tools.build.tasks.install
+                                      clojure.tools.build.tasks.jar
+                                      clojure.tools.build.tasks.javac
+                                      clojure.tools.build.tasks.pom
+                                      clojure.tools.build.tasks.process
+                                      clojure.tools.build.tasks.sync-pom
+                                      clojure.tools.build.tasks.uber
+                                      clojure.tools.build.tasks.zip]
                    :build/compiler-opts {:elide-meta [:doc :file :line]
                                          :direct-linking true}
-                   :build/copy-to "resources"
+                   :build/copy-to "target/resources"
                    :build/copy-specs [{:from "src/main/resources"
                                        :replace {"${project.version}" :build/version
                                                  "${version.short}" :clj/version-short
