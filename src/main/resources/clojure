@@ -24,6 +24,7 @@ main_aliases=()
 tool_aliases=()
 all_aliases=()
 exec_alias=()
+exec_fn=()
 while [ $# -gt 0 ]
 do
   case "$1" in
@@ -60,6 +61,14 @@ do
       shift
       while [[ $# -gt 0 ]] && [[ "${1:0:1}" != "-" ]]; do
         exec_alias+=("${1}")
+        shift
+      done
+      ;;
+    -F*)
+      exec_fn+=("${1}")
+      shift
+      while [[ $# -gt 0 ]] && [[ "${1:0:1}" != "-" ]]; do
+        exec_fn+=("${1}")
         shift
       done
       ;;
@@ -170,7 +179,8 @@ if "$help"; then
 	 -Malias...     Concatenated main option aliases, ex: -M:test
 	 -Talias...     Concatenated tool option aliases, ex: -T:format-src
 	 -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
-	 -Xalias...     Exec alias to invoke a function that takes a map
+	 -Xalias kvs... Exec alias to invoke a function that takes a map, with kv overrides
+	 -Ffn map       Exec function with map
 	 -Sdeps EDN     Deps data to use as the last deps file to be merged
 	 -Spath         Compute classpath and echo to stdout only
 	 -Scp CP        Do NOT compute or cache classpath, use this one instead
@@ -391,7 +401,9 @@ else
   fi
 
   if [[ ${#exec_alias[@]} -gt 0 ]]; then
-    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp" clojure.main -m clojure.tools.deps.alpha.run "${exec_alias[@]}"
+    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp" clojure.main -m clojure.tools.deps.alpha.exec "${exec_alias[@]}"
+  elif [[ ${#exec_fn[@]} -gt 0 ]]; then
+    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp" clojure.main -m clojure.tools.deps.alpha.exec "${exec_fn[@]}"
   else
     if [[ -e "$main_file" ]]; then
       main_cache_opts=($(cat "$main_file"))
