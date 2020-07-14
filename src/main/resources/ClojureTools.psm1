@@ -43,6 +43,8 @@ function Invoke-Clojure {
   $MainAliases = @()
   $ToolAliases = @()
   $AllAliases = @()
+  $ExecAlias = @()
+  $ExecFnAlias = @()
 
   $params = $args
   while ($params.Count -gt 0) {
@@ -79,6 +81,12 @@ function Invoke-Clojure {
       if ($aliases) {
         $AllAliases += ":$aliases"
       }
+    } elseif ($arg.StartsWith('-X')) {
+      $ExecAlias += $params
+      break
+    } elseif ($arg.StartsWith('-F')) {
+      $ExecFnAlias += $params
+      break
     } elseif ($arg -eq '-Sdeps') {
       $DepsData, $params = $params
     } elseif ($arg -eq '-Scp') {
@@ -358,11 +366,18 @@ cp_file      = $CpFile
       # TODO this seems dangerous
       $JvmCacheOpts = (Get-Content $JvmFile) -split '\s+'
     }
-    if (Test-Path $MainFile) {
-      # TODO this seems dangerous
-      $MainCacheOpts = ((Get-Content $MainFile) -split '\s+') -replace '"', '\"'
+
+    if ($ExecAlias) {
+      & $JavaCmd @JvmOpts "-Dclojure.basis=$BasisFile" -classpath $CP clojure.main -m clojure.tools.deps.alpha.exec @ExecAlias
+    } elseif ($ExecFnAlias) {
+      & $JavaCmd @JvmOpts "-Dclojure.basis=$BasisFile" -classpath $CP clojure.main -m clojure.tools.deps.alpha.exec @ExecFnAlias
+    } else {
+      if (Test-Path $MainFile) {
+        # TODO this seems dangerous
+        $MainCacheOpts = ((Get-Content $MainFile) -split '\s+') -replace '"', '\"'
+      }
+      & $JavaCmd @JvmCacheOpts @JvmOpts "-Dclojure.basis=$BasisFile" "-Dclojure.libfile=$LibsFile" -classpath $CP clojure.main @MainCacheOpts @ClojureArgs
     }
-    & $JavaCmd @JvmCacheOpts @JvmOpts "-Dclojure.basis=$BasisFile" "-Dclojure.libfile=$LibsFile" -classpath $CP clojure.main @MainCacheOpts @ClojureArgs
   }
 }
 
