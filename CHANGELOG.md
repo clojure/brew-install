@@ -3,6 +3,8 @@ Changelog
 
 *Also see [tools.deps changelog](https://github.com/clojure/tools.deps.alpha/blob/master/CHANGELOG.md)*
 
+* 1.10.1.561 on July 17, 2020
+  * Update to tools.deps.alpha 0.8.709
 * 1.10.1.554 on July 15, 2020
   * Update to tools.deps.alpha 0.8.702
 * 1.10.1.547 on June 11, 2020
