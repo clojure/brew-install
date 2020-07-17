@@ -41,13 +41,13 @@ perl -pi.bak -e "s,SHA,$sha,g" target/clojure.rb
 cp target/classes/clojure@version.rb "target/clojure@$version.rb"
 perl -pi.bak -e "s,SHA,$sha,g" "target/clojure@$version.rb"
 
-# Write devel properties
-echo "$version $sha" > devel.properties
-git add devel.properties
-git commit -m "update devel to $version"
-
 # Deploy to s3
 if [[ ! -z "$S3_BUCKET" ]]; then
+  # Write devel properties
+  echo "$version $sha" > devel.properties
+  git add devel.properties
+  git commit -m "update devel to $version"
+
   echo "Deploying https://download.clojure.org/install/clojure-tools-$version.tar.gz"
   aws s3 cp --only-show-errors "target/clojure-tools-$version.tar.gz" "$S3_BUCKET/install/clojure-tools.tar.gz"
   aws s3 cp --only-show-errors "target/clojure-tools-$version.tar.gz" "$S3_BUCKET/install/clojure-tools-$version.tar.gz"
