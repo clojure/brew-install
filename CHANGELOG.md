@@ -3,6 +3,9 @@ Changelog
 
 *Also see [tools.deps changelog](https://github.com/clojure/tools.deps.alpha/blob/master/CHANGELOG.md)*
 
+* 1.10.1.547 on June 11, 2020
+  * In Windows impl, use Write-Output when returning values like with -Spath
+  * Update to tools.deps.alpha 0.8.695
 * 1.10.1.524-1.10.1.536 on Feb 28, 2020
   * Working on release automation, no changes
 * 1.10.1.510 on Feb 14, 2020
