@@ -25,7 +25,6 @@ main_aliases=()
 tool_aliases=()
 all_aliases=()
 exec_alias=()
-exec_fn=()
 while [ $# -gt 0 ]
 do
   case "$1" in
@@ -62,14 +61,6 @@ do
       shift
       while [[ $# -gt 0 ]] && [[ "${1:0:1}" != "-" ]]; do
         exec_alias+=("${1}")
-        shift
-      done
-      ;;
-    -F*)
-      exec_fn+=("${1}")
-      shift
-      while [[ $# -gt 0 ]] && [[ "${1:0:1}" != "-" ]]; do
-        exec_fn+=("${1}")
         shift
       done
       ;;
@@ -406,8 +397,6 @@ else
 
   if [[ ${#exec_alias[@]} -gt 0 ]]; then
     exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp" clojure.main -m clojure.tools.deps.alpha.exec "${exec_alias[@]}"
-  elif [[ ${#exec_fn[@]} -gt 0 ]]; then
-    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp" clojure.main -m clojure.tools.deps.alpha.exec "${exec_fn[@]}"
   else
     if [[ -e "$main_file" ]]; then
       main_cache_opts=($(cat "$main_file"))
