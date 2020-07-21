@@ -163,72 +163,51 @@ if "$help"; then
   cat <<-END
 	Version: ${project.version}
 
-	Usage: clojure [clj-opt*] [--] [init-opt*] [main-opt] [arg*]
-	       clj     [clj-opt*] [--] [init-opt*] [main-opt] [arg*]
+	Usage: clojure [dep-opt*] [--] [init-opt*] [main-opt] [arg*]
+	       clj     [dep-opt*] [--] [init-opt*] [main-opt] [arg*]
 
-	The clojure tool is a program runner for Clojure. clj is a
-	wrapper for interactive use that adds terminal support.
+	The clojure tool is a runner for Clojure. clj is a wrapper
+	for interactive repl use. These tools ultimately construct and
+	invoke a command-line of the form:
 
-	All programs are run on the JVM. Opts are used to define the
-	classpath (and download deps if necessary), JVM environment,
-	main class entry point, and program arguments.
+	java [java-opt*] -cp classpath clojure.main [init-opt*] [main-opt] [arg*]
 
-	DEPS
-	Configuration data is provided in deps.edn files at the root,
-	user, project, and command line, which are merged.
-	clj-opts about deps.edn files:
-	 -Srepro         Ignore the ~/.clojure/deps.edn config file
-	 -Sdeps EDN      Command line deps data
+	The dep-opts are used to build the java-opts and classpath:
+	 -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
+	 -Oalias...     Concatenated jvm option aliases, ex: -O:mem
+	 -Ralias...     Concatenated resolve-deps aliases, ex: -R:bench:1.9
+	 -Calias...     Concatenated make-classpath aliases, ex: -C:dev
+	 -Malias...     Concatenated main option aliases, ex: -M:test
+	 -Talias...     Concatenated tool option aliases, ex: -T:format-src
+	 -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
+	 -Xalias kvs... Exec alias to invoke a function that takes a map, with kv overrides
+	 -Ffn map       Exec function with map
+	 -Sdeps EDN     Deps data to use as the last deps file to be merged
+	 -Spath         Compute classpath and echo to stdout only
+	 -Scp CP        Do NOT compute or cache classpath, use this one instead
+	 -Srepro        Ignore the ~/.clojure/deps.edn config file
+	 -Sforce        Force recomputation of the classpath (don't use the cache)
+	 -Spom          Generate (or update existing) pom.xml with deps and paths
+	 -Stree         Print dependency tree
+	 -Sresolve-tags Resolve git coordinate tags to shas and update deps.edn
+	 -Sverbose      Print important path info to console
+	 -Sdescribe     Print environment and command parsing info as data
+	 -Sthreads      Set specific number of download threads
+	 -Strace        Write a trace.edn file that traces deps expansion
+	 --             Stop parsing dep options and pass remaining arguments to clojure.main
 
-	CLASSPATH
-	Classpath is formed from :paths and :deps keys in the deps.edn
-	files (root, user, project, and -Sdeps). Transitive dep
-	resolution consists of tool, resolve-deps,
-	and make-classpath steps, modified by data passed in aliases.
-	clj-opts affecting classpath:
-	 -Ralias...      resolve-deps per concatenated aliases, ex: -R:bench:1.9
-	 -Calias...      make-classpath per concatenated aliases, ex: -C:dev
-	 -Talias...      tool use per concatenated aliases, ex: -T:format-src
-	 -Aalias...      Applied to all of -R, -C, -T if appropriate
-	 -Scp CP         Do NOT compute or cache classpath, use this one instead
-	 -Sforce         Force recomputation of the classpath (don't use the cache)
-	 -Sthreads       Set specific number of download threads
-	 -Strace         Write a trace.edn file that traces deps expansion
+	init-opt:
+	 -i, --init path     Load a file or resource
+	 -e, --eval string   Eval exprs in string; print non-nil values
+	 --report target     Report uncaught exception to "file" (default), "stderr", or "none",
+	                     overrides System property clojure.main.report
 
-	JVM ENVIRONMENT
-	clj-opts affecting JVM environment:
-	 -Jopt           Pass single opt through as JVM option, ex: -J-Xmx512m
-	 -Oalias...      JVM options per Concatenated aliases, ex: -O:mem (or -A)
-
-	PROGRAM AND ARGS
-	clj-opts for executing specific functions:
-	 -Ffun args...   Exec resolved function fun with args
-	 -Xalias args... Exec function in alias, with any overridden args
-
-	main-opt (use clojure.main):
-	 (none)		 Run a repl
-	 -r, --repl      Run a repl
-	 -m, --main ns   Run the -main function from namespace w/args
-	 path            Run a script from a file or resource
-	 -               Run a script from standard input
-
-	clj-opts affecting main-opt use:
-	 -Malias...      Concatenated main option aliases, ex: -M:test (or -A)
-
-	init-opts affecting main-opt use:
-	 -i, --init path    Load a file or resource
-	 -e, --eval string  Eval exprs in string; print non-nil values
-	 --report target    Report uncaught exception to: file (default), stderr, none
-	                    Overrides -Dclojure.main.report
-
-	OTHER PROGRAMS
-	 -Spath          Compute classpath and echo to stdout only
-	 -Spom           Generate (or update existing) pom.xml with deps and paths
-	 -Stree          Print dependency tree
-	 -Sresolve-tags  Resolve git coordinate tags to shas and update deps.edn
-	 -Sdescribe      Print environment and command parsing info as data
-	 -Sverbose       Print clj path info
-	 -h, -?, --help  Print this help message and exit
+	main-opt:
+	 -m, --main ns-name  Call the -main function from namespace w/args
+	 -r, --repl          Run a repl
+	 path                Run a script from a file or resource
+	 -                   Run a script from standard input
+	 -h, -?, --help      Print this help message and exit
 
 	For more info, see:
 	 https://clojure.org/guides/deps_and_cli
