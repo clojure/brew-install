@@ -6,11 +6,13 @@ clj, clojure \- runners to launch Clojure programs
 .SH SYNOPSIS
 
 .B clj
-[\fBdep-opts...\fR] [\fBinit-opts...\fR] [\fBmain-opt\fR]
-[\fBargs...\fR]
+[\fBclj-opts...\fR] [\fBinit-opts...\fR]
 .br
 .B clojure
-[\fBdep-opts...\fR] [\fBinit-opts...\fR] [\fBmain-opt\fR]
+[\fBclj-opts...\fR] [\fB--\fR] -X:an-alias [\fBkpath v\fR]...
+.br
+.B clojure
+[\fBclj-opts...\fR] [\fBinit-opts...\fR] [\fBmain-opt\fR]
 [\fBargs...\fR]
 
 .SH DESCRIPTION
@@ -24,14 +26,6 @@ is a wrapper for
 that uses rlwrap to provide a better interactive experience.
 Users will typically run
 .BR clj .
-
-Using the tools.deps library to build a classpath, these
-scripts ultimately construct and invoke a command-line of the
-form:
-
-.B java
-[\fBjava-opt*\fR] -cp classpath clojure.main [\fBinit-opt*\fR]
-[\fBmain-opt\fR] [\fBarg*\fR]
 
 .SH EXAMPLES
 
@@ -48,7 +42,7 @@ and
 .B clojure
 scripts can take three types of options, as shown in the
 synopsis.
-.B dep-opts
+.B clj-opts
 are used to build the java-opts and
 classpath.
 .B init-opts
@@ -56,7 +50,7 @@ refer to Clojure code to execute.
 .B main-opts
 are options to clojure.main.
 
-.SS dep-opts
+.SS clj-opts
 
 .TP
 .BI \-J opt
@@ -85,6 +79,11 @@ Concatenated tool aliases, ex: -T:format-src
 .TP
 .BI \-A: alias
 Concatenated aliases of any kind, ex: -A:dev:mem
+
+.TP
+.BI \-X: alias\  [KPATH V]...
+Exec alias to invoke a function that takes a map, with
+keypath/value overrides.
 
 .TP
 .BI \-Sdeps\  EDN
@@ -182,8 +181,8 @@ This script reads configuration from
 .B deps.edn
 files. It will check against
 .B deps.edn
-files in the system default location, the configuration
-directory (usually
+files in the system root location, the user
+configuration directory (usually
 .BR ~/.clojure ),
 and the local directory. Files in each of these locations, if
 they exist, are merged to form one combined configuration
@@ -206,8 +205,8 @@ Changelog for tools.deps library
 
 .SH BUGS
 
-Visit the bug tracker at
-https://clojure.atlassian.net/browse/TDEPS to file an issue.
+File issues at
+https://ask.clojure.org under category Libs / tools.deps.alpha.
 
 .SH AUTHORS
 
@@ -216,7 +215,7 @@ This man page was written by Elana Hashman <ehashman@debian.org>.
 
 .SH COPYRIGHT
 
-Copyright \(co 2018 Rich Hickey, Alex Miller and contributors.
+Copyright \(co 2018-2020 Rich Hickey, Alex Miller and contributors.
 
 Distributed under the Eclipse Public License 1.0, the same as
 Clojure.

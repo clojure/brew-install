@@ -44,7 +44,6 @@ function Invoke-Clojure {
   $ToolAliases = @()
   $AllAliases = @()
   $ExecAlias = @()
-  $ExecFnAlias = @()
 
   $params = $args
   while ($params.Count -gt 0) {
@@ -83,9 +82,6 @@ function Invoke-Clojure {
       }
     } elseif ($arg.StartsWith('-X')) {
       $ExecAlias += $params
-      break
-    } elseif ($arg.StartsWith('-F')) {
-      $ExecFnAlias += $params
       break
     } elseif ($arg -eq '-Sdeps') {
       $DepsData, $params = $params
@@ -145,16 +141,15 @@ function Invoke-Clojure {
     Write-Host @'
 Version: ${project.version}
 
-Usage: clojure [dep-opt*] [init-opt*] [main-opt] [arg*]
-        clj     [dep-opt*] [init-opt*] [main-opt] [arg*]
+Usage:
+  Start a REPL   clj     [clj-opt*] [init-opt*]
+  Exec function  clojure [clj-opt*] -X:an-alias [kpath v]*
+  Run main       clojure [clj-opt*] [--] [init-opt*] [main-opt] [arg*]
 
 The clojure tool is a runner for Clojure. clj is a wrapper
-for interactive repl use. These tools ultimately construct and
-invoke a command-line of the form:
+for interactive repl use.
 
-java [java-opt*] -cp classpath clojure.main [init-opt*] [main-opt] [arg*]
-
-The dep-opts are used to build the java-opts and classpath:
+The clj-opts are used to build the java-opts and classpath:
   -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
   -Oalias...     Concatenated jvm option aliases, ex: -O:mem
   -Ralias...     Concatenated resolve-deps aliases, ex: -R:bench:1.9
@@ -162,6 +157,7 @@ The dep-opts are used to build the java-opts and classpath:
   -Malias...     Concatenated main option aliases, ex: -M:test
   -Talias...     Concatenated tool aliases, ex: -T:format-src
   -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
+  -Xalias kvs... Exec alias to invoke a function that takes a map, with kv overrides
   -Sdeps EDN     Deps data to use as the final deps file
   -Spath         Compute classpath and echo to stdout only
   -Scp CP        Do NOT compute or cache classpath, use this one instead
@@ -179,8 +175,8 @@ The dep-opts are used to build the java-opts and classpath:
 init-opt:
   -i, --init path     Load a file or resource
   -e, --eval string   Eval exprs in string; print non-nil values
-  --report target     Report uncaught exception to "file" (default), "stderr", or "none",
-                      overrides System property clojure.main.report
+  --report target     Report uncaught exception to "file" (default), "stderr", or "none"
+                      Overrides System property clojure.main.report
 
 main-opt:
   -m, --main ns-name  Call the -main function from namespace w/args
@@ -369,8 +365,6 @@ cp_file      = $CpFile
 
     if ($ExecAlias) {
       & $JavaCmd @JvmOpts "-Dclojure.basis=$BasisFile" -classpath $CP clojure.main -m clojure.tools.deps.alpha.exec @ExecAlias
-    } elseif ($ExecFnAlias) {
-      & $JavaCmd @JvmOpts "-Dclojure.basis=$BasisFile" -classpath $CP clojure.main -m clojure.tools.deps.alpha.exec @ExecFnAlias
     } else {
       if (Test-Path $MainFile) {
         # TODO this seems dangerous
