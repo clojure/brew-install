@@ -3,6 +3,11 @@ Changelog
 
 *Also see [tools.deps changelog](https://github.com/clojure/tools.deps.alpha/blob/master/CHANGELOG.md)*
 
+* 1.10.1.590 on July 22, 2020
+  * Added new execution mode to execute a function that takes an argmap via -X
+  * Added support for using data stored in aliases as :paths
+  * Added explicit "tool" step to cover :deps and :paths replacement, which can be passed via alias -T
+  * Update to tools.deps.alpha 0.9.745
 * 1.10.1.561 on July 17, 2020
   * Update to tools.deps.alpha 0.8.709
 * 1.10.1.554 on July 15, 2020
