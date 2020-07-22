@@ -157,7 +157,7 @@ The clj-opts are used to build the java-opts and classpath:
   -Malias...     Concatenated main option aliases, ex: -M:test
   -Talias...     Concatenated tool aliases, ex: -T:format-src
   -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
-  -Xalias kvs... Exec alias to invoke a function that takes a map, with kv overrides
+  -Xalias K V... Exec alias to invoke a function that takes a map, with kv overrides
   -Sdeps EDN     Deps data to use as the final deps file
   -Spath         Compute classpath and echo to stdout only
   -Scp CP        Do NOT compute or cache classpath, use this one instead

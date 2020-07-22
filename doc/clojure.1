@@ -9,10 +9,10 @@ clj, clojure \- runners to launch Clojure programs
 [\fBclj-opts...\fR] [\fBinit-opts...\fR]
 .br
 .B clojure
-[\fBclj-opts...\fR] [\fB--\fR] -X:an-alias [\fBkpath v\fR]...
+[\fBclj-opts...\fR] -X:an-alias [\fBkpath v\fR]...
 .br
 .B clojure
-[\fBclj-opts...\fR] [\fBinit-opts...\fR] [\fBmain-opt\fR]
+[\fBclj-opts...\fR] [\fB--\fR] [\fBinit-opts...\fR] [\fBmain-opt\fR]
 [\fBargs...\fR]
 
 .SH DESCRIPTION
@@ -81,7 +81,7 @@ Concatenated tool aliases, ex: -T:format-src
 Concatenated aliases of any kind, ex: -A:dev:mem
 
 .TP
-.BI \-X: alias\  [KPATH V]...
+.BI \-X: alias\  KPATH  V  ...
 Exec alias to invoke a function that takes a map, with
 keypath/value overrides.
 
