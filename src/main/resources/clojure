@@ -154,13 +154,31 @@ if "$help"; then
   cat <<-END
 	Version: ${project.version}
 
+	You use the Clojure tools ('clj' or 'clojure') to run Clojure programs
+	on the JVM, e.g. to start a REPL or invoke a specific function with data.
+	The Clojure tools will configure the JVM process by defining a classpath
+	(of desired libraries), an execution environment (JVM options) and
+	specifying a main class and args. 
+
+	Using a deps.edn file (or files), you tell Clojure where your source code
+	resides and what libraries you need. Clojure will then calculate the full
+	set of required libraries and a classpath, caching expensive parts of this
+	process for better performance.
+
+	The internal steps of the Clojure tools, as well as the Clojure functions
+	you intend to run, are parameterized by data structures, often maps. Shell
+	command lines are not optimized for passing nested data, so instead you
+	will put the data structures in your deps.edn file and refer to them on the
+	command line via 'aliases' - keywords that name data structures.
+
+	'clj' and 'clojure' differ in that 'clj' has extra support for use as a REPL
+	in a terminal, and should be preferred unless you don't want that support,
+	then use 'clojure'.
+
 	Usage:
 	  Start a REPL   clj     [clj-opt*] [init-opt*]
 	  Exec function  clojure [clj-opt*] -X:an-alias [kpath v]*
 	  Run main       clojure [clj-opt*] [--] [init-opt*] [main-opt] [arg*]
-
-	The clojure tool is a runner for Clojure. clj is a wrapper
-	for interactive repl use.
 
 	The clj-opts are used to build the java-opts and classpath:
 	 -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
