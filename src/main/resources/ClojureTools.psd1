@@ -79,7 +79,7 @@
   # ModuleList = @()
 
   # List of all files packaged with this module
-  FileList          = 'deps.edn', 'example-deps.edn', 'clojure-tools-${project.version}.jar'
+  FileList          = 'deps.edn', 'example-deps.edn', 'clj_exec.clj', 'clojure-tools-${project.version}.jar'
 
   # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
   PrivateData       = @{
