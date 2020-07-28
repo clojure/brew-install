@@ -81,7 +81,7 @@ function Invoke-Clojure {
         $AllAliases += ":$aliases"
       }
     } elseif ($arg.StartsWith('-X')) {
-      $ExecAlias += $params
+      $ExecAlias += $arg, $params
       break
     } elseif ($arg -eq '-Sdeps') {
       $DepsData, $params = $params
@@ -94,7 +94,7 @@ function Invoke-Clojure {
     } elseif ($arg -eq '-Sthreads') {
       $Threads, $params = $params
     } elseif ($arg -eq '-Strace') {
-	  $Trace = $TRUE
+      $Trace = $TRUE
     } elseif ($arg -eq '-Sdescribe') {
       $Describe = $TRUE
     } elseif ($arg -eq '-Sforce') {
