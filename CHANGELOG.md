@@ -3,6 +3,8 @@ Changelog
 
 *Also see [tools.deps changelog](https://github.com/clojure/tools.deps.alpha/blob/master/CHANGELOG.md)*
 
+* 1.10.1.600 on July 28, 2020
+  * Fix clj -X handler in Windows
 * 1.10.1.596 on July 28, 2020
   * Fix clj -X handler
 * 1.10.1.590 on July 22, 2020
