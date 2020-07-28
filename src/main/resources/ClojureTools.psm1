@@ -382,7 +382,7 @@ cp_file      = $CpFile
     }
 
     if ($ExecAlias) {
-      & $JavaCmd @JvmOpts "-Dclojure.basis=$BasisFile" -classpath "$InstallDir;$CP" clojure.main -m clojure.tools.deps.alpha.exec @ExecAlias
+      & $JavaCmd @JvmOpts "-Dclojure.basis=$BasisFile" -classpath "$InstallDir;$CP" clojure.main -m clj-exec @ExecAlias
     } else {
       if (Test-Path $MainFile) {
         # TODO this seems dangerous
