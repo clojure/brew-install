@@ -51,7 +51,10 @@
 (defn exec
   "Resolve and execute the function f (a symbol) with args"
   [f & args]
-  (apply (requiring-resolve' f) args))
+  (let [resolved-f (requiring-resolve' f)]
+    (if resolved-f
+      (apply (requiring-resolve' resolved-f) args)
+      (throw (IllegalArgumentException. (str "Function not found: " f))))))
 
 (defn- apply-overrides
   [args overrides]
