@@ -4,12 +4,6 @@ class Clojure < Formula
   url "https://download.clojure.org/install/clojure-tools-${stable.version}.tar.gz"
   sha256 "${stable.sha}"
 
-  devel do
-    url "https://download.clojure.org/install/clojure-tools-${project.version}.tar.gz"
-    sha256 "SHA"
-    version "${project.version}"
-  end
-
   bottle :unneeded
 
   depends_on "rlwrap"
