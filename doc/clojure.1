@@ -12,6 +12,9 @@ clj, clojure \- runners to launch Clojure programs
 [\fBclj-opts...\fR] -X\fB:an-alias\fR [\fBkpath v\fR]...
 .br
 .B clojure
+[\fBclj-opts...\fR] -F\fBmy/fn\fR [\fBkpath v\fR]...
+.br
+.B clojure
 [\fBclj-opts...\fR] [\fB--\fR] [\fBinit-opts...\fR] [\fBmain-opt\fR]
 [\fBargs...\fR]
 
@@ -84,6 +87,10 @@ Concatenated aliases of any kind, ex: -A:dev:mem
 .BI \-X: alias\ \fIKPATH\fR " " \fIV\fR " "
 Exec alias to invoke a function that takes a map, with
 keypath/value overrides.
+
+.TP
+.BI \-F: my/fn\ \fIKPATH\fR " " \fIV\fR " "
+Exec a function that takes a map, with keypath/value overrides.
 
 .TP
 .BI \-Sdeps\  EDN

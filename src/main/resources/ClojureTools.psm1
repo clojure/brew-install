@@ -80,7 +80,7 @@ function Invoke-Clojure {
       if ($aliases) {
         $AllAliases += ":$aliases"
       }
-    } elseif ($arg.StartsWith('-X')) {
+    } elseif ($arg.StartsWith('-X') -or $arg.StartsWith('-F')) {
       $ExecAlias += $arg, $params
       break
     } elseif ($arg -eq '-Sdeps') {
@@ -165,6 +165,7 @@ then use 'clojure'.
 Usage:
   Start a REPL   clj     [clj-opt*] [init-opt*]
   Exec function  clojure [clj-opt*] -X:an-alias [kpath v]*
+                 clojure [clj-opt*] -Ffn [kpath v]*
   Run main       clojure [clj-opt*] [--] [init-opt*] [main-opt] [arg*]
 
 The clj-opts are used to build the java-opts and classpath:
@@ -176,6 +177,7 @@ The clj-opts are used to build the java-opts and classpath:
   -Talias...     Concatenated tool aliases, ex: -T:format-src
   -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
   -Xalias K V... Exec alias to invoke a function that takes a map, with kv overrides
+  -Fmy/fn K V... Exec function myfn that takes a map, with kv overrides
   -Sdeps EDN     Deps data to use as the final deps file
   -Spath         Compute classpath and echo to stdout only
   -Scp CP        Do NOT compute or cache classpath, use this one instead
