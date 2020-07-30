@@ -58,7 +58,7 @@
   [f & args]
   (let [resolved-f (requiring-resolve' f)]
     (if resolved-f
-      (apply (requiring-resolve' resolved-f) args)
+      (apply resolved-f args)
       (throw (IllegalArgumentException. (str "Function not found: " f))))))
 
 (defn- apply-overrides
