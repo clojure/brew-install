@@ -11,35 +11,43 @@
     ;; NOTE: ONLY depend on Clojure core, loaded in user's classpath so can't have any deps
     [clojure.edn :as edn]
     [clojure.java.io :as jio]
-    [clojure.string :as str]))
+    [clojure.string :as str])
+  (:import
+    [clojure.lang ExceptionInfo]))
+
+(defn- err
+  [& msg]
+  (throw (ex-info (str/join " " msg) {:exec-msg true})))
 
 (defn- read-basis
   []
   (when-let [f (jio/file (System/getProperty "clojure.basis"))]
     (if (and f (.exists f))
       (-> f slurp edn/read-string)
-      (throw (IllegalArgumentException. "No basis declared in clojure.basis system property")))))
+      (throw (err "No basis declared in clojure.basis system property")))))
 
 (defn- check-first
   [arg]
   (cond
-    (nil? arg) (throw (ex-info "No args passed to exec" {}))
-    (= "-X" arg) (throw (ex-info "No alias specified with -X" {}))
-    (= "-F" arg) (throw (ex-info "No function specified with -F" {}))
+    (nil? arg) (throw (err "No args passed to exec"))
+    (= "-X" arg) (throw (err "No alias specified with -X"))
+    (= "-F" arg) (throw (err "No function specified with -F"))
     (str/starts-with? arg "-X") (let [fread (edn/read-string (subs arg 2))]
                                   (if (keyword? fread)
                                     {:alias fread}
-                                    (throw (ex-info (str "Invalid first arg to exec: " arg) {}))))
+                                    (throw (err (str "Invalid first arg to exec: " arg)))))
     (str/starts-with? arg "-F") (let [fread (edn/read-string (subs arg 2))]
                                   (if (qualified-symbol? fread)
                                     {:fn fread}
-                                    (throw (ex-info (str "Invalid first arg to exec: " arg) {}))))
-    :else (throw (ex-info (str "Invalid first arg to exec: " arg) {}))))
+                                    (throw (err (str "Invalid first arg to exec: " arg)))))
+    :else (throw (err (str "Invalid first arg to exec: " arg)))))
 
 (defn- parse-args
   [[arg & args]]
   (let [fread (check-first arg)
         arg-count (count args)]
+    (when (odd? (count args))
+      (throw (err (str "Key is missing value: " (last args)))))
     (cond-> fread
       (seq args) (assoc :overrides (mapv edn/read-string args)))))
 
@@ -47,7 +55,7 @@
   ;; copied and modified from core to remove constraints on Clojure 1.10.x
   [sym]
   (if (nil? (namespace sym))
-    (throw (IllegalArgumentException. (str "Not a qualified symbol: " sym)))
+    (throw (err (str "Not a qualified symbol: " sym)))
     (or (resolve sym)
       (do
         (-> sym namespace symbol require)
@@ -59,7 +67,7 @@
   (let [resolved-f (requiring-resolve' f)]
     (if resolved-f
       (apply resolved-f args)
-      (throw (IllegalArgumentException. (str "Function not found: " f))))))
+      (throw (err (str "Function not found: " f))))))
 
 (defn- apply-overrides
   [args overrides]
@@ -71,18 +79,24 @@
 
 (defn- exec-alias
   [alias overrides]
-  (when (odd? (count overrides))
-    (throw (ex-info (str "Key is missing value: " (last overrides)) {})))
   (let [basis (read-basis)
         {f :fn, maybe-args :args} (get-in basis [:aliases alias])
         args (if (keyword? maybe-args) (get-in basis [:aliases maybe-args]) maybe-args)]
-    ;(println "args" args)
-    ;(println "overrides" overrides)
     (exec f (apply-overrides args overrides))))
+
+(defn- exec-fn
+  [f overrides]
+  (exec f (when (seq overrides) (apply hash-map overrides))))
 
 (defn -main
   [& args]
-  (let [{:keys [alias overrides] :as parsed} (parse-args args)]
-    (if alias
-      (exec-alias alias overrides)
-      (apply exec (:fn parsed) overrides))))
+  (try
+    (let [{:keys [alias overrides] :as parsed} (parse-args args)]
+      (if alias
+        (exec-alias alias overrides)
+        (exec-fn (:fn parsed) overrides)))
+    (catch ExceptionInfo e
+      (if (-> e ex-data :exec-msg)
+        (binding [*out* *err*]
+          (println (.getMessage e)))
+        (throw e)))))
