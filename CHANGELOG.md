@@ -3,6 +3,9 @@ Changelog
 
 *Also see [tools.deps changelog](https://github.com/clojure/tools.deps.alpha/blob/master/CHANGELOG.md)*
 
+* 1.10.1.615 on July 30, 2020
+  * Add -F function exec
+  * Update to tools.deps.alpha 0.9.751
 * 1.10.1.604 on July 28, 2020
   * Fix clj -X arg handler in Windows
 * 1.10.1.600 on July 28, 2020
