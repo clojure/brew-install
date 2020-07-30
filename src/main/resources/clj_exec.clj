@@ -86,7 +86,7 @@
 
 (defn- exec-fn
   [f overrides]
-  (exec f (when (seq overrides) (apply hash-map overrides))))
+  (exec f (when (seq overrides) (apply-overrides nil overrides))))
 
 (defn -main
   [& args]
