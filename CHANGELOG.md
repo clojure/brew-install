@@ -3,6 +3,8 @@ Changelog
 
 *Also see [tools.deps changelog](https://github.com/clojure/tools.deps.alpha/blob/master/CHANGELOG.md)*
 
+* 1.10.1.619 on July 31, 2020
+  * Error handling on -X :args
 * 1.10.1.615 on July 30, 2020
   * Add -F function exec
   * Update to tools.deps.alpha 0.9.751
