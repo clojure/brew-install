@@ -81,7 +81,10 @@
   [alias overrides]
   (let [basis (read-basis)
         {f :fn, maybe-args :args} (get-in basis [:aliases alias])
-        args (if (keyword? maybe-args) (get-in basis [:aliases maybe-args]) maybe-args)]
+        args (cond
+               (keyword? maybe-args) (get-in basis [:aliases maybe-args])
+               (map? maybe-args) maybe-args
+               :else (throw (err (str "Invalid :args for exec, must be map or alias keyword: " (pr-str maybe-args)))))]
     (exec f (apply-overrides args overrides))))
 
 (defn- exec-fn
