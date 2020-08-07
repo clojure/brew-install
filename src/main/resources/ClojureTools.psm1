@@ -80,7 +80,7 @@ function Invoke-Clojure {
       if ($aliases) {
         $AllAliases += ":$aliases"
       }
-    } elseif ($arg -eq '-X') {
+    } elseif ($arg -eq '-X:') {
       # Windows splits on the : in -X:foo as an option
       $kw, $params = $params
       $ExecAlias += "${arg}$kw"
