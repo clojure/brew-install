@@ -80,7 +80,15 @@ function Invoke-Clojure {
       if ($aliases) {
         $AllAliases += ":$aliases"
       }
-    } elseif ($arg.StartsWith('-X') -or $arg.StartsWith('-F')) {
+    } elseif ($arg -eq '-X') {
+      # Windows splits on the : in -X:foo as an option
+      $kw, $params = $params
+      $ExecAlias += "$arg:$kw", $params
+      break
+    } elseif ($arg.StartsWith('-X')) {
+      $ExecAlias += $arg, $params
+      break
+    } elseif ($arg.StartsWith('-F')) {
       $ExecAlias += $arg, $params
       break
     } elseif ($arg -eq '-Sdeps') {
