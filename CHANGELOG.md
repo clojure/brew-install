@@ -3,7 +3,7 @@ Changelog
 
 *Also see [tools.deps changelog](https://github.com/clojure/tools.deps.alpha/blob/master/CHANGELOG.md)*
 
-* 1.10.1.632 on Aug 7, 2020
+* 1.10.1.636 on Aug 7, 2020
   * Fix clj -X arg handler in Windows
   * Update to tools.deps.alpha 0.9.759
 * 1.10.1.619 on July 31, 2020
