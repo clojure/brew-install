@@ -83,7 +83,8 @@ function Invoke-Clojure {
     } elseif ($arg -eq '-X') {
       # Windows splits on the : in -X:foo as an option
       $kw, $params = $params
-      $ExecAlias += "$arg:$kw", $params
+      $ExecAlias += "${arg}:$kw"
+      $ExecAlias += $params
       break
     } elseif ($arg.StartsWith('-X')) {
       $ExecAlias += $arg, $params
