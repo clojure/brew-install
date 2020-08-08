@@ -174,7 +174,7 @@ then use 'clojure'.
 Usage:
   Start a REPL   clj     [clj-opt*] [init-opt*]
   Exec function  clojure [clj-opt*] -X:an-alias [kpath v]*
-                 clojure [clj-opt*] -Ffn [kpath v]*
+                 clojure [clj-opt*] -Fmy/fn [kpath v]*
   Run main       clojure [clj-opt*] [--] [init-opt*] [main-opt] [arg*]
 
 The clj-opts are used to build the java-opts and classpath:

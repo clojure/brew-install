@@ -32,13 +32,13 @@
     (nil? arg) (throw (err "No args passed to exec"))
     (= "-X" arg) (throw (err "No alias specified with -X"))
     (= "-F" arg) (throw (err "No function specified with -F"))
-    (str/starts-with? arg "-X") (let [fread (edn/read-string (subs arg 2))]
-                                  (if (keyword? fread)
-                                    {:alias fread}
+    (str/starts-with? arg "-X") (let [alias (edn/read-string (subs arg 2))]
+                                  (if (keyword? alias)
+                                    {:alias alias}
                                     (throw (err (str "Invalid first arg to exec: " arg)))))
-    (str/starts-with? arg "-F") (let [fread (edn/read-string (subs arg 2))]
-                                  (if (qualified-symbol? fread)
-                                    {:fn fread}
+    (str/starts-with? arg "-F") (let [fsym (edn/read-string (subs arg 2))]
+                                  (if (qualified-symbol? fsym)
+                                    {:fn fsym}
                                     (throw (err (str "Invalid first arg to exec: " arg)))))
     :else (throw (err (str "Invalid first arg to exec: " arg)))))
 
