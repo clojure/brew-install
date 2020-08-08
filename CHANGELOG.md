@@ -3,6 +3,8 @@ Changelog
 
 *Also see [tools.deps changelog](https://github.com/clojure/tools.deps.alpha/blob/master/CHANGELOG.md)*
 
+* 1.10.1.641 on Aug 8, 2020
+  * Fix clj -X to make :args optional
 * 1.10.1.636 on Aug 7, 2020
   * Fix clj -X arg handler in Windows
   * Update to tools.deps.alpha 0.9.759
