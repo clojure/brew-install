@@ -3,6 +3,7 @@ class Clojure < Formula
   homepage "https://clojure.org"
   url "https://download.clojure.org/install/clojure-tools-${stable.version}.tar.gz"
   sha256 "${stable.sha}"
+  license "EPL-1.0"
 
   bottle :unneeded
 
