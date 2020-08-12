@@ -422,7 +422,7 @@ else
   fi
 
   if [[ ${#exec_alias[@]} -gt 0 ]]; then
-    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$install_dir:$cp" clojure.main -m clj-exec "${exec_alias[@]}"
+    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp:$install_dir" clojure.main -m clj-exec "${exec_alias[@]}"
   else
     if [[ -e "$main_file" ]]; then
       main_cache_opts=($(cat "$main_file"))
