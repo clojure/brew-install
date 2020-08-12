@@ -17,6 +17,7 @@ tree=false
 pom=false
 resolve_tags=false
 help=false
+download=false
 jvm_opts=()
 resolve_aliases=()
 classpath_aliases=()
@@ -71,6 +72,10 @@ do
         exec_alias+=("${1}")
         shift
       done
+      ;;
+    -D)
+      download=true
+      shift
       ;;
     -Sdeps)
       shift
@@ -199,6 +204,7 @@ if "$help"; then
 	 -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
 	 -Xalias K V... Exec alias to invoke a function that takes a map, with kv overrides
 	 -Fmy/fn K V... Exec function myfn that takes a map, with kv overrides
+	 -D             Download deps and exit
 	 -Sdeps EDN     Deps data to use as the last deps file to be merged
 	 -Spath         Compute classpath and echo to stdout only
 	 -Scp CP        Do NOT compute or cache classpath, use this one instead
@@ -384,7 +390,9 @@ else
   cp=$(cat "$cp_file")
 fi
 
-if "$pom"; then
+if "$download"; then
+  exit 0
+elif "$pom"; then
   exec "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest2 --config-user "$config_user" --config-project "$config_project" --gen=pom "${tools_args[@]}"
 elif "$print_classpath"; then
   echo "$cp"
