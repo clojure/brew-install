@@ -4,7 +4,7 @@ Changelog
 *Also see [tools.deps changelog](https://github.com/clojure/tools.deps.alpha/blob/master/CHANGELOG.md)*
 
 * next
-  * Add -D to download deps and exit
+  * Add -P to prepare (download, cache classpath) without execution
 * 1.10.1.645 on Aug 9, 2020
   * Update to tools.deps.alpha 0.9.763
 * 1.10.1.641 on Aug 8, 2020
