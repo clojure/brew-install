@@ -139,7 +139,8 @@ done
 
 # Find java executable
 set +e
-JAVA_CMD=$(type -p java)
+JAVA_CMD=${JAVA_CMD:-$(type -p java)}
+
 set -e
 if [[ ! -n "$JAVA_CMD" ]]; then
   if [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]]; then
