@@ -35,7 +35,7 @@ function Invoke-Clojure {
   $Tree = $FALSE
   $Pom = $FALSE
   $ResolveTags = $FALSE
-  $Download = $FALSE
+  $Prep = $FALSE
   $Help = $FALSE
   $JvmOpts = @()
   $ResolveAliases = @()
@@ -94,7 +94,7 @@ function Invoke-Clojure {
       $ExecAlias += $arg, $params
       break
     } elseif ($arg -eq '-D') {
-      $Download = $TRUE
+      $Prep = $TRUE
     } elseif ($arg -eq '-Sdeps') {
       $DepsData, $params = $params
     } elseif ($arg -eq '-Scp') {
@@ -190,7 +190,7 @@ The clj-opts are used to build the java-opts and classpath:
   -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
   -Xalias K V... Exec alias to invoke a function that takes a map, with kv overrides
   -Fmy/fn K V... Exec function myfn that takes a map, with kv overrides
-  -D             Download deps and exit
+  -P             Prepare - download deps, cache classpath, don't execute
   -Sdeps EDN     Deps data to use as the final deps file
   -Spath         Compute classpath and echo to stdout only
   -Scp CP        Do NOT compute or cache classpath, use this one instead
@@ -301,7 +301,7 @@ cp_file      = $CpFile
 
   # Check for stale classpath file
   $Stale = $FALSE
-  if ($Force -or $Trace -or !(Test-Path $CpFile)) {
+  if ($Force -or $Trace -or $Prep -or !(Test-Path $CpFile)) {
     $Stale = $TRUE
   } elseif ($ConfigPaths | Where-Object { Test-NewerFile $_ $CpFile }) {
     $Stale = $TRUE
@@ -363,7 +363,7 @@ cp_file      = $CpFile
     $CP = Get-Content $CpFile
   }
 
-  if ($Download) {
+  if ($Prep) {
     # Already done
   } elseif ($Pom) {
     & $JavaCmd -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.generate-manifest2 --config-user $ConfigUser --config-project $ConfigProject --gen=pom @ToolsArgs
