@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.clojure</groupId>
   <artifactId>clojure-tools</artifactId>
-  <version>1.10.1.645</version>
+  <version>1.10.1.645b</version>
   <name>clojure-tools</name>
   <description>Clojure command line tools</description>
   <url>https://github.com/clojure/brew-install</url>
@@ -24,8 +24,9 @@
   </developers>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <clojure.version>1.10.1</clojure.version>
-    <tools.deps.version>0.9.763</tools.deps.version>
+    <tools.deps.version>0.9.764-SNAPSHOT</tools.deps.version>
   </properties>
 
   <dependencies>
@@ -50,13 +51,51 @@
       <resource>
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/clojure</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>**/*.clj</include>
+        </includes>
       </resource>
     </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.0</version>
+        <configuration>
+        </configuration>
+      </plugin>
+      <plugin>
+        <!-- By default, compile everything as a sanity check, but do
+             not include any AOT-compiled .class files in the
+             JAR. Projects may override as needed. -->
+        <groupId>com.theoryinpractise</groupId>
+        <artifactId>clojure-maven-plugin</artifactId>
+        <version>1.7.1</version>
+        <extensions>true</extensions>
+        <configuration>
+          <warnOnReflection>true</warnOnReflection>
+          <temporaryOutputDirectory>true</temporaryOutputDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>clojure-compile</id>
+            <phase>none</phase>
+          </execution>
+          <execution>
+            <id>clojure-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

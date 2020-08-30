@@ -19,13 +19,7 @@ resolve_tags=false
 help=false
 prep=false
 jvm_opts=()
-resolve_aliases=()
-classpath_aliases=()
-jvm_aliases=()
-main_aliases=()
-tool_aliases=()
-all_aliases=()
-exec_alias=()
+mode="repl"
 while [ $# -gt 0 ]
 do
   case "$1" in
@@ -34,46 +28,48 @@ do
       shift
       ;;
     -R*)
-      resolve_aliases+=("${1:2}")
-      shift
+      echo "-R is no longer supported, use -A instead"
+      exit 1
       ;;
     -C*)
-      classpath_aliases+=("${1:2}")
-      shift
+      echo "-C is no longer supported, use -A instead"
+      exit 1
       ;;
     -O*)
-      jvm_aliases+=("${1:2}")
-      shift
-      ;;
-    -M*)
-      main_aliases+=("${1:2}")
-      shift
+      echo "-O is no longer supported, use -A instead"
+      exit 1
       ;;
     -T*)
-      tool_aliases+=("${1:2}")
-      shift
+      echo "-T is no longer supported, use -A instead"
+      exit 1
       ;;
     -A*)
-      all_aliases+=("${1:2}")
+      repl_aliases="${1:2}"
       shift
+      ;;
+    -M)
+      mode="main"
+      shift
+      break
+      ;;
+    -M*)
+      mode="main"
+      main_aliases="${1:2}"
+      shift
+      break
+      ;;
+    -X)
+      mode="exec"
+      shift
+      break
       ;;
     -X*)
-      exec_alias+=("${1}")
+      mode="exec"
+      exec_aliases="${1:2}"
       shift
-      while [[ $# -gt 0 ]] && [[ "${1:0:1}" != "-" ]]; do
-        exec_alias+=("${1}")
-        shift
-      done
+      break
       ;;
-    -F*)
-      exec_alias+=("${1}")
-      shift
-      while [[ $# -gt 0 ]] && [[ "${1:0:1}" != "-" ]]; do
-        exec_alias+=("${1}")
-        shift
-      done
-      ;;
-    -D)
+    -P)
       prep=true
       shift
       ;;
@@ -133,7 +129,7 @@ do
       exit 1
       ;;
     -h|--help|"-?")
-      if [[ ${#main_aliases[@]} -gt 0 ]] || [[ ${#all_aliases[@]} -gt 0 ]]; then
+      if [[ -n "$main_aliases" ]] || [[ -n "$repl_aliases" ]]; then
         break
       else
         help=true
@@ -154,7 +150,7 @@ done
 set +e
 JAVA_CMD=$(type -p java)
 set -e
-if [[ ! -n "$JAVA_CMD" ]]; then
+if [[ -z "$JAVA_CMD" ]]; then
   if [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]]; then
     JAVA_CMD="$JAVA_HOME/bin/java"
   else
@@ -190,20 +186,12 @@ if "$help"; then
 
 	Usage:
 	  Start a REPL   clj     [clj-opt*] [init-opt*]
-	  Exec function  clojure [clj-opt*] -X:an-alias [kpath v]*
-	                 clojure [clj-opt*] -Fmy/fn [kpath v]*
-	  Run main       clojure [clj-opt*] [--] [init-opt*] [main-opt] [arg*]
+	  Exec function  clojure [clj-opt*] -X[:aliases] [kpath v]*
+	  Run main       clojure [clj-opt*] -M[:aliases] [init-opt*] [main-opt] [arg*]
+	  Prepare        clojure [clj-opt*] -P [other execution]
 
 	The clj-opts are used to build the java-opts and classpath:
 	 -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
-	 -Oalias...     Concatenated jvm option aliases, ex: -O:mem
-	 -Ralias...     Concatenated resolve-deps aliases, ex: -R:bench:1.9
-	 -Calias...     Concatenated make-classpath aliases, ex: -C:dev
-	 -Malias...     Concatenated main option aliases, ex: -M:test
-	 -Talias...     Concatenated tool option aliases, ex: -T:format-src
-	 -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
-	 -Xalias K V... Exec alias to invoke a function that takes a map, with kv overrides
-	 -Fmy/fn K V... Exec function myfn that takes a map, with kv overrides
 	 -P             Prepare deps - download libs, cache classpath
 	 -Sdeps EDN     Deps data to use as the last deps file to be merged
 	 -Spath         Compute classpath and echo to stdout only
@@ -299,7 +287,7 @@ else
 fi
 
 # Construct location of cached classpath file
-val="$(join '' ${resolve_aliases[@]})|$(join '' ${classpath_aliases[@]})|$(join '' ${all_aliases[@]})|$(join '' ${jvm_aliases[@]})|$(join '' ${main_aliases[@]})|$(join '' ${tool_aliases[@]})|$deps_data"
+val="$repl_aliases|$exec_aliases|$main_aliases|$deps_data"
 for config_path in "${config_paths[@]}"; do
   if [[ -f "$config_path" ]]; then
     val="$val|$config_path"
@@ -345,23 +333,14 @@ if "$stale" || "$pom"; then
   if [[ -n "$deps_data" ]]; then
     tools_args+=("--config-data" "$deps_data")
   fi
-  if [[ ${#resolve_aliases[@]} -gt 0 ]]; then
-    tools_args+=("-R$(join '' ${resolve_aliases[@]})")
+  if [[ -n "$main_aliases" ]]; then
+    tools_args+=("-M$main_aliases")
   fi
-  if [[ ${#classpath_aliases[@]} -gt 0 ]]; then
-    tools_args+=("-C$(join '' ${classpath_aliases[@]})")
+  if [[ -n "$repl_aliases" ]]; then
+    tools_args+=("-A$repl_aliases")
   fi
-  if [[ ${#jvm_aliases[@]} -gt 0 ]]; then
-    tools_args+=("-J$(join '' ${jvm_aliases[@]})")
-  fi
-  if [[ ${#main_aliases[@]} -gt 0 ]]; then
-    tools_args+=("-M$(join '' ${main_aliases[@]})")
-  fi
-  if [[ ${#tool_aliases[@]} -gt 0 ]]; then
-    tools_args+=("-T$(join '' ${tool_aliases[@]})")
-  fi
-  if [[ ${#all_aliases[@]} -gt 0 ]]; then
-    tools_args+=("-A$(join '' ${all_aliases[@]})")
+  if [[ -n "$exec_aliases" ]]; then
+    tools_args+=("-X$exec_aliases")
   fi
   if [[ -n "$force_cp" ]]; then
     tools_args+=("--skip-cp")
@@ -412,29 +391,29 @@ elif "$describe"; then
 	 :cache-dir "$cache_dir"
 	 :force $force
 	 :repro $repro
-	 :resolve-aliases "$(join '' ${resolve_aliases[@]})"
-	 :classpath-aliases "$(join '' ${classpath_aliases[@]})"
-	 :jvm-aliases "$(join '' ${jvm_aliases[@]})"
-	 :main-aliases "$(join '' ${main_aliases[@]})"
-	 :tool-aliases "$(join '' ${tool_aliases[@]})"
-	 :all-aliases "$(join '' ${all_aliases[@]})"}
+	 :main-aliases "$main_aliases"
+	 :repl-aliases "$repl_aliases"}
 END
 elif "$tree"; then
   exec "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file "$libs_file"
 elif "$trace"; then
-  echo "Writing trace.edn"
+  echo "Wrote trace.edn"
 else
   set -f
   if [[ -e "$jvm_file" ]]; then
     jvm_cache_opts=($(cat "$jvm_file"))
   fi
 
-  if [[ ${#exec_alias[@]} -gt 0 ]]; then
-    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp:$install_dir" clojure.main -m clj-exec "${exec_alias[@]}"
+  if [ "$mode" == "exec" ]; then
+    exec_args=()
+    if [[ -n "$exec_aliases" ]]; then
+      exec_args+=("--aliases" "$exec_aliases")
+    fi
+    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp:$install_dir/exec.jar" clojure.main -m clojure.run.exec "${exec_args[@]}" "$@"
   else
     if [[ -e "$main_file" ]]; then
       main_cache_opts=($(cat "$main_file"))
     fi
-    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.libfile=$libs_file" "-Dclojure.basis=$basis_file" -classpath "$cp" clojure.main "${main_cache_opts[@]}" "$@"
+    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp" clojure.main "${main_cache_opts[@]}" "$@"
   fi
 fi

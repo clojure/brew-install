@@ -1,0 +1,95 @@
+(ns clojure.run.test-exec
+  (:require
+    [clojure.test :refer :all]
+    [clojure.string :as str]
+    [clojure.run.exec :as exec])
+  (:import
+    [java.io File]
+    [clojure.lang ExceptionInfo]))
+
+(deftest test-read-args
+  (is (= [] (#'exec/read-args [])))
+  (is (= ['a [1 2] :k] (#'exec/read-args ["a" "[1 2]" ":k"])))
+
+  ;; unreadable arg message contains the bad value
+  (is (thrown-with-msg? ExceptionInfo #":::a" (#'exec/read-args [":::a"]))))
+
+(deftest test-parse-args
+  (are [expected args] (= expected (#'exec/parse-args args))
+    nil []
+    {:aliases [:a :b]} ['--aliases :a:b]
+    {:aliases [:a] :function 'foo/bar} ['--aliases :a 'foo/bar]
+    {:aliases [:a] :overrides [:x 1 :y 1]} ['--aliases :a :x 1 :y 1]
+    {:function 'foo} ['foo]
+    {:function 'foo :overrides [:x 1 :y 1]} ['foo :x 1 :y 1]
+    {:overrides [:x 1 :y 1]} [:x 1 :y 1])
+
+  ;; missing last override value prints value missing for key (like hash-map)
+  (is (thrown-with-msg? ExceptionInfo #":y" (#'exec/parse-args [:x 1 :y])))
+  )
+
+(deftest test-qualify-fn
+  (are [expected sym aliases default]
+    (= expected (#'exec/qualify-fn sym aliases default))
+    'a/b 'a/b nil nil
+    'a/b 'b nil 'a
+    'a/b 'my-alias/b {'my-alias 'a} nil)
+
+  ;; function is not a symbol
+  (is (thrown-with-msg? ExceptionInfo #"100" (#'exec/qualify-fn 100 nil nil)))
+
+  ;; unqualified, no default-ns
+  (is (thrown-with-msg? ExceptionInfo #"my-sym" (#'exec/qualify-fn 'my-sym nil nil))))
+
+(def stash (atom nil))
+(defn save [val] (reset! stash val))
+
+(defn- encapsulate-main
+  [basis args]
+  (let [fake-basis (File/createTempFile "basis" nil)]
+    (save nil)
+    (.deleteOnExit fake-basis)
+    (binding [*print-namespace-maps* false]
+      (spit fake-basis (pr-str basis))
+      (System/setProperty "clojure.basis" (.getAbsolutePath fake-basis)))
+    (apply exec/-main args)
+    @stash))
+
+(defmacro with-err-str
+  "Evaluates exprs in a context in which *err* is bound to a fresh
+  StringWriter.  Returns the string created by any nested printing
+  calls."
+  {:added "1.0"}
+  [& body]
+  `(let [s# (new java.io.StringWriter)]
+     (binding [*err* s#]
+       ~@body
+       (str s#))))
+
+(deftest test-main
+  (are [stashed args basis] (= stashed (encapsulate-main basis args))
+    ;; ad hoc, fully resolved, with both key and path vector
+    {:a 1, :b {:c 2}} ["clojure.run.test-exec/save" ":a" "1" "[:b,:c]" "2"] {}
+
+    ;; ad hoc, resolved by default-ns
+    {:a 1} ["--aliases" ":x" "save" ":a" "1"] {:aliases {:x {:ns-default 'clojure.run.test-exec}}}
+
+    ;; ad hoc, resolved alias
+    {:a 1} ["--aliases" ":x" "a/save" ":a" "1"] {:aliases {:x {:ns-aliases {'a 'clojure.run.test-exec}}}}
+
+    ;; exec-fn with overrides
+    {:a 1, :b 2} ["--aliases" ":x" ":b" "2"] {:aliases {:x {:exec-fn 'clojure.run.test-exec/save :exec-args {:a 1 :b 1}}}}
+
+    ;; exec-fn resolved by :ns-default, aliased exec-args
+    {:a 1, :b 1} ["--aliases" ":x"] {:aliases {:x {:exec-fn 'save, :exec-args :y :ns-default 'clojure.run.test-exec}
+                                               :y {:a 1, :b 1}}})
+
+  ;; missing override val: "Key is missing value: :foo\n"
+  (is (str/includes? (with-err-str (encapsulate-main {} [":foo"])) ":foo"))
+
+  ;; no function: "No function found on command line or in :exec-fn\n"
+  (is (str/includes? (with-err-str (encapsulate-main {} [])) "No function"))
+
+  ;; unqualified function: "Unqualified function can't be resolved: foo\n"
+  (is (str/includes? (with-err-str (encapsulate-main {} ["foo"])) "foo"))
+  )
