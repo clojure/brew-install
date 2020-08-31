@@ -3,6 +3,8 @@ Changelog
 
 *Also see [tools.deps changelog](https://github.com/clojure/tools.deps.alpha/blob/master/CHANGELOG.md)*
 
+clj has both stable and preleease versions. *Stable (listed in bold)* are obtained from the default [brew tap](https://github.com/clojure/brew-install/) formula. Prereleases or older versions can be obtained using versioned formulas only.
+
 * next
   * Add -P to prepare (download, cache classpath) without execution
 * 1.10.1.645 on Aug 9, 2020
@@ -28,15 +30,16 @@ Changelog
   * Added support for using data stored in aliases as :paths
   * Added explicit "tool" step to cover :deps and :paths replacement, which can be passed via alias -T
   * Update to tools.deps.alpha 0.9.745
-* 1.10.1.561 on July 17, 2020
+* *1.10.1.561 on July 17, 2020*
   * Update to tools.deps.alpha 0.8.709
 * 1.10.1.554 on July 15, 2020
   * Update to tools.deps.alpha 0.8.702
-* 1.10.1.547 on June 11, 2020
+* *1.10.1.547 on June 11, 2020*
   * In Windows impl, use Write-Output when returning values like with -Spath
   * Update to tools.deps.alpha 0.8.695
-* 1.10.1.524-1.10.1.536 on Feb 28, 2020
+* 1.10.1.524-*1.10.1.536 on Feb 28, 2020*
   * Working on release automation, no changes
+* *All releases older than this were stable releases*
 * 1.10.1.510 on Feb 14, 2020
   * Update to tools.deps.alpha 0.8.677
 * 1.10.1.507 on Jan 30, 2020
