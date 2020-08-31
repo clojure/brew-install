@@ -3,7 +3,7 @@ Changelog
 
 **Also see [tools.deps changelog](https://github.com/clojure/tools.deps.alpha/blob/master/CHANGELOG.md)**
 
-clj has both stable and preleease versions. Current and former stable build are listed in **bold** are obtained from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
+clj has both stable and prerelease versions. Current and former stable build are listed in **bold** are (or were) obtained from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
 Prerelease versions:
 
@@ -33,10 +33,10 @@ Prerelease versions:
   * Added explicit "tool" step to cover :deps and :paths replacement, which can be passed via alias -T
   * Update to tools.deps.alpha 0.9.745
 
-Current stable version:
+**Current stable version:**
 
 * **1.10.1.561 on July 17, 2020**
-  * Update to tools.deps.alpha 0.8.709
+  * **Update to tools.deps.alpha 0.8.709**
 
 Older versions (previous stable builds in bold):
 
