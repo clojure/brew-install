@@ -175,30 +175,24 @@ in a terminal, and should be preferred unless you don't want that support,
 then use 'clojure'.
 
 Usage:
-  Start a REPL   clj     [clj-opt*] [init-opt*]
-  Exec function  clojure [clj-opt*] -X:an-alias [kpath v]*
-                 clojure [clj-opt*] -Fmy/fn [kpath v]*
-  Run main       clojure [clj-opt*] [--] [init-opt*] [main-opt] [arg*]
+  Start a REPL   clj     [clj-opt*] [-A:aliases] [init-opt*]
+  Exec function  clojure [clj-opt*] -X[:aliases] [a/fn] [kpath v]*
+  Run main       clojure [clj-opt*] -M[:aliases] [init-opt*] [main-opt] [arg*]
+  Prepare        clojure [clj-opt*] -P [other exec opts]
 
-The clj-opts are used to build the java-opts and classpath:
+exec-opts:
+  -A:aliases     Use aliases to modify classpath
+  -X[:aliases]   Use aliases to modify classpath or supply exec fn/args
+  -M[:aliases]   Use aliases to modify classpath or supply main opts
+  -P             Prepare deps - download libs, cache classpath, but don't exec
+
+clj-opts:
   -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
-  -Oalias...     Concatenated jvm option aliases, ex: -O:mem
-  -Ralias...     Concatenated resolve-deps aliases, ex: -R:bench:1.9
-  -Calias...     Concatenated make-classpath aliases, ex: -C:dev
-  -Malias...     Concatenated main option aliases, ex: -M:test
-  -Talias...     Concatenated tool aliases, ex: -T:format-src
-  -Aalias...     Concatenated aliases of any kind, ex: -A:dev:mem
-  -Xalias K V... Exec alias to invoke a function that takes a map, with kv overrides
-  -Fmy/fn K V... Exec function myfn that takes a map, with kv overrides
-  -P             Prepare - download deps, cache classpath, don't execute
   -Sdeps EDN     Deps data to use as the final deps file
   -Spath         Compute classpath and echo to stdout only
   -Scp CP        Do NOT compute or cache classpath, use this one instead
   -Srepro        Use only the local deps.edn (ignore other config files)
   -Sforce        Force recomputation of the classpath (don't use the cache)
-  -Spom          Generate (or update existing) pom.xml with deps and paths
-  -Stree         Print dependency tree
-  -Sresolve-tags Resolve git coordinate tags to shas and update deps.edn
   -Sverbose      Print important path info to console
   -Sdescribe     Print environment and command parsing info as data
   -Sthreads      Set specific number of download threads
@@ -209,7 +203,6 @@ init-opt:
   -i, --init path     Load a file or resource
   -e, --eval string   Eval exprs in string; print non-nil values
   --report target     Report uncaught exception to "file" (default), "stderr", or "none"
-                      Overrides System property clojure.main.report
 
 main-opt:
   -m, --main ns-name  Call the -main function from namespace w/args
@@ -217,6 +210,12 @@ main-opt:
   path                Run a script from a file or resource
   -                   Run a script from standard input
   -h, -?, --help      Print this help message and exit
+
+Programs provided by :deps alias:
+ -X:deps tree              Print dependency tree
+ -X:deps mvn-pom           Generate (or update) pom.xml with deps and paths
+ -X:deps mvn-install       Install a maven jar to the local repository cache
+ -X:deps git-resolve-tags  Resolve git coord tags to shas and update deps.edn
 
 For more info, see:
   https://clojure.org/guides/deps_and_cli
