@@ -6,16 +6,13 @@ clj, clojure \- runners to launch Clojure programs
 .SH SYNOPSIS
 
 .B clj
-[\fBclj-opts...\fR] [\fBinit-opts...\fR]
+[\fBclj-opts...\fR] [\fB-A:alias...\fR] [\fBinit-opts...\fR]
 .br
 .B clojure
-[\fBclj-opts...\fR] -X\fB:an-alias\fR [\fBkpath v\fR]...
+[\fBclj-opts...\fR] \fB-X\fR[\fB:alias...\fR] [\fBmy/fn\fR] [\fBkpath v\fR]...
 .br
 .B clojure
-[\fBclj-opts...\fR] -F\fBmy/fn\fR [\fBkpath v\fR]...
-.br
-.B clojure
-[\fBclj-opts...\fR] [\fB--\fR] [\fBinit-opts...\fR] [\fBmain-opt\fR]
+[\fBclj-opts...\fR] \fB-M\fR[\fB:alias...\fR] [\fBinit-opts...\fR] [\fBmain-opt\fR]
 [\fBargs...\fR]
 
 .SH DESCRIPTION
@@ -60,37 +57,18 @@ are options to clojure.main.
 Pass opt through in java_opts, ex: -J-Xmx512m
 
 .TP
-.BI \-O: alias
-Concatenated jvm option aliases, ex: -O:mem
-
-.TP
-.BI \-R: alias
-Concatenated resolve-deps aliases, ex: -R:bench:1.9
-
-.TP
-.BI \-C: alias
-Concatenated make-classpath aliases, ex: -C:dev
-
-.TP
-.BI \-M: alias
-Concatenated main option aliases, ex: -M:test
-
-.TP
-.BI \-T: alias
-Concatenated tool aliases, ex: -T:format-src
-
-.TP
-.BI \-A: alias
+.BI \-A :alias...
 Concatenated aliases of any kind, ex: -A:dev:mem
 
 .TP
-.BI \-X: alias\ \fIKPATH\fR " " \fIV\fR " "
+.BI \-X :alias...\ \fIfn\fR \fIKPATH\fR " " \fIV\fR " "
 Exec alias to invoke a function that takes a map, with
-keypath/value overrides
+keypath/value overrides. Function must either be supplied
+or be in :exec-fn argmap for alias
 
 .TP
-.BI \-F: my/fn\ \fIKPATH\fR " " \fIV\fR " "
-Exec a function that takes a map, with keypath/value overrides
+.BI \-M :alias...
+Exec clojure.main, either from opts in alias or command line
 
 .TP
 .BI \-P
@@ -117,18 +95,6 @@ Ignore the ~/.clojure/deps.edn config file
 Force recomputation of the classpath (don't use the cache)
 
 .TP
-.BI \-Spom
-Generate (or update existing) pom.xml with deps and paths
-
-.TP
-.BI \-Stree
-Print dependency tree
-
-.TP
-.BI \-Sresolve-tags
-Resolve git coordinate tags to shas and update deps.edn
-
-.TP
 .BI \-Sverbose
 Print important path info to console
 
@@ -149,7 +115,6 @@ Write a trace.edn file that traces deps expansion
 Stop parsing dep options and pass remaining arguments to clojure.main
 
 .SS init-opts
-
 
 .TP
 .BR \-i ", " \-\-init\  \fIpath\fR
