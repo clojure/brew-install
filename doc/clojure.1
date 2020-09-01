@@ -12,8 +12,7 @@ clj, clojure \- runners to launch Clojure programs
 [\fBclj-opts...\fR] \fB-X\fR[\fB:alias...\fR] [\fBmy/fn\fR] [\fBkpath v\fR]...
 .br
 .B clojure
-[\fBclj-opts...\fR] \fB-M\fR[\fB:alias...\fR] [\fBinit-opts...\fR] [\fBmain-opt\fR]
-[\fBargs...\fR]
+[\fBclj-opts...\fR] \fB-M\fR[\fB:alias...\fR] [\fBinit-opts...\fR] [\fBmain-opts...\fR] [\fBargs...\fR]
 
 .SH DESCRIPTION
 
@@ -58,10 +57,10 @@ Pass opt through in java_opts, ex: -J-Xmx512m
 
 .TP
 .BI \-A :alias...
-Concatenated aliases of any kind, ex: -A:dev:mem
+Concatenated aliases for REPL execution, ex: -A:dev:mem
 
 .TP
-.BI \-X :alias...\ \fIfn\fR \fIKPATH\fR " " \fIV\fR " "
+.BI \-X :alias...\ \fIfn\fR " " \fIKPATH\fR " " \fIV\fR " "
 Exec alias to invoke a function that takes a map, with
 keypath/value overrides. Function must either be supplied
 or be in :exec-fn argmap for alias
