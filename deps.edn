@@ -1,4 +1,5 @@
-{:deps
+{:paths ["x"]
+ :deps
  {org.clojure/clojure {:mvn/version "1.10.1"}
   org.clojure/tools.deps.alpha {:mvn/version "0.9.764-SNAPSHOT"}
   org.slf4j/slf4j-nop {:mvn/version "1.6.2"}
@@ -7,4 +8,6 @@
  :aliases
  {:package {:paths ["script"]}
   :t1 {:exec-fn clojure.core/prn :exec-args {:a 1}}
-  :t2 {:exec-fn check/hi :exec-args {:a 1} :paths ["x"] :deps {cheshire/cheshire {:mvn/version "5.10.0"}}}}}
+  :t2 {:exec-fn check/hi :exec-args {:a 1} :paths ["x"] :deps {cheshire/cheshire {:mvn/version "5.10.0"}}}
+  :t3 {:exec-fn check/hi :exec-args {:a 1} :replace-paths ["x"] :replace-deps {cheshire/cheshire {:mvn/version "5.10.0"}}}
+  :m {:main-opts ["-m" "m" "1"]}}}
