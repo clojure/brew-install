@@ -28,19 +28,19 @@ do
       shift
       ;;
     -R*)
-      echo "-R is no longer supported, use -A instead"
+      echo "-R is no longer supported, use -A for repl, -M for main, or -X for exec"
       exit 1
       ;;
     -C*)
-      echo "-C is no longer supported, use -A instead"
+      echo "-C is no longer supported, use -A for repl, -M for main, or -X for exec"
       exit 1
       ;;
     -O*)
-      echo "-O is no longer supported, use -A instead"
+      echo "-O is no longer supported, use -A for repl, -M for main, or -X for exec"
       exit 1
       ;;
     -T*)
-      echo "-T is no longer supported, use -A instead"
+      echo "-T is no longer supported, use -A for repl, -M for main, or -X for exec"
       exit 1
       ;;
     -A*)
