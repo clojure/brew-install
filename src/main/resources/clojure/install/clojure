@@ -13,9 +13,6 @@ verbose=false
 trace=false
 force=false
 repro=false
-tree=false
-pom=false
-resolve_tags=false
 help=false
 prep=false
 jvm_opts=()
@@ -113,16 +110,16 @@ do
       shift
       ;;
     -Stree)
-      tree=true
-      shift
+      echo "Option changed, use: clj -X:deps tree"
+      exit 1
       ;;
     -Spom)
-      pom=true
-      shift
+      echo "Option changed, use: clj -X:deps mvn-pom"
+      exit 1
       ;;
     -Sresolve-tags)
-      resolve_tags=true
-      shift
+      echo "Option changed, use: clj -X:deps git-resolve-tags"
+      exit 1
       ;;
     -S*)
       echo "Invalid option: $1"
@@ -238,17 +235,6 @@ fi
 install_dir=PREFIX
 tools_cp="$install_dir/libexec/clojure-tools-${project.version}.jar"
 
-# Execute resolve-tags command
-if "$resolve_tags"; then
-  if [[ -e deps.edn ]]; then
-    "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.resolve-tags "--deps-file=deps.edn"
-    exit 0
-  else
-    echo "deps.edn does not exist"
-    exit 1
-  fi
-fi
-
 # Determine user config directory
 if [[ -n "$CLJ_CONFIG" ]]; then
   config_dir="$CLJ_CONFIG"
@@ -335,7 +321,7 @@ else
 fi
 
 # Make tools args if needed
-if "$stale" || "$pom"; then
+if "$stale"; then
   tools_args=()
   if [[ -n "$deps_data" ]]; then
     tools_args+=("--config-data" "$deps_data")
@@ -378,8 +364,6 @@ fi
 
 if "$prep"; then
   exit 0
-elif "$pom"; then
-  exec "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest2 --config-user "$config_user" --config-project "$config_project" --gen=pom "${tools_args[@]}"
 elif "$print_classpath"; then
   echo "$cp"
 elif "$describe"; then
@@ -401,8 +385,6 @@ elif "$describe"; then
 	 :main-aliases "$main_aliases"
 	 :repl-aliases "$repl_aliases"}
 END
-elif "$tree"; then
-  exec "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file "$libs_file"
 elif "$trace"; then
   echo "Wrote trace.edn"
 else
