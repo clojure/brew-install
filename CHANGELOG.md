@@ -7,7 +7,7 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* next
+* 1.10.1.672 on Sep 4, 2020
   * Add -P to prepare (download, cache classpath) without execution
   * Enhance -X and -M to support all argmaps
   * Enhance -X to support ad hoc function (-F removed)
