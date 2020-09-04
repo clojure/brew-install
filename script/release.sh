@@ -19,7 +19,7 @@ mvn -e -B clean package "-Dversion.short=$version_short" "-Dstable.sha=$stable_s
 # Build exec jar
 echo "Building exec jar"
 mkdir -p target/clojure-tools
-jar -c -f target/clojure-tools/exec.jar -C target/classes clojure/run/exec.clj
+jar cf target/clojure-tools/exec.jar -C target/classes clojure/run/exec.clj
 
 # Make tar file of jar and script
 echo "Building scripts tar file"
