@@ -9,6 +9,15 @@ Prerelease versions:
 
 * next
   * Add -P to prepare (download, cache classpath) without execution
+  * Enhance -X and -M to support all argmaps
+  * Enhance -X to support ad hoc function (-F removed)
+  * Add new argmap keys for -X, :ns-default, :ns-aliases
+  * Deprecate main args without -M
+  * Remove -T, -R, -C, -O
+  * In deps.edn, deprecate :deps/:paths in alias (change to :replace-deps/:replace-paths)
+  * In deps.edn, change :fn/:args to :exec-fn/:exec-args
+  * Move -Sdeps, -Spom, -Sresolve-tags into -X:deps invocations
+  * Update to tools.deps.alpha 0.9.782
 * 1.10.1.645 on Aug 9, 2020
   * Update to tools.deps.alpha 0.9.763
 * 1.10.1.641 on Aug 8, 2020
