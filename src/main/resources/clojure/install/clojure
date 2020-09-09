@@ -25,19 +25,19 @@ do
       shift
       ;;
     -R*)
-      echo "-R is no longer supported, use -A for repl, -M for main, or -X for exec"
+      >&2 echo "-R is no longer supported, use -A for repl, -M for main, or -X for exec"
       exit 1
       ;;
     -C*)
-      echo "-C is no longer supported, use -A for repl, -M for main, or -X for exec"
+      >&2 echo "-C is no longer supported, use -A for repl, -M for main, or -X for exec"
       exit 1
       ;;
     -O*)
-      echo "-O is no longer supported, use -A for repl, -M for main, or -X for exec"
+      >&2 echo "-O is no longer supported, use -A for repl, -M for main, or -X for exec"
       exit 1
       ;;
     -T*)
-      echo "-T is no longer supported, use -A for repl, -M for main, or -X for exec"
+      >&2 echo "-T is no longer supported, use -A for repl, -M for main, or -X for exec"
       exit 1
       ;;
     -A*)
@@ -110,19 +110,19 @@ do
       shift
       ;;
     -Stree)
-      echo "Option changed, use: clj -X:deps tree"
+      >&2 echo "Option changed, use: clj -X:deps tree"
       exit 1
       ;;
     -Spom)
-      echo "Option changed, use: clj -X:deps mvn-pom"
+      >&2 echo "Option changed, use: clj -X:deps mvn-pom"
       exit 1
       ;;
     -Sresolve-tags)
-      echo "Option changed, use: clj -X:deps git-resolve-tags"
+      >&2 echo "Option changed, use: clj -X:deps git-resolve-tags"
       exit 1
       ;;
     -S*)
-      echo "Invalid option: $1"
+      >&2 echo "Invalid option: $1"
       exit 1
       ;;
     -h|--help|"-?")
@@ -349,7 +349,7 @@ fi
 # If stale, run make-classpath to refresh cached classpath
 if [[ "$stale" = true && "$describe" = false ]]; then
   if "$verbose"; then
-    echo "Refreshing classpath"
+    >&2 echo "Refreshing classpath"
   fi
   "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" "${tools_args[@]}"
 fi
@@ -386,7 +386,7 @@ elif "$describe"; then
 	 :repl-aliases "$repl_aliases"}
 END
 elif "$trace"; then
-  echo "Wrote trace.edn"
+  >&2 echo "Wrote trace.edn"
 else
   set -f
   if [[ -e "$jvm_file" ]]; then
@@ -404,7 +404,7 @@ else
       main_cache_opts=($(cat "$main_file"))
     fi
     if [ "$#" -gt 0 ] && [ "$mode" == "repl" ]; then
-      echo "WARNING: When invoking clojure.main, use -M"
+      >&2 echo "WARNING: When invoking clojure.main, use -M"
     fi
     exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp" clojure.main "${main_cache_opts[@]}" "$@"
   fi
