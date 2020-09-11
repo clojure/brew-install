@@ -13,6 +13,7 @@ verbose=false
 trace=false
 force=false
 repro=false
+pom=false
 help=false
 prep=false
 jvm_opts=()
@@ -119,8 +120,9 @@ do
       exit 1
       ;;
     -Spom)
-      >&2 echo "Option changed, use: clj -X:deps mvn-pom"
-      exit 1
+      pom=true
+      shift
+      >&2 echo "Option deprecated, use: clj -X:deps mvn-pom"
       ;;
     -Sresolve-tags)
       >&2 echo "Option changed, use: clj -X:deps git-resolve-tags"
@@ -326,7 +328,7 @@ else
 fi
 
 # Make tools args if needed
-if "$stale"; then
+if "$stale" || "$pom"; then
   tools_args=()
   if [[ -n "$deps_data" ]]; then
     tools_args+=("--config-data" "$deps_data")
@@ -375,6 +377,8 @@ fi
 
 if "$prep"; then
   exit 0
+elif "$pom"; then
+  exec "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest2 --config-user "$config_user" --config-project "$config_project" --gen=pom "${tools_args[@]}"
 elif "$print_classpath"; then
   echo "$cp"
 elif "$describe"; then
