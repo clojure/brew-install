@@ -7,6 +7,9 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
+* 1.10.1.681 on Sep 11, 2020
+  * Reinstate -R, -C, and -Spom as deprecated options
+  * Update to tools.deps.alpha 0.9.795
 * 1.10.1.672 on Sep 4, 2020
   * Add -P to prepare (download, cache classpath) without execution
   * Enhance -X and -M to support all argmaps
