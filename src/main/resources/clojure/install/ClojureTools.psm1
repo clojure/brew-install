@@ -24,7 +24,6 @@ function Invoke-Clojure {
   $Version = '${project.version}'
   $ToolsCp = "$InstallDir\clojure-tools-$Version.jar"
 
-
   # Extract opts
   $PrintClassPath = $FALSE
   $Describe = $FALSE
@@ -32,19 +31,16 @@ function Invoke-Clojure {
   $Trace = $FALSE
   $Force = $FALSE
   $Repro = $FALSE
-  $Tree = $FALSE
   $Pom = $FALSE
-  $ResolveTags = $FALSE
   $Prep = $FALSE
   $Help = $FALSE
   $JvmOpts = @()
   $ResolveAliases = @()
   $ClasspathAliases = @()
-  $JvmAliases = @()
+  $ReplAliases = @()
   $MainAliases = @()
-  $ToolAliases = @()
-  $AllAliases = @()
-  $ExecAlias = @()
+  $ExecAliases = @()
+  $Mode = "repl"
 
   $params = $args
   while ($params.Count -gt 0) {
@@ -52,48 +48,56 @@ function Invoke-Clojure {
     if ($arg.StartsWith('-J')) {
       $JvmOpts += $arg.Substring(2)
     } elseif ($arg.StartsWith('-R')) {
+      Write-Error "-R is deprecated, use -A with repl, -M for main, or -X for exec"
       $aliases, $params = $params
       if ($aliases) {
         $ResolveAliases += ":$aliases"
       }
     } elseif ($arg.StartsWith('-C')) {
+      Write-Error "-C is deprecated, use -A with repl, -M for main, or -X for exec"
       $aliases, $params = $params
       if ($aliases) {
         $ClassPathAliases += ":$aliases"
       }
     } elseif ($arg.StartsWith('-O')) {
-      $aliases, $params = $params
-      if ($aliases) {
-        $JvmAliases += ":$aliases"
-      }
+      Write-Error "-O is no longer supported, use -A with repl, -M for main, or -X for exec"
+      return
+    } elseif ($arg -eq '-M') {
+      $Mode = "main"
+	  break
+    } elseif ($arg.StartsWith('-M:')) {
+      $Mode = "main"
+	  $kw, $params = $params
+	  $MainAliases += "${arg}$kw"
+	  $MainAliases += $params
+	  break
     } elseif ($arg.StartsWith('-M')) {
-      $aliases, $params = $params
-      if ($aliases) {
-        $MainAliases += ":$aliases"
-      }
+      $Mode = "main"
+      $MainAliases += $arg, $params
+      break
     } elseif ($arg.StartsWith('-T')) {
-      $aliases, $params = $params
-      if ($aliases) {
-        $ToolAliases += ":$aliases"
-      }
+      Write-Error "-O is no longer supported, use -A with repl, -M for main, or -X for exec"
+      return
     } elseif ($arg.StartsWith('-A')) {
       $aliases, $params = $params
       if ($aliases) {
-        $AllAliases += ":$aliases"
+        $ReplAliases += ":$aliases"
       }
+    } elseif ($arg -eq '-X') {
+      $Mode = "exec"
+      break
     } elseif ($arg -eq '-X:') {
+      $Mode = "exec"
       # Windows splits on the : in -X:foo as an option
       $kw, $params = $params
-      $ExecAlias += "${arg}$kw"
-      $ExecAlias += $params
+      $ExecAliases += "${arg}$kw"
+      $ExecAliases += $params
       break
     } elseif ($arg.StartsWith('-X')) {
-      $ExecAlias += $arg, $params
+      $Mode = "exec"
+      $ExecAliases += $arg, $params
       break
-    } elseif ($arg.StartsWith('-F')) {
-      $ExecAlias += $arg, $params
-      break
-    } elseif ($arg -eq '-D') {
+    } elseif ($arg -eq '-P') {
       $Prep = $TRUE
     } elseif ($arg -eq '-Sdeps') {
       $DepsData, $params = $params
@@ -114,11 +118,13 @@ function Invoke-Clojure {
     } elseif ($arg -eq '-Srepro') {
       $Repro = $TRUE
     } elseif ($arg -eq '-Stree') {
-      $Tree = $TRUE
+      Write-Error "Option changed, use: clj -X:deps tree"
+      return
     } elseif ($arg -eq '-Spom') {
       $Pom = $TRUE
     } elseif ($arg -eq '-Sresolve-tags') {
-      $ResolveTags = $TRUE
+      Write-Error "Option changed, use: clj -X:deps git-resolve-tags"
+      return
     } elseif ($arg.StartsWith('-S')) {
       Write-Error "Invalid option: $arg"
       return
@@ -224,17 +230,6 @@ For more info, see:
     return
   }
 
-  # Execute resolve-tags command
-  if ($ResolveTags) {
-    if (Test-Path deps.edn) {
-      & $JavaCmd -classpath $ToolsCP clojure.main -m clojure.tools.deps.alpha.script.resolve-tags --deps-file=deps.edn
-      return
-    } else {
-      Write-Error 'deps.edn does not exist'
-      return
-    }
-  }
-
   # Determine user config directory
   if ($env:CLJ_CONFIG) {
     $ConfigDir = $env:CLJ_CONFIG
@@ -277,7 +272,7 @@ For more info, see:
   }
 
   # Construct location of cached classpath file
-  $CacheKey = "$($ResolveAliases -join '')|$($ClassPathAliases -join '')|$($AllAliases -join '')|$($JvmAliases -join '')|$($MainAliases -join '')|$($ToolAliases -join '')|$DepsData|$($ConfigPaths -join '|')"
+  $CacheKey = "$($ResolveAliases -join '')|$($ClassPathAliases -join '')|$($ReplAliases -join '')|$($JvmAliases -join '')|$ExecAliases|$MainAliases|$DepsData|$($ConfigPaths -join '|')"
   $CacheKeyHash = (Get-StringHash $CacheKey) -replace '-', ''
 
   $LibsFile = "$CacheDir\$CacheKeyHash.libs"
@@ -319,17 +314,14 @@ cp_file      = $CpFile
     if ($ClassPathAliases) {
       $ToolsArgs += "-C$($ClassPathAliases -join '')"
     }
-    if ($JvmAliases) {
-      $ToolsArgs += "-J$($JvmAliases -join '')"
-    }
     if ($MainAliases) {
-      $ToolsArgs += "-M$($MainAliases -join '')"
+      $ToolsArgs += "-M$MainAliases"
     }
-    if ($ToolAliases) {
-      $ToolsArgs += "-T$($ToolAliases -join '')"
+    if ($ReplAliases) {
+      $ToolsArgs += "-A$($ReplAliases -join '')"
     }
-    if ($AllAliases) {
-      $ToolsArgs += "-A$($AllAliases -join '')"
+    if ($ExecAliases) {
+      $ToolsArgs += "-X$ExecAliases"
     }
     if ($ForceCp) {
       $ToolsArgs += '--skip-cp'
@@ -380,31 +372,34 @@ cp_file      = $CpFile
  :cache-dir "$CacheDir"
  :force $Force
  :repro $Repro
- :resolve-aliases "$($ResolveAliases -join ' ')"
- :classpath-aliases "$($ClasspathAliases -join ' ')"
- :jvm-aliases "$($JvmAliases -join ' ')"
- :main-aliases "$($MainAliases -join ' ')"
- :tool-aliases "$($ToolAliases -join ' ')"
- :all-aliases "$($AllAliases -join ' ')"}
+ :main-aliases "$main_aliases"
+ :repl-aliases "$repl_aliases"
+ :exec-aliases "$exec_aliases"}
 "@
-  } elseif ($Tree) {
-    & $JavaCmd -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file $LibsFile
   } elseif ($Trace) {
-    Write-Host "Writing trace.edn"
+    Write-Host "Wrote trace.edn"
   } else {
     if (Test-Path $JvmFile) {
       # TODO this seems dangerous
       $JvmCacheOpts = (Get-Content $JvmFile) -split '\s+'
     }
 
-    if ($ExecAlias) {
-      & $JavaCmd @JvmOpts "-Dclojure.basis=$BasisFile" -classpath "$CP;$InstallDir" clojure.main -m clj-exec @ExecAlias
+    if ($Mode -eq 'exec') {
+      $ExecArgs=()
+	  if ($ExecAliases) {
+        $ExecArgs += '--aliases'
+		$ExecArgs += $ExecAliases
+	  }
+      & $JavaCmd @JvmOpts "-Dclojure.basis=$BasisFile" -classpath "$CP;$InstallDir/exec.jar" clojure.main -m clojure.run.exec @ExecArgs @ClojureArgs
     } else {
       if (Test-Path $MainFile) {
         # TODO this seems dangerous
         $MainCacheOpts = ((Get-Content $MainFile) -split '\s+') -replace '"', '\"'
       }
-      & $JavaCmd @JvmCacheOpts @JvmOpts "-Dclojure.basis=$BasisFile" "-Dclojure.libfile=$LibsFile" -classpath $CP clojure.main @MainCacheOpts @ClojureArgs
+	  if ($ClojureArgs.Count -gt 0 -and $Mode -eq 'repl') {
+        WriteError "WARNING: When invoking clojure.main, use -M"
+	  }
+      & $JavaCmd @JvmCacheOpts @JvmOpts "-Dclojure.basis=$BasisFile" -classpath $CP clojure.main @MainCacheOpts @ClojureArgs
     }
   }
 }
