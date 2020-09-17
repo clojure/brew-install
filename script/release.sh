@@ -35,8 +35,9 @@ mkdir -p target/win/ClojureTools
 cp target/classes/clojure/install/ClojureTools.psd1 target/classes/clojure/install/ClojureTools.psm1 target/classes/clojure/install/deps.edn target/classes/clojure/install/example-deps.edn "target/clojure-tools-$version.jar" target/win/ClojureTools
 cp target/clojure-tools/exec.jar target/win/ClojureTools
 cd target/win
-zip -r "../clojure-tools-$version.zip" ClojureTools
+zip -r "../clojure-tools.zip" ClojureTools
 cd ../..
+cp target/classes/clojure/install/win-install.ps1 target
 
 # Create formula file (brew)
 echo "Creating formula files"
@@ -64,9 +65,9 @@ if [[ ! -z "$S3_BUCKET" ]]; then
   aws s3 cp --only-show-errors "target/classes/clojure/install/linux-install.sh" "$S3_BUCKET/install/linux-install.sh"
   aws s3 cp --only-show-errors "target/classes/clojure/install/linux-install.sh" "$S3_BUCKET/install/linux-install-$version.sh"
   echo "Deploying https://download.clojure.org/install/clojure-tools-$version.zip"
-  aws s3 cp --only-show-errors "target/clojure-tools-$version.zip" "$S3_BUCKET/install/clojure-tools.zip"
-  aws s3 cp --only-show-errors "target/clojure-tools-$version.zip" "$S3_BUCKET/install/clojure-tools-$version.zip"
+  aws s3 cp --only-show-errors "target/clojure-tools.zip" "$S3_BUCKET/install/clojure-tools.zip"
+  aws s3 cp --only-show-errors "target/clojure-tools.zip" "$S3_BUCKET/install/clojure-tools-$version.zip"
   echo "Deploying https://download.clojure.org/install/win-install-$version.ps1"
-  aws s3 cp --only-show-errors "target/classes/clojure/install/win-install.ps1" "$S3_BUCKET/install/win-install.ps1"
-  aws s3 cp --only-show-errors "target/classes/clojure/install/win-install.ps1" "$S3_BUCKET/install/win-install-$version.ps1"
+  aws s3 cp --only-show-errors "target/win-install.ps1" "$S3_BUCKET/install/win-install.ps1"
+  aws s3 cp --only-show-errors "target/win-install.ps1" "$S3_BUCKET/install/win-install-$version.ps1"
 fi
