@@ -64,13 +64,13 @@ function Invoke-Clojure {
       return
     } elseif ($arg -eq '-M') {
       $Mode = "main"
-	  break
+      break
     } elseif ($arg.StartsWith('-M:')) {
       $Mode = "main"
-	  $kw, $params = $params
-	  $MainAliases += "${arg}$kw"
-	  $MainAliases += $params
-	  break
+      $kw, $params = $params
+      $MainAliases += "${arg}$kw"
+      $MainAliases += $params
+      break
     } elseif ($arg.StartsWith('-M')) {
       $Mode = "main"
       $MainAliases += $arg, $params
@@ -385,20 +385,20 @@ cp_file      = $CpFile
     }
 
     if ($Mode -eq 'exec') {
-      $ExecArgs=()
-	  if ($ExecAliases) {
+      $ExecArgs=@()
+      if ($ExecAliases) {
         $ExecArgs += '--aliases'
-		$ExecArgs += $ExecAliases
-	  }
+        $ExecArgs += $ExecAliases
+      }
       & $JavaCmd @JvmOpts "-Dclojure.basis=$BasisFile" -classpath "$CP;$InstallDir/exec.jar" clojure.main -m clojure.run.exec @ExecArgs @ClojureArgs
     } else {
       if (Test-Path $MainFile) {
         # TODO this seems dangerous
         $MainCacheOpts = ((Get-Content $MainFile) -split '\s+') -replace '"', '\"'
       }
-	  if ($ClojureArgs.Count -gt 0 -and $Mode -eq 'repl') {
-        WriteError "WARNING: When invoking clojure.main, use -M"
-	  }
+      if ($ClojureArgs.Count -gt 0 -and $Mode -eq 'repl') {
+        Write-Error "WARNING: When invoking clojure.main, use -M"
+      }
       & $JavaCmd @JvmCacheOpts @JvmOpts "-Dclojure.basis=$BasisFile" -classpath $CP clojure.main @MainCacheOpts @ClojureArgs
     }
   }
