@@ -389,7 +389,7 @@ cp_file      = $CpFile
         $MainCacheOpts = ((Get-Content $MainFile) -split '\s+') -replace '"', '\"'
       }
       if ($ClojureArgs.Count -gt 0 -and $Mode -eq 'repl') {
-        Write-Warning "WARNING: When invoking clojure.main, use -M"
+        Write-Warning "When invoking clojure.main, use -M"
       }
       & $JavaCmd @JvmCacheOpts @JvmOpts "-Dclojure.basis=$BasisFile" -classpath $CP clojure.main @MainCacheOpts @ClojureArgs
     }
