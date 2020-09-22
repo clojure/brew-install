@@ -38,8 +38,7 @@ function Invoke-Clojure {
   $ResolveAliases = @()
   $ClasspathAliases = @()
   $ReplAliases = @()
-  $MainAliases = @()
-  $ExecAliases = @()
+  $ClojureArgs = @()
   $Mode = "repl"
 
   $params = $args
@@ -48,13 +47,13 @@ function Invoke-Clojure {
     if ($arg.StartsWith('-J')) {
       $JvmOpts += $arg.Substring(2)
     } elseif ($arg.StartsWith('-R')) {
-      Write-Error "-R is deprecated, use -A with repl, -M for main, or -X for exec"
+      Write-Warning "-R is deprecated, use -A with repl, -M for main, or -X for exec"
       $aliases, $params = $params
       if ($aliases) {
         $ResolveAliases += ":$aliases"
       }
     } elseif ($arg.StartsWith('-C')) {
-      Write-Error "-C is deprecated, use -A with repl, -M for main, or -X for exec"
+      Write-Warning "-C is deprecated, use -A with repl, -M for main, or -X for exec"
       $aliases, $params = $params
       if ($aliases) {
         $ClassPathAliases += ":$aliases"
@@ -62,67 +61,60 @@ function Invoke-Clojure {
     } elseif ($arg.StartsWith('-O')) {
       Write-Error "-O is no longer supported, use -A with repl, -M for main, or -X for exec"
       return
-    } elseif ($arg -eq '-M') {
+    } elseif ($arg -ceq '-M') {
       $Mode = "main"
+      $ClojureArgs += $params
       break
-    } elseif ($arg.StartsWith('-M:')) {
+    } elseif ($arg -ceq '-M:') {
       $Mode = "main"
       $kw, $params = $params
-      $MainAliases += "${arg}$kw"
-      $MainAliases += $params
-      break
-    } elseif ($arg.StartsWith('-M')) {
-      $Mode = "main"
-      $MainAliases += $arg, $params
+      $MainAliases = ":$kw"
+      $ClojureArgs += $params
       break
     } elseif ($arg.StartsWith('-T')) {
-      Write-Error "-O is no longer supported, use -A with repl, -M for main, or -X for exec"
+      Write-Error "-T is no longer supported, use -A with repl, -M for main, or -X for exec"
       return
     } elseif ($arg.StartsWith('-A')) {
       $aliases, $params = $params
       if ($aliases) {
         $ReplAliases += ":$aliases"
       }
-    } elseif ($arg -eq '-X') {
+    } elseif ($arg -ceq '-X') {
       $Mode = "exec"
+      $ClojureArgs += $params
       break
-    } elseif ($arg -eq '-X:') {
+    } elseif ($arg -ceq '-X:') {
       $Mode = "exec"
-      # Windows splits on the : in -X:foo as an option
       $kw, $params = $params
-      $ExecAliases += "${arg}$kw"
-      $ExecAliases += $params
+      $ExecAliases = ":$kw"
+      $ClojureArgs += $params
       break
-    } elseif ($arg.StartsWith('-X')) {
-      $Mode = "exec"
-      $ExecAliases += $arg, $params
-      break
-    } elseif ($arg -eq '-P') {
+    } elseif ($arg -ceq '-P') {
       $Prep = $TRUE
-    } elseif ($arg -eq '-Sdeps') {
+    } elseif ($arg -ceq '-Sdeps') {
       $DepsData, $params = $params
-    } elseif ($arg -eq '-Scp') {
+    } elseif ($arg -ceq '-Scp') {
       $ForceCP, $params = $params
-    } elseif ($arg -eq '-Spath') {
+    } elseif ($arg -ceq '-Spath') {
       $PrintClassPath = $TRUE
-    } elseif ($arg -eq '-Sverbose') {
+    } elseif ($arg -ceq '-Sverbose') {
       $Verbose = $TRUE
-    } elseif ($arg -eq '-Sthreads') {
+    } elseif ($arg -ceq '-Sthreads') {
       $Threads, $params = $params
-    } elseif ($arg -eq '-Strace') {
+    } elseif ($arg -ceq '-Strace') {
       $Trace = $TRUE
-    } elseif ($arg -eq '-Sdescribe') {
+    } elseif ($arg -ceq '-Sdescribe') {
       $Describe = $TRUE
-    } elseif ($arg -eq '-Sforce') {
+    } elseif ($arg -ceq '-Sforce') {
       $Force = $TRUE
-    } elseif ($arg -eq '-Srepro') {
+    } elseif ($arg -ceq '-Srepro') {
       $Repro = $TRUE
-    } elseif ($arg -eq '-Stree') {
+    } elseif ($arg -ceq '-Stree') {
       Write-Error "Option changed, use: clj -X:deps tree"
       return
-    } elseif ($arg -eq '-Spom') {
+    } elseif ($arg -ceq '-Spom') {
       $Pom = $TRUE
-    } elseif ($arg -eq '-Sresolve-tags') {
+    } elseif ($arg -ceq '-Sresolve-tags') {
       Write-Error "Option changed, use: clj -X:deps git-resolve-tags"
       return
     } elseif ($arg.StartsWith('-S')) {
@@ -397,7 +389,7 @@ cp_file      = $CpFile
         $MainCacheOpts = ((Get-Content $MainFile) -split '\s+') -replace '"', '\"'
       }
       if ($ClojureArgs.Count -gt 0 -and $Mode -eq 'repl') {
-        Write-Error "WARNING: When invoking clojure.main, use -M"
+        Write-Warning "WARNING: When invoking clojure.main, use -M"
       }
       & $JavaCmd @JvmCacheOpts @JvmOpts "-Dclojure.basis=$BasisFile" -classpath $CP clojure.main @MainCacheOpts @ClojureArgs
     }
