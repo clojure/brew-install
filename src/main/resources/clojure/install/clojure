@@ -13,6 +13,7 @@ verbose=false
 trace=false
 force=false
 repro=false
+tree=false
 pom=false
 help=false
 prep=false
@@ -116,8 +117,8 @@ do
       shift
       ;;
     -Stree)
-      >&2 echo "Option changed, use: clj -X:deps tree"
-      exit 1
+      tree=true
+      shift
       ;;
     -Spom)
       pom=true
@@ -203,7 +204,8 @@ if "$help"; then
 	 -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
 	 -Sdeps EDN     Deps data to use as the last deps file to be merged
 	 -Spath         Compute classpath and echo to stdout only
-	 -Spom          Generate (or pudate) pom.xml with deps and paths
+	 -Spom          Generate (or update) pom.xml with deps and paths
+	 -Stree         Print dependency tree
 	 -Scp CP        Do NOT compute or cache classpath, use this one instead
 	 -Srepro        Ignore the ~/.clojure/deps.edn config file
 	 -Sforce        Force recomputation of the classpath (don't use the cache)
@@ -226,8 +228,6 @@ if "$help"; then
 	 -h, -?, --help      Print this help message and exit
 
 	Programs provided by :deps alias:
-	 -X:deps tree              Print dependency tree
-	 -X:deps mvn-pom           Generate (or update) pom.xml with deps and paths
 	 -X:deps mvn-install       Install a maven jar to the local repository cache
 	 -X:deps git-resolve-tags  Resolve git coord tags to shas and update deps.edn
 
@@ -400,6 +400,8 @@ elif "$describe"; then
 	 :main-aliases "$main_aliases"
 	 :repl-aliases "$repl_aliases"}
 END
+elif "$tree"; then
+  exec "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file "$libs_file"
 elif "$trace"; then
   >&2 echo "Wrote trace.edn"
 else

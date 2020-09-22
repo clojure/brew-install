@@ -31,6 +31,7 @@ function Invoke-Clojure {
   $Trace = $FALSE
   $Force = $FALSE
   $Repro = $FALSE
+  $Tree = $FALSE
   $Pom = $FALSE
   $Prep = $FALSE
   $Help = $FALSE
@@ -110,8 +111,7 @@ function Invoke-Clojure {
     } elseif ($arg -ceq '-Srepro') {
       $Repro = $TRUE
     } elseif ($arg -ceq '-Stree') {
-      Write-Error "Option changed, use: clj -X:deps tree"
-      return
+      $Tree = $TRUE
     } elseif ($arg -ceq '-Spom') {
       $Pom = $TRUE
     } elseif ($arg -ceq '-Sresolve-tags') {
@@ -188,6 +188,8 @@ clj-opts:
   -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
   -Sdeps EDN     Deps data to use as the final deps file
   -Spath         Compute classpath and echo to stdout only
+  -Spom          Generate (or update) pom.xml with deps and paths
+  -Stree         Print dependency tree
   -Scp CP        Do NOT compute or cache classpath, use this one instead
   -Srepro        Use only the local deps.edn (ignore other config files)
   -Sforce        Force recomputation of the classpath (don't use the cache)
@@ -210,8 +212,6 @@ main-opt:
   -h, -?, --help      Print this help message and exit
 
 Programs provided by :deps alias:
- -X:deps tree              Print dependency tree
- -X:deps mvn-pom           Generate (or update) pom.xml with deps and paths
  -X:deps mvn-install       Install a maven jar to the local repository cache
  -X:deps git-resolve-tags  Resolve git coord tags to shas and update deps.edn
 
@@ -368,6 +368,8 @@ cp_file      = $CpFile
  :repl-aliases "$repl_aliases"
  :exec-aliases "$exec_aliases"}
 "@
+  } elseif ($Tree) {
+    & $JavaCmd -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file $LibsFile
   } elseif ($Trace) {
     Write-Host "Wrote trace.edn"
   } else {
