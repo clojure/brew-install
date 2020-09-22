@@ -7,8 +7,9 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* next
+* 1.10.1.693 on Sep 21, 2020
   * Update windows scripts for latest
+  * Re-instate -Stree
   * Update to tools.deps.alpha 0.9.799
 * 1.10.1.681 on Sep 11, 2020
   * Reinstate -R, -C, and -Spom as deprecated options
