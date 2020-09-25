@@ -7,8 +7,15 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* 1.10.1.697 on Sep 24, 2020
-  * Update to tools.deps.alpha 0.9.810
+* none
+
+**Current stable version:**
+
+* **1.10.1.697 on Sep 24, 2020**
+  * **Update to tools.deps.alpha 0.9.810**
+
+Older versions (previous stable builds in bold):
+
 * 1.10.1.693 on Sep 21, 2020
   * Update windows scripts for latest
   * Re-instate -Stree
@@ -50,14 +57,8 @@ Prerelease versions:
   * Added support for using data stored in aliases as :paths
   * Added explicit "tool" step to cover :deps and :paths replacement, which can be passed via alias -T
   * Update to tools.deps.alpha 0.9.745
-
-**Current stable version:**
-
 * **1.10.1.561 on July 17, 2020**
   * **Update to tools.deps.alpha 0.8.709**
-
-Older versions (previous stable builds in bold):
-
 * 1.10.1.554 on July 15, 2020
   * Update to tools.deps.alpha 0.8.702
 * **1.10.1.547 on June 11, 2020**
