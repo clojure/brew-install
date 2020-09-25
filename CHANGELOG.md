@@ -11,7 +11,7 @@ Prerelease versions:
 
 **Current stable version:**
 
-* **1.10.1.697 on Sep 24, 2020**
+* **1.10.1.697 on Sep 25, 2020**
   * **Update to tools.deps.alpha 0.9.810**
 
 Older versions (previous stable builds in bold):
