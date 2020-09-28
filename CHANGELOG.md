@@ -7,7 +7,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* none
+* next
+  * TDEPS-168 - Fix error message handling for -X
 
 **Current stable version:**
 
