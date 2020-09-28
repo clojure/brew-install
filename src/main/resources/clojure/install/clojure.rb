@@ -17,9 +17,9 @@ class Clojure < Formula
 
   test do
     ENV["TERM"] = "xterm"
-    system("#{bin}/clj -e nil")
+    system("#{bin}/clj -M -e nil")
     %w[clojure clj].each do |clj|
-      assert_equal "2", shell_output("#{bin}/#{clj} -e \"(+ 1 1)\"").strip
+      assert_equal "2", shell_output("#{bin}/#{clj} -M -e \"(+ 1 1)\"").strip
     end
   end
 end
