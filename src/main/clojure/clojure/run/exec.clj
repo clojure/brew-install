@@ -76,7 +76,7 @@
   []
   (when-let [f (jio/file (System/getProperty "clojure.basis"))]
     (if (and f (.exists f))
-      (-> f slurp edn/read-string)
+      (->> f slurp (edn/read-string {:default tagged-literal}))
       (throw (err "No basis declared in clojure.basis system property")))))
 
 (defn- read-aliases
@@ -128,7 +128,7 @@
          read-args []]
     (if a
       (let [r (try
-                (edn/read-string a)
+                (edn/read-string {:default tagged-literal} a)
                 (catch Throwable t
                   (throw (err "Unreadable arg:" (pr-str a)))))]
         (recur as (conj read-args r)))
