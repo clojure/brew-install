@@ -67,8 +67,8 @@ Older versions (previous stable builds in bold):
 * 1.10.1.554 on July 15, 2020
   * Update to tools.deps.alpha 0.8.702
 * **1.10.1.547 on June 11, 2020**
-  * In Windows impl, use Write-Output when returning values like with -Spath
-  * Update to tools.deps.alpha 0.8.695
+  * **In Windows impl, use Write-Output when returning values like with -Spath**
+  * **Update to tools.deps.alpha 0.8.695**
 * 1.10.1.524-**1.10.1.536 on Feb 28, 2020**
   * Working on release automation, no changes
 * **All releases older than this were stable releases**
