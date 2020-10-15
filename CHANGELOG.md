@@ -7,18 +7,19 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* 1.10.1.716 on Oct 10, 2020
-  * Make edn reading tolerant of unknown tagged literals
-  * Update to tools.deps.alpha 0.9.821
+* none
 
 **Current stable version:**
+
+* **1.10.1.716 on Oct 10, 2020**
+  * **Make edn reading tolerant of unknown tagged literals**
+  * **Update to tools.deps.alpha 0.9.821**
+
+Older versions (previous stable builds in bold):
 
 * **1.10.1.708 on Oct 7, 2020**
   * **Update to tools.deps.alpha 0.9.816**
   * **TDEPS-168 - Fix error message handling for -X**
-
-Older versions (previous stable builds in bold):
-
 * **1.10.1.697 on Sep 25, 2020**
   * **Update to tools.deps.alpha 0.9.810**
 * 1.10.1.693 on Sep 21, 2020
