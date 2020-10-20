@@ -7,7 +7,9 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* none
+* next
+  * Built-in :deps alias should use replace-deps, not extra-deps
+  * Update to tools.deps.alpha 0.9.828
 
 **Current stable version:**
 
