@@ -7,8 +7,10 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* next
-  * Built-in :deps alias should use replace-deps, not extra-deps
+* 1.10.1.723 on Oct 20, 2020
+  * Fix `clj -X:deps tree` adding tools.deps.alpha to tree
+  * Fix `clj -X:deps mvn-pom` adding tools.deps.alpha to pom deps
+  * Fix `clj -X:deps git-resolve-tags` not working
   * Update to tools.deps.alpha 0.9.828
 
 **Current stable version:**
