@@ -7,22 +7,23 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* 1.10.1.727 on Oct 21, 2020
-  * Update to tools.deps.alpha 0.9.833
+* none
+
+**Current stable version:**
+
+* **1.10.1.727 on Oct 21, 2020**
+  * **Update to tools.deps.alpha 0.9.833**
+
+Older versions (previous stable builds in bold):
+
 * 1.10.1.723 on Oct 20, 2020
   * Fix `clj -X:deps tree` adding tools.deps.alpha to tree
   * Fix `clj -X:deps mvn-pom` adding tools.deps.alpha to pom deps
   * Fix `clj -X:deps git-resolve-tags` not working
   * Update to tools.deps.alpha 0.9.828
-
-**Current stable version:**
-
 * **1.10.1.716 on Oct 10, 2020**
   * **Make edn reading tolerant of unknown tagged literals**
   * **Update to tools.deps.alpha 0.9.821**
-
-Older versions (previous stable builds in bold):
-
 * **1.10.1.708 on Oct 7, 2020**
   * **Update to tools.deps.alpha 0.9.816**
   * **TDEPS-168 - Fix error message handling for -X**
