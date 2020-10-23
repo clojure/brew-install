@@ -7,7 +7,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* none
+* next
+  * Fix double throw in exec
 
 **Current stable version:**
 
