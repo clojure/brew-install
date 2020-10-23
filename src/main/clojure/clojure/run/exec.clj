@@ -15,9 +15,11 @@
   (:import
     [clojure.lang ExceptionInfo]))
 
+(set! *warn-on-reflection* true)
+
 (defn- err
-  [& msg]
-  (throw (ex-info (str/join " " msg) {:exec-msg true})))
+  ^Throwable [& msg]
+  (ex-info (str/join " " msg) {:exec-msg true}))
 
 (defn- requiring-resolve'
   ;; copied and modified from core to remove constraints on Clojure 1.10.x
