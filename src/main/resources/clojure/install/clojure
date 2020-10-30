@@ -47,6 +47,10 @@ do
       >&2 echo "-T is no longer supported, use -A with repl, -M for main, or -X for exec"
       exit 1
       ;;
+    -A)
+      >&2 echo "-A requires an alias"
+      exit 1
+      ;;
     -A*)
       repl_aliases+=("${1:2}")
       shift

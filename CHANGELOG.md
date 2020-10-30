@@ -8,7 +8,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 Prerelease versions:
 
 * next
-  * Fix double throw in exec
+  * Fix double throw in -X handling
+  * Error if -A used without an alias
 
 **Current stable version:**
 
