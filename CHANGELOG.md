@@ -7,7 +7,7 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* next
+* 1.10.1.735 on Oct 30, 2020
   * Fix double throw in -X handling
   * Error if -A used without an alias
 
