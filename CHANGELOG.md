@@ -7,6 +7,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
+* next on Nov 23, 2020
+  * Update to tools.deps.alpha 0.9.840
 * 1.10.1.735 on Oct 30, 2020
   * Fix double throw in -X handling
   * Error if -A used without an alias
