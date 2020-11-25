@@ -7,19 +7,20 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* 1.10.1.739 on Nov 23, 2020
-  * Update to tools.deps.alpha 0.9.840
-* 1.10.1.735 on Oct 30, 2020
-  * Fix double throw in -X handling
-  * Error if -A used without an alias
+* none
 
 **Current stable version:**
 
-* **1.10.1.727 on Oct 21, 2020**
-  * **Update to tools.deps.alpha 0.9.833**
+* **1.10.1.739 on Nov 23, 2020**
+  * **Update to tools.deps.alpha 0.9.840**
 
 Older versions (previous stable builds in bold):
 
+* 1.10.1.735 on Oct 30, 2020
+  * Fix double throw in -X handling
+  * Error if -A used without an alias
+* **1.10.1.727 on Oct 21, 2020**
+  * **Update to tools.deps.alpha 0.9.833**
 * 1.10.1.723 on Oct 20, 2020
   * Fix `clj -X:deps tree` adding tools.deps.alpha to tree
   * Fix `clj -X:deps mvn-pom` adding tools.deps.alpha to pom deps
