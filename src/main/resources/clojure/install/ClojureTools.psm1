@@ -287,7 +287,7 @@ cp_file      = $CpFile
 
   # Check for stale classpath file
   $Stale = $FALSE
-  if ($Force -or $Trace -or $Prep -or !(Test-Path $CpFile)) {
+  if ($Force -or $Trace -or $Tree -or $Prep -or !(Test-Path $CpFile)) {
     $Stale = $TRUE
   } elseif ($ConfigPaths | Where-Object { Test-NewerFile $_ $CpFile }) {
     $Stale = $TRUE
@@ -324,6 +324,9 @@ cp_file      = $CpFile
     }
     if ($Trace) {
       $ToolsArgs += '--trace'
+    }
+    if ($Tree) {
+      $ToolsArgs += '--tree'
     }
   }
 
@@ -369,7 +372,7 @@ cp_file      = $CpFile
  :exec-aliases "$exec_aliases"}
 "@
   } elseif ($Tree) {
-    & $JavaCmd -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file $LibsFile
+    # Already done
   } elseif ($Trace) {
     Write-Host "Wrote trace.edn"
   } else {
