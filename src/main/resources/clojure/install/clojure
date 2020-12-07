@@ -320,7 +320,7 @@ fi
 
 # Check for stale classpath file
 stale=false
-if "$force" || "$trace" || "$prep" || [ ! -f "$cp_file" ]; then
+if "$force" || "$trace" || "$tree" || "$prep" || [ ! -f "$cp_file" ]; then
   stale=true
 else
   for config_path in "${config_paths[@]}"; do
@@ -360,6 +360,9 @@ if "$stale" || "$pom"; then
   fi
   if "$trace"; then
     tools_args+=("--trace")
+  fi
+  if "$tree"; then
+    tools_args+=("--tree")
   fi
 fi
 
@@ -405,7 +408,7 @@ elif "$describe"; then
 	 :repl-aliases "$repl_aliases"}
 END
 elif "$tree"; then
-  exec "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.print-tree --libs-file "$libs_file"
+  exit 0
 elif "$trace"; then
   >&2 echo "Wrote trace.edn"
 else
