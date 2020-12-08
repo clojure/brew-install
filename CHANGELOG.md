@@ -7,22 +7,23 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* 1.10.1.754 on Dec 7, 2020
-  * Update to tools.deps.alpha 0.9.857
-  * Update Windows scripts for new -Stree format
+* none
+
+**Current stable version:**
+
+* **1.10.1.754 on Dec 7, 2020**
+  * **Update to tools.deps.alpha 0.9.857**
+  * **Update Windows scripts for new -Stree format**
+
+Older versions (previous stable builds in bold):
+
 * 1.10.1.749 on Dec 6, 2020
   * Update -Stree to use new tree printer
   * Update to tools.deps.alpha 0.9.853
 * 1.10.1.745 on Dec 2, 2020
   * Update to tools.deps.alpha 0.9.847
-
-**Current stable version:**
-
 * **1.10.1.739 on Nov 23, 2020**
   * **Update to tools.deps.alpha 0.9.840**
-
-Older versions (previous stable builds in bold):
-
 * 1.10.1.735 on Oct 30, 2020
   * Fix double throw in -X handling
   * Error if -A used without an alias
