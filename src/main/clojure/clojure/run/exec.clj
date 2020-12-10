@@ -136,6 +136,10 @@
         (recur as (conj read-args r)))
       read-args)))
 
+(defn ^:dynamic *exit*
+  [code]
+  (System/exit code))
+
 (defn -main
   [& args]
   (try
@@ -151,7 +155,7 @@
       (if (-> e ex-data :exec-msg)
         (binding [*out* *err*]
           (println (.getMessage e))
-          (System/exit 1))
+          (*exit* 1))
         (throw e)))))
 
 (comment

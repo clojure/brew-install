@@ -52,7 +52,8 @@
     (binding [*print-namespace-maps* false]
       (spit fake-basis (pr-str basis))
       (System/setProperty "clojure.basis" (.getAbsolutePath fake-basis)))
-    (apply exec/-main args)
+    (binding [exec/*exit* (constantly nil)]
+      (apply exec/-main args))
     @stash))
 
 (defmacro with-err-str
