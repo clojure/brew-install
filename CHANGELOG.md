@@ -7,7 +7,7 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* next
+* 1.10.1.763 on Dec 10, 2020
   * Set exit code for -X ex-info error
   * Sync up cli syntax for aliases in help
 
