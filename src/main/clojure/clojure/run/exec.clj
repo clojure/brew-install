@@ -150,7 +150,8 @@
     (catch ExceptionInfo e
       (if (-> e ex-data :exec-msg)
         (binding [*out* *err*]
-          (println (.getMessage e)))
+          (println (.getMessage e))
+          (System/exit 1))
         (throw e)))))
 
 (comment
