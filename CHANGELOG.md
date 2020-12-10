@@ -8,7 +8,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 Prerelease versions:
 
 * next
-  * Sync up cli syntax for aliases
+  * Set exit code for -X ex-info error
+  * Sync up cli syntax for aliases in help
 
 **Current stable version:**
 
