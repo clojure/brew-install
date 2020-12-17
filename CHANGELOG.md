@@ -7,18 +7,19 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* 1.10.1.763 on Dec 10, 2020
-  * Set exit code for -X ex-info error
-  * Sync up cli syntax for aliases in help
+* none
 
 **Current stable version:**
+
+* **1.10.1.763 on Dec 10, 2020**
+  * **Set exit code for -X ex-info error**
+  * **Sync up cli syntax for aliases in help**
+
+Older versions (previous stable builds in bold):
 
 * **1.10.1.754 on Dec 7, 2020**
   * **Update to tools.deps.alpha 0.9.857**
   * **Update Windows scripts for new -Stree format**
-
-Older versions (previous stable builds in bold):
-
 * 1.10.1.749 on Dec 6, 2020
   * Update -Stree to use new tree printer
   * Update to tools.deps.alpha 0.9.853
