@@ -7,7 +7,7 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* next
+* 1.10.2.781 on Feb 8, 2021
   * TDEPS-125 - use `JAVA_CMD` if set
   * Update to tools.deps.alpha 0.9.871
 
