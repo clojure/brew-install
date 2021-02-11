@@ -131,7 +131,7 @@
     (if a
       (let [r (try
                 (edn/read-string {:default tagged-literal} a)
-                (catch Throwable t
+                (catch Throwable _
                   (throw (err "Unreadable arg:" (pr-str a)))))]
         (recur as (conj read-args r)))
       read-args)))
@@ -143,7 +143,7 @@
 (defn -main
   [& args]
   (try
-    (let [{:keys [function aliases overrides] :as parsed} (-> args read-args parse-args)
+    (let [{:keys [function aliases overrides]} (-> args read-args parse-args)
           {:keys [exec-fn exec-args ns-aliases ns-default]} (when aliases (read-aliases (read-basis) aliases))
           f (or function exec-fn)]
       (when (nil? f)
