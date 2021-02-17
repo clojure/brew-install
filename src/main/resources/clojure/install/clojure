@@ -414,7 +414,9 @@ elif "$trace"; then
 else
   set -f
   if [[ -e "$jvm_file" ]]; then
-    jvm_cache_opts=($(cat "$jvm_file"))
+    set +e
+    IFS=$'\n' read -ra jvm_cache_opts -d '' <"$jvm_file"
+    set -e
   fi
 
   if [ "$mode" == "exec" ]; then
@@ -425,7 +427,9 @@ else
     exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp:$install_dir/libexec/exec.jar" clojure.main -m clojure.run.exec "${exec_args[@]}" "$@"
   else
     if [[ -e "$main_file" ]]; then
-      main_cache_opts=($(cat "$main_file"))
+      set +e
+      IFS=$'\n' read -ra main_cache_opts -d '' <"$main_file"
+      set -e
     fi
     if [ "$#" -gt 0 ] && [ "$mode" == "repl" ]; then
       >&2 echo "WARNING: When invoking clojure.main, use -M"

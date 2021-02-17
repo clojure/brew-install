@@ -377,8 +377,7 @@ cp_file      = $CpFile
     Write-Host "Wrote trace.edn"
   } else {
     if (Test-Path $JvmFile) {
-      # TODO this seems dangerous
-      $JvmCacheOpts = (Get-Content $JvmFile) -split '\s+'
+      $JvmCacheOpts = @(Get-Content $JvmFile)
     }
 
     if ($Mode -eq 'exec') {
@@ -391,7 +390,7 @@ cp_file      = $CpFile
     } else {
       if (Test-Path $MainFile) {
         # TODO this seems dangerous
-        $MainCacheOpts = ((Get-Content $MainFile) -split '\s+') -replace '"', '\"'
+        $MainCacheOpts = @(Get-Content $MainFile) -replace '"', '\"'
       }
       if ($ClojureArgs.Count -gt 0 -and $Mode -eq 'repl') {
         Write-Warning "When invoking clojure.main, use -M"
