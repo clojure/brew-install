@@ -7,6 +7,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
+* next
+  * Add -version and --version to print Clojure CLI version (to stderr and stdout respectively)
 * 1.10.2.786 on Feb 17, 2021
   * TDEPS-56 - fix main-opts and jvm-opts splitting on space
   * Update to tools.deps.alpha 0.9.876

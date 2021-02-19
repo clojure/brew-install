@@ -25,6 +25,14 @@ mode="repl"
 while [ $# -gt 0 ]
 do
   case "$1" in
+    -version)
+      >&2 echo "Clojure CLI version ${project.version}"
+      exit 0
+      ;;
+    --version)
+      echo "Clojure CLI version ${project.version}"
+      exit 0
+      ;;
     -J*)
       jvm_opts+=("${1:2}")
       shift
@@ -218,6 +226,8 @@ if "$help"; then
 	 -Sthreads      Set specific number of download threads
 	 -Strace        Write a trace.edn file that traces deps expansion
 	 --             Stop parsing dep options and pass remaining arguments to clojure.main
+	 --version      Print the version to stdout and exit
+	 -version       Print the version to stderr and exit
 
 	init-opt:
 	 -i, --init path     Load a file or resource

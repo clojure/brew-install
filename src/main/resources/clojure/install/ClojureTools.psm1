@@ -45,7 +45,13 @@ function Invoke-Clojure {
   $params = $args
   while ($params.Count -gt 0) {
     $arg, $params = $params
-    if ($arg.StartsWith('-J')) {
+    if ($arg -ceq '-version') {
+      Write-Error "Clojure CLI version $Version"
+      return
+    } elseif ($arg -ceq '--version') {
+      Write-Output "Clojure CLI version $Version"
+      return
+    } elseif ($arg.StartsWith('-J')) {
       $JvmOpts += $arg.Substring(2)
     } elseif ($arg.StartsWith('-R')) {
       Write-Warning "-R is deprecated, use -A with repl, -M for main, or -X for exec"
@@ -198,6 +204,8 @@ clj-opts:
   -Sthreads      Set specific number of download threads
   -Strace        Write a trace.edn file that traces deps expansion
   --             Stop parsing dep options and pass remaining arguments to clojure.main
+  --version      Print the version to stdout and exit
+  -version       Print the version to stderr and exit
 
 init-opt:
   -i, --init path     Load a file or resource
