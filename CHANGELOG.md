@@ -7,23 +7,24 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* 1.10.2.790 on Feb 19, 2021
-  * Add -version and --version to print Clojure CLI version (to stderr and stdout respectively)
+* none
+
+**Current stable version:**
+
+* **1.10.2.790 on Feb 19, 2021**
+  * **Add -version and --version to print Clojure CLI version (to stderr and stdout respectively)**
+
+Older versions (previous stable builds in bold):
+
 * 1.10.2.786 on Feb 17, 2021
   * TDEPS-56 - fix main-opts and jvm-opts splitting on space
   * Update to tools.deps.alpha 0.9.876
 * 1.10.2.781 on Feb 8, 2021
   * TDEPS-125 - use `JAVA_CMD` if set
   * Update to tools.deps.alpha 0.9.871
-
-**Current stable version:**
-
 * **1.10.2.774 on Jan 26, 2021**
   * **Change default Clojure dep to 1.10.2**
   * **Update to tools.deps.alpha 0.9.863**
-
-Older versions (previous stable builds in bold):
-
 * 1.10.1.769 on Jan 26, 2021
   * Update to tools.deps.alpha 0.9.859
 * **1.10.1.763 on Dec 10, 2020**
