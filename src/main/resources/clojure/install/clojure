@@ -51,6 +51,10 @@ do
       >&2 echo "-O is no longer supported, use -A with repl, -M for main, or -X for exec"
       exit 1
       ;;
+    -T*)
+      >&2 echo "-T is no longer supported, use -A with repl, -M for main, or -X for exec"
+      exit 1
+      ;;
     -A)
       >&2 echo "-A requires an alias"
       exit 1
@@ -78,25 +82,6 @@ do
     -X*)
       mode="exec"
       exec_aliases="${1:2}"
-      shift
-      break
-      ;;
-    -T:*)
-      mode="tool"
-      tool_aliases="${1:2}"
-      shift
-      break
-      ;;
-    -T*)
-      mode="tool"
-      tool_name="${1:2}"
-      shift
-      tool_function="${1}"
-      shift
-      break
-      ;;
-    -T)
-      mode="tool"
       shift
       break
       ;;
@@ -225,7 +210,6 @@ if "$help"; then
 	 -Aaliases      Use concatenated aliases to modify classpath
 	 -X[aliases]    Use concatenated aliases to modify classpath or supply exec fn/args
 	 -M[aliases]    Use concatenated aliases to modify classpath or supply main opts
-	 -T[toolname|aliases]  Invoke tool by name or via aliases ala -X
 	 -P             Prepare deps - download libs, cache classpath, but don't exec
 
 	clj-opts:
@@ -302,8 +286,6 @@ fi
 config_project="deps.edn"
 if "$repro"; then
   config_paths=("$install_dir/deps.edn" "deps.edn")
-elif [ "$mode" == "tool" ]; then
-  config_paths=("$install_dir/deps.edn" "$config_dir/deps.edn")
 else
   config_user="$config_dir/deps.edn"
   config_paths=("$install_dir/deps.edn" "$config_dir/deps.edn" "deps.edn")
@@ -319,7 +301,7 @@ else
 fi
 
 # Construct location of cached classpath file
-val="$(join '' ${resolve_aliases[@]})|$(join '' ${classpath_aliases[@]})|$(join '' ${repl_aliases[@]})|$exec_aliases|$main_aliases|$deps_data|$tool_name|$tool_function|$tool_aliases"
+val="$(join '' ${resolve_aliases[@]})|$(join '' ${classpath_aliases[@]})|$(join '' ${repl_aliases[@]})|$exec_aliases|$main_aliases|$deps_data"
 for config_path in "${config_paths[@]}"; do
   if [[ -f "$config_path" ]]; then
     val="$val|$config_path"
@@ -334,7 +316,6 @@ cp_file="$cache_dir/$ck.cp"
 jvm_file="$cache_dir/$ck.jvm"
 main_file="$cache_dir/$ck.main"
 basis_file="$cache_dir/$ck.basis"
-function_file="$cache_dir/$ck.function"
 
 # Print paths in verbose mode
 if "$verbose"; then
@@ -381,18 +362,6 @@ if "$stale" || "$pom"; then
   if [[ -n "$exec_aliases" ]]; then
     tools_args+=("-X$exec_aliases")
   fi
-  if [[ -n "$tool_mode" ]]; then
-    tools_args+=("--tool-mode")
-  fi
-  if [[ -n "$tool_name" ]]; then
-    tools_args+=("--tool-name" "$tool_name")
-  fi
-  if [[ -n "$tool_function" ]]; then
-    tools_args+=("--function" "$tool_function")
-  fi
-  if [[ -n "$tool_aliases" ]]; then
-    tools_args+=("-T$tool_aliases")
-  fi
   if [[ -n "$force_cp" ]]; then
     tools_args+=("--skip-cp")
   fi
@@ -412,7 +381,7 @@ if [[ "$stale" = true && "$describe" = false ]]; then
   if "$verbose"; then
     >&2 echo "Refreshing classpath"
   fi
-  "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" --function-file "$function_file" "${tools_args[@]}"
+  "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" "${tools_args[@]}"
 fi
 
 if "$describe"; then
@@ -460,16 +429,7 @@ else
     set -e
   fi
 
-  if [ "$mode" == "tool" ]; then
-    tool_args=()
-    if [[ -n "$tool_aliases" ]]; then
-      tool_args+=("--aliases" "$tool_aliases")
-    fi
-    if [[ -e "$function_file" ]]; then
-      tool_args+=($(cat "$function_file"))
-    fi
-    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp:$install_dir/libexec/exec.jar" clojure.main -m clojure.run.exec "${tool_args[@]}" "$@"
-  elif [ "$mode" == "exec" ]; then
+  if [ "$mode" == "exec" ]; then
     exec_args=()
     if [[ -n "$exec_aliases" ]]; then
       exec_args+=("--aliases" "$exec_aliases")
