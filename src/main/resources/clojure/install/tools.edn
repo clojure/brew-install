@@ -1,0 +1,2 @@
+{:lib io.github.clojure/tools.tools
+ :coord {:git/tag "v0.0.4" :git/sha "deebd27"}}
