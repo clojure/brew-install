@@ -9,11 +9,13 @@ Prerelease versions: none
 
 **Current stable version:**
 
-* **1.10.3.833 on May 11, 2021**
-  * **Clean up script variables**
+* **1.10.3.839 on May 12, 2021**
+  * **Fix breakage in linux installer in 1.10.3.833**
 
 Older versions (previous stable builds in bold):
 
+* **1.10.3.833 on May 11, 2021**
+  * **Clean up script variables**
 * 1.10.3.829 on May 11, 2021
   * Update to tools.deps.alpha 0.11.918
 * **1.10.3.822 on Apr 3, 2021**
