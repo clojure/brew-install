@@ -43,6 +43,7 @@ install -Dm644 clojure-tools/clojure-tools-${project.version}.jar "$clojure_lib_
 
 echo "Installing clojure and clj into $bin_dir"
 sed -i -e 's@PREFIX@'"$clojure_lib_dir"'@g' clojure-tools/clojure
+sed -i -e 's@BINDIR@'"$bin_dir"'@g' clojure-tools/clj
 install -Dm755 clojure-tools/clojure "$bin_dir/clojure"
 install -Dm755 clojure-tools/clj "$bin_dir/clj"
 

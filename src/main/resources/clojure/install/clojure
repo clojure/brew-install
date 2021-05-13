@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-# Version = ${project.version}
-
 set -e
+
+install_dir=PREFIX
+version=${project.version}
 
 function join { local d=$1; shift; echo -n "$1"; shift; printf "%s" "${@/#/$d}"; }
 
@@ -26,11 +27,11 @@ while [ $# -gt 0 ]
 do
   case "$1" in
     -version)
-      >&2 echo "Clojure CLI version ${project.version}"
+      >&2 echo "Clojure CLI version $version"
       exit 0
       ;;
     --version)
-      echo "Clojure CLI version ${project.version}"
+      echo "Clojure CLI version $version"
       exit 0
       ;;
     -J*)
@@ -160,7 +161,7 @@ do
       exit 1
       ;;
     -h|--help|"-?")
-      if [[ -n "$main_aliases" ]] || [[ -n "$repl_aliases" ]]; then
+      if [[ -n "$main_aliases" ]] || [[ ${#repl_aliases[@]} -gt 0 ]]; then
         break
       else
         help=true
@@ -192,7 +193,7 @@ fi
 
 if "$help"; then
   cat <<-END
-	Version: ${project.version}
+	Version: $version
 
 	You use the Clojure tools ('clj' or 'clojure') to run Clojure programs
 	on the JVM, e.g. to start a REPL or invoke a specific function with data.
@@ -268,9 +269,8 @@ END
   exit 0
 fi
 
-# Set dir containing the installed files
-install_dir=PREFIX
-tools_cp="$install_dir/libexec/clojure-tools-${project.version}.jar"
+# Set tools classpath used for the various programs before the user's program
+tools_cp="$install_dir/libexec/clojure-tools-$version.jar"
 
 # Determine user config directory
 if [[ -n "$CLJ_CONFIG" ]]; then
@@ -342,7 +342,7 @@ function_file="$cache_dir/$ck.function"
 
 # Print paths in verbose mode
 if "$verbose"; then
-  echo "version      = ${project.version}"
+  echo "version      = $version"
   echo "install_dir  = $install_dir"
   echo "config_dir   = $config_dir"
   echo "config_paths =" "${config_paths[@]}"
@@ -442,7 +442,7 @@ elif "$describe"; then
     fi
   done
   cat <<-END
-	{:version "${project.version}"
+	{:version "$version"
 	 :config-files [$path_vector]
 	 :config-user "$config_user"
 	 :config-project "$config_project"
@@ -452,7 +452,7 @@ elif "$describe"; then
 	 :force $force
 	 :repro $repro
 	 :main-aliases "$main_aliases"
-	 :repl-aliases "$repl_aliases"}
+	 :repl-aliases "${repl_aliases[@]}"}
 END
 elif "$tree"; then
   exit 0
@@ -488,7 +488,7 @@ else
       set -e
     fi
     if [ "$#" -gt 0 ] && [ "$mode" == "repl" ]; then
-      >&2 echo "WARNING: When invoking clojure.main, use -M"
+      >&2 echo "WARNING: Use of -A with clojure.main is deprecated, use -M instead"
     fi
     exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp" clojure.main "${main_cache_opts[@]}" "$@"
   fi
