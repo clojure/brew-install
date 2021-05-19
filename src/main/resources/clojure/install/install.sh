@@ -12,7 +12,7 @@ cp ./*.jar "$prefix/libexec"
 
 # scripts
 ${HOMEBREW_RUBY_PATH} -pi.bak -e "gsub(/PREFIX/, '$prefix')" clojure
-${HOMEBREW_RUBY_PATH} -pi.bak -e "gsub(/PREFIX/, '$prefix')" clj
+${HOMEBREW_RUBY_PATH} -pi.bak -e "gsub(/BINDIR/, '$prefix/bin')" clj
 mkdir -p "$prefix/bin"
 cp clojure "$prefix/bin"
 cp clj "$prefix/bin"
