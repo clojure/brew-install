@@ -96,22 +96,22 @@
      :ns-aliases (combine-alias-data alias-data :ns-aliases #(apply merge %))
      :ns-default (combine-alias-data alias-data :ns-default last)}))
 
+(defn- build-fn-descriptor [parsed fun args]
+  (if (odd? (count args))
+    (let [trailing (last args)]
+      (if (map? trailing)
+        (-> parsed (assoc :function fun) (assoc :overrides (butlast args)) (assoc :trailing trailing))
+        (throw (err "Key is missing value:" trailing))))
+    (cond-> parsed
+      fun        (assoc :function fun)
+      (seq args) (assoc :overrides args))))
+
 (defn- parse-fn
   [parsed [expr & exprs :as args]]
   (if (seq args)
     (if (symbol? expr)
-      (if (odd? (count exprs))
-        (let [trailing (last exprs)]
-          (if (map? trailing)
-            (-> parsed (assoc :function expr) (assoc :overrides (butlast exprs)) (assoc :trailing trailing))
-            (throw (err "Key is missing value:" trailing))))
-        (cond-> (assoc parsed :function expr) (seq exprs) (assoc :overrides exprs)))
-      (if (odd? (count args))
-        (let [trailing (last args)]
-          (if (map? trailing)
-            (-> parsed (assoc :overrides (butlast args)) (assoc :trailing trailing))
-            (throw (err "Key is missing value:" trailing))))
-        (assoc parsed :overrides args)))
+      (build-fn-descriptor parsed expr exprs)
+      (build-fn-descriptor parsed nil args))
     parsed))
 
 (defn- parse-kws
@@ -171,9 +171,8 @@
   (parse-args ['--aliases :a:b])                     ;;=> {:aliases (:a :b)}
   (parse-args ['--aliases :a:b 'foo/bar])            ;;=> {:aliases (:a :b), :function foo/bar}
   (parse-args ['--aliases :a:b 'foo/bar :x 1 :y 2])  ;;=> {:aliases (:a :b), :function foo/bar, :overrides (:x 1 :y 2)}
-  (parse-args ['--aliases :a:b 'foo/bar :x 1 :y])    ;;=> {:aliases (:a :b), :overrides (foo/bar :x 1 :y)}
+  (parse-args ['--aliases :a:b 'foo/bar :x 1 :y])    ;;=> Except, missing value for :y
   (parse-args ['--aliases :a:b :x 1 :k 1])           ;;=> {:aliases (:a :b), :overrides (:x 1 :k 1)}
-  (parse-args ['--aliases :a:b :x 1 :k])             ;; Except, missing value for :k
   (parse-args ['foo/bar])                            ;;=> {:function foo/bar}
   (parse-args ['foo/bar :x 1 :y])                    ;;=> Except, missing value for :y
   (parse-args [:x 1 :y])                             ;;=> Except, missing value for :y
