@@ -99,12 +99,19 @@
 (defn- parse-fn
   [parsed [expr & exprs :as args]]
   (if (seq args)
-    (if (odd? (count args))
-      (if (symbol? expr)
-        (cond-> (assoc parsed :function expr)
-          (seq exprs) (assoc :overrides exprs))
-        (throw (err "Key is missing value:" (last args))))
-      (assoc parsed :overrides args))
+    (if (symbol? expr)
+      (if (odd? (count exprs))
+        (let [trailing (last exprs)]
+          (if (map? trailing)
+            (-> parsed (assoc :function expr) (assoc :overrides (butlast exprs)) (assoc :trailing trailing))
+            (throw (err "Key is missing value:" trailing))))
+        (cond-> (assoc parsed :function expr) (seq exprs) (assoc :overrides exprs)))
+      (if (odd? (count args))
+        (let [trailing (last args)]
+          (if (map? trailing)
+            (-> parsed (assoc :overrides (butlast args)) (assoc :trailing trailing))
+            (throw (err "Key is missing value:" trailing))))
+        (assoc parsed :overrides args)))
     parsed))
 
 (defn- parse-kws
@@ -143,8 +150,9 @@
 (defn -main
   [& args]
   (try
-    (let [{:keys [function aliases overrides]} (-> args read-args parse-args)
+    (let [{:keys [function aliases overrides trailing]} (-> args read-args parse-args)
           {:keys [exec-fn exec-args ns-aliases ns-default]} (when aliases (read-aliases (read-basis) aliases))
+          exec-args (merge exec-args trailing)
           f (or function exec-fn)]
       (when (nil? f)
         (if (symbol? (first overrides))
@@ -159,20 +167,27 @@
         (throw e)))))
 
 (comment
-  (parse-args [])
-  (parse-args ['--aliases :a:b])
-  (parse-args ['--aliases :a:b 'foo/bar])
-  (parse-args ['--aliases :a:b :x 1 :k 1])
-  (parse-args ['--aliases :a:b :x 1 :k 1])
-  (parse-args ['--aliases :a:b :x 1 :k])
-  (parse-args ['foo/bar])
-  (parse-args ['foo/bar :x 1 :y])
-  (parse-args [:x 1 :y])
+  (parse-args []) ;;=> nil
+  (parse-args ['--aliases :a:b])                     ;;=> {:aliases (:a :b)}
+  (parse-args ['--aliases :a:b 'foo/bar])            ;;=> {:aliases (:a :b), :function foo/bar}
+  (parse-args ['--aliases :a:b 'foo/bar :x 1 :y 2])  ;;=> {:aliases (:a :b), :function foo/bar, :overrides (:x 1 :y 2)}
+  (parse-args ['--aliases :a:b 'foo/bar :x 1 :y])    ;;=> {:aliases (:a :b), :overrides (foo/bar :x 1 :y)}
+  (parse-args ['--aliases :a:b :x 1 :k 1])           ;;=> {:aliases (:a :b), :overrides (:x 1 :k 1)}
+  (parse-args ['--aliases :a:b :x 1 :k])             ;; Except, missing value for :k
+  (parse-args ['foo/bar])                            ;;=> {:function foo/bar}
+  (parse-args ['foo/bar :x 1 :y])                    ;;=> Except, missing value for :y
+  (parse-args [:x 1 :y])                             ;;=> Except, missing value for :y
 
+  (parse-args [:a 1 :b 2])                           ;;=> {:overrides [:a 1 :b 2]}
+  (parse-args [:a 1 :b 2 {:b 42}])                   ;;=> {:overrides (:a 1 :b 2), :trailing {:b 42}}
+  (parse-args ['foo/bar {:a 1}])                     ;;=> {:function foo/bar, :overrides nil, :trailing {:a 1}}
+  (parse-args ['--aliases :a:b :x 1 :k 1 {:a 1}])    ;;=> {:aliases (:a :b), :overrides (:x 1 :k 1), :trailing {:a 1}}
+  (parse-args ['foo/bar :x 1 :y 2 {:y 42}])          ;;=> {:function foo/bar, :overrides (:x 1 :y 2), :trailing {:y 42}}
+  (parse-args ['foo/bar :x 1 :y {:y 42}])            ;;=> {:function foo/bar, :overrides (:x 1 :y {:y 42})}
+  
   (read-aliases {:aliases {:a {:exec-fn 'clojure.core/pr :exec-args {:a 1}}}} [:a])
   (read-aliases {:aliases {:a {:exec-fn 'pr :exec-args {:a 1} :ns-default 'clojure.core}}} [:a])
   (read-aliases {:aliases {:a {:exec-fn 'core/pr :exec-args {:a 1} :ns-aliases {'core 'clojure.core}}}} [:a])
 
   (read-aliases nil [:a])
-
   )
