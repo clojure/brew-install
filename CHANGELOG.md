@@ -5,7 +5,11 @@ Changelog
 
 clj has both stable and prerelease versions. Current and former stable build are listed in **bold** are (or were) obtained from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
-Prerelease versions: none
+Prerelease versions:
+
+* 1.10.3.849 on May 20, 2021
+  * Add support for trailing map in -X calls
+  * Update to tools.deps.alpha 0.11.922
 
 **Current stable version:**
 
