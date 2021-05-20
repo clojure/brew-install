@@ -155,13 +155,12 @@
   (try
     (let [{:keys [function aliases overrides trailing]} (-> args read-args parse-args)
           {:keys [exec-fn exec-args ns-aliases ns-default]} (when aliases (read-aliases (read-basis) aliases))
-          exec-args (merge exec-args trailing)
           f (or function exec-fn)]
       (when (nil? f)
         (if (symbol? (first overrides))
           (throw (err "Key is missing value:" (last overrides)))
           (throw (err "No function found on command line or in :exec-fn"))))
-      (exec (qualify-fn f ns-aliases ns-default) (apply-overrides exec-args overrides)))
+      (exec (qualify-fn f ns-aliases ns-default) (merge (apply-overrides exec-args overrides) trailing)))
     (catch ExceptionInfo e
       (if (-> e ex-data :exec-msg)
         (binding [*out* *err*]
