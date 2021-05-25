@@ -394,7 +394,7 @@ cp_file      = $CpFile
         $ExecArgs += '--aliases'
         $ExecArgs += $ExecAliases
       }
-      & $JavaCmd @JvmOpts "-Dclojure.basis=$BasisFile" -classpath "$CP;$InstallDir/exec.jar" clojure.main -m clojure.run.exec @ExecArgs @ClojureArgs
+      & $JavaCmd @JvmCacheOpts @JvmOpts "-Dclojure.basis=$BasisFile" -classpath "$CP;$InstallDir/exec.jar" clojure.main -m clojure.run.exec @ExecArgs @ClojureArgs
     } else {
       if (Test-Path $MainFile) {
         # TODO this seems dangerous
