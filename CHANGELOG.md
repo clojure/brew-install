@@ -5,19 +5,18 @@ Changelog
 
 clj has both stable and prerelease versions. Current and former stable build are listed in **bold** are (or were) obtained from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
-Prerelease versions:
-
-* 1.10.3.855 on May 25, 2021
-  * Fix bug in applying :jvm-opts flags for -X on Windows
+Prerelease versions: none
 
 **Current stable version:**
+
+* **1.10.3.855 on May 25, 2021**
+  * **Fix bug in applying :jvm-opts flags for -X on Windows**
+
+Older versions (previous stable builds in bold):
 
 * **1.10.3.849 on May 20, 2021**
   * **Add support for trailing map in -X calls**
   * **Update to tools.deps.alpha 0.11.922**
-
-Older versions (previous stable builds in bold):
-
 * **1.10.3.839 on May 12, 2021**
   * **Fix breakage in linux installer in 1.10.3.833**
 * **1.10.3.833 on May 11, 2021**
