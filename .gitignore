@@ -1,3 +1,6 @@
 dependency-reduced-pom.xml
 target
 .cpcache/
+*.iml
+.nrepl*
+.idea/
