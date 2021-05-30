@@ -9,11 +9,16 @@ Prerelease versions: none
 
 **Current stable version:**
 
-* **1.10.3.839 on May 12, 2021**
-  * **Fix breakage in linux installer in 1.10.3.833**
+* **1.10.3.855 on May 25, 2021**
+  * **Fix bug in applying :jvm-opts flags for -X on Windows**
 
 Older versions (previous stable builds in bold):
 
+* **1.10.3.849 on May 20, 2021**
+  * **Add support for trailing map in -X calls**
+  * **Update to tools.deps.alpha 0.11.922**
+* **1.10.3.839 on May 12, 2021**
+  * **Fix breakage in linux installer in 1.10.3.833**
 * **1.10.3.833 on May 11, 2021**
   * **Clean up script variables**
 * 1.10.3.829 on May 11, 2021
