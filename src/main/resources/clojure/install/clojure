@@ -442,7 +442,7 @@ else
       set -e
     fi
     if [ "$#" -gt 0 ] && [ "$mode" == "repl" ]; then
-      >&2 echo "WARNING: Use of -A with clojure.main is deprecated, use -M instead"
+      >&2 echo "WARNING: Implicit use of clojure.main with options is deprecated, use -M"
     fi
     exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp" clojure.main "${main_cache_opts[@]}" "$@"
   fi
