@@ -11,7 +11,8 @@
     ;; NOTE: ONLY depend on Clojure core, loaded in user's classpath so can't have any deps
     [clojure.edn :as edn]
     [clojure.java.io :as jio]
-    [clojure.string :as str])
+    [clojure.string :as str]
+    [clojure.spec.alpha :as s])
   (:import
     [clojure.lang ExceptionInfo]))
 
@@ -96,7 +97,17 @@
      :ns-aliases (combine-alias-data alias-data :ns-aliases #(apply merge %))
      :ns-default (combine-alias-data alias-data :ns-default last)}))
 
-(defn- build-fn-descriptor [parsed fun args]
+(def arg-spec (s/cat :fns (s/* symbol?) :kvs (s/* (s/cat :k keyword? :v any?)) :trailing (s/? map?)))
+
+(defn- build-fn-descriptor [parsed {:keys [fns kvs trailing] :as extra}]
+  (cond-> parsed
+    fns (assoc :function fns)
+    trailing (assoc :trailing trailing)
+    kvs (assoc :overrides (reduce #(-> %1 (conj (:k %2)) (conj (:v %2))) [] kvs))))
+
+(comment
+  {:fns [a b], :kvs [{:k :a, :v 1} {:k :b, :v 2}], :trailing {}}
+  
   (if (odd? (count args))
     (let [trailing (last args)]
       (if (map? trailing)
@@ -107,14 +118,17 @@
         (throw (err "Key is missing value:" trailing))))
     (cond-> parsed
       fun        (assoc :function fun)
-      (seq args) (assoc :overrides args))))
+      (seq args) (assoc :overrides args)))
+
+)
 
 (defn- parse-fn
-  [parsed [expr & exprs :as args]]
+  [parsed args]
   (if (seq args)
-    (if (symbol? expr)
-      (build-fn-descriptor parsed expr exprs)
-      (build-fn-descriptor parsed nil args))
+    (let [conf (s/conform arg-spec args)]
+      (if (= :clojure.spec.alpha/invalid conf)
+        (throw (err "Problem parsing arguments: "))
+        (build-fn-descriptor parsed conf)))
     parsed))
 
 (defn- parse-kws
@@ -171,8 +185,8 @@
 (comment
   (parse-args []) ;;=> nil
   (parse-args ['--aliases :a:b])                     ;;=> {:aliases (:a :b)}
-  (parse-args ['--aliases :a:b 'foo/bar])            ;;=> {:aliases (:a :b), :function foo/bar}
-  (parse-args ['--aliases :a:b 'foo/bar :x 1 :y 2])  ;;=> {:aliases (:a :b), :function foo/bar, :overrides (:x 1 :y 2)}
+  (parse-args ['--aliases :a:b 'foo/bar])            ;;=> {:aliases (:a :b), :function [foo/bar]}
+  (parse-args ['--aliases :a:b 'foo/bar :x 1 :y 2])  ;;=> {:aliases (:a :b), :function [foo/bar], :overrides [:x 1 :y 2]}
   (parse-args ['--aliases :a:b 'foo/bar :x 1 :y])    ;;=> Except, missing value for :y
   (parse-args ['--aliases :a:b :x 1 :k 1])           ;;=> {:aliases (:a :b), :overrides (:x 1 :k 1)}
   (parse-args ['foo/bar])                            ;;=> {:function foo/bar}
@@ -185,6 +199,15 @@
   (parse-args ['--aliases :a:b :x 1 :k 1 {:a 1}])    ;;=> {:aliases (:a :b), :overrides (:x 1 :k 1), :trailing {:a 1}}
   (parse-args ['foo/bar :x 1 :y 2 {:y 42}])          ;;=> {:function foo/bar, :overrides (:x 1 :y 2), :trailing {:y 42}}
   (parse-args ['foo/bar :x 1 :y {:y 42}])            ;;=> {:function foo/bar, :overrides (:x 1 :y {:y 42})}
+
+  (def arg-spec (s/cat :fns (s/* symbol?) :kvs (s/* (s/cat :k keyword? :v any?)) :trailing (s/? map?)))
+
+  (s/conform arg-spec '[a b :a 1 :b 2 {}])
+  (s/conform arg-spec '[a b])
+  (s/conform arg-spec '[a])
+  (s/conform arg-spec '[a {:a 1 :b 2}])
+  (s/conform arg-spec '[:a 1 :b 2])
+  (s/conform arg-spec '[foo/bar :x 1 :y])
   
   (read-aliases {:aliases {:a {:exec-fn 'clojure.core/pr :exec-args {:a 1}}}} [:a])
   (read-aliases {:aliases {:a {:exec-fn 'pr :exec-args {:a 1} :ns-default 'clojure.core}}} [:a])
