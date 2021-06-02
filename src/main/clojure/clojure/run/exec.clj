@@ -105,29 +105,19 @@
     trailing (assoc :trailing trailing)
     kvs (assoc :overrides (reduce #(-> %1 (conj (:k %2)) (conj (:v %2))) [] kvs))))
 
-(comment
-  {:fns [a b], :kvs [{:k :a, :v 1} {:k :b, :v 2}], :trailing {}}
-  
-  (if (odd? (count args))
-    (let [trailing (last args)]
-      (if (map? trailing)
-        (cond-> parsed
-          fun (assoc :function fun)
-          (-> args next next) (assoc :overrides (butlast args))
-          trailing (assoc :trailing trailing))
-        (throw (err "Key is missing value:" trailing))))
-    (cond-> parsed
-      fun        (assoc :function fun)
-      (seq args) (assoc :overrides args)))
-
-)
+(defn- build-error [expl]
+  (let [err-str (with-out-str
+                  (doseq [problem (:clojure.spec.alpha/problems expl)]
+                    (println (:reason problem) (:clojure.spec.alpha/value expl))))]
+    (err "Problem parsing arguments: " err-str)))
 
 (defn- parse-fn
   [parsed args]
   (if (seq args)
     (let [conf (s/conform arg-spec args)]
       (if (= :clojure.spec.alpha/invalid conf)
-        (throw (err "Problem parsing arguments: "))
+        (let [expl (s/explain-data arg-spec args)]
+          (throw (build-error expl)))
         (build-fn-descriptor parsed conf)))
     parsed))
 
@@ -188,19 +178,17 @@
   (parse-args ['--aliases :a:b 'foo/bar])            ;;=> {:aliases (:a :b), :function [foo/bar]}
   (parse-args ['--aliases :a:b 'foo/bar :x 1 :y 2])  ;;=> {:aliases (:a :b), :function [foo/bar], :overrides [:x 1 :y 2]}
   (parse-args ['--aliases :a:b 'foo/bar :x 1 :y])    ;;=> Except, missing value for :y
-  (parse-args ['--aliases :a:b :x 1 :k 1])           ;;=> {:aliases (:a :b), :overrides (:x 1 :k 1)}
-  (parse-args ['foo/bar])                            ;;=> {:function foo/bar}
+  (parse-args ['--aliases :a:b :x 1 :k 1])           ;;=> {:aliases (:a :b), :overrides [:x 1 :k 1]}
+  (parse-args ['foo/bar])                            ;;=> {:function [foo/bar]}
   (parse-args ['foo/bar :x 1 :y])                    ;;=> Except, missing value for :y
-  (parse-args [:x 1 :y])                             ;;=> Except, missing value for :y
+  (parse-args [:x 1 :ZZZZZZZZZZZ])                   ;;=> Except, missing value for :ZZZZZZZZZZZ
 
   (parse-args [:a 1 :b 2])                           ;;=> {:overrides [:a 1 :b 2]}
-  (parse-args [:a 1 :b 2 {:b 42}])                   ;;=> {:overrides (:a 1 :b 2), :trailing {:b 42}}
-  (parse-args ['foo/bar {:a 1}])                     ;;=> {:function foo/bar, :trailing {:a 1}}
-  (parse-args ['--aliases :a:b :x 1 :k 1 {:a 1}])    ;;=> {:aliases (:a :b), :overrides (:x 1 :k 1), :trailing {:a 1}}
-  (parse-args ['foo/bar :x 1 :y 2 {:y 42}])          ;;=> {:function foo/bar, :overrides (:x 1 :y 2), :trailing {:y 42}}
-  (parse-args ['foo/bar :x 1 :y {:y 42}])            ;;=> {:function foo/bar, :overrides (:x 1 :y {:y 42})}
-
-  (def arg-spec (s/cat :fns (s/* symbol?) :kvs (s/* (s/cat :k keyword? :v any?)) :trailing (s/? map?)))
+  (parse-args [:a 1 :b 2 {:b 42}])                   ;;=> {:overrides [:a 1 :b 2], :trailing {:b 42}}
+  (parse-args ['foo/bar {:a 1}])                     ;;=> {:function [foo/bar], :trailing {:a 1}}
+  (parse-args ['--aliases :a:b :x 1 :k 1 {:a 1}])    ;;=> {:aliases (:a :b), :overrides [:x 1 :k 1], :trailing {:a 1}}
+  (parse-args ['foo/bar :x 1 :y 2 {:y 42}])          ;;=> {:function [foo/bar], :overrides [:x 1 :y 2], :trailing {:y 42}}
+  (parse-args ['foo/bar :x 1 :y {:y 42}])            ;;=> {:function [foo/bar], :overrides [:x 1 :y {:y 42}]}
 
   (s/conform arg-spec '[a b :a 1 :b 2 {}])
   (s/conform arg-spec '[a b])
