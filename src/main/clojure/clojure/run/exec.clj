@@ -166,7 +166,7 @@
           (throw (err "No function found on command line or in :exec-fn"))))
       (loop [fns f, args (merge (apply-overrides exec-args overrides) trailing)]
         (if (seq fns)
-          (recur (next fns) (exec (qualify-fn (first fns) ns-aliases ns-default) args))
+          (recur (rest fns) (exec (qualify-fn (first fns) ns-aliases ns-default) args))
           args)))
     (catch ExceptionInfo e
       (if (-> e ex-data :exec-msg)

@@ -2,7 +2,8 @@
   (:require
     [clojure.test :refer :all]
     [clojure.string :as str]
-    [clojure.run.exec :as exec])
+    [clojure.run.exec :as exec]
+    clojure.set)
   (:import
     [java.io File]
     [clojure.lang ExceptionInfo]))
@@ -47,6 +48,7 @@
 
 (def stash (atom nil))
 (defn save [val] (reset! stash val))
+(defn flip [val] (reset! stash (clojure.set/map-invert val)))
 
 (defn- encapsulate-main
   [basis args]
@@ -75,6 +77,8 @@
   (are [stashed args basis] (= stashed (encapsulate-main basis args))
     ;; ad hoc, fully resolved, with both key and path vector
     {:a 1, :b {:c 2}} ["clojure.run.test-exec/save" ":a" "1" "[:b,:c]" "2"] {}
+
+    {1 :a, {:c 2} :b} ["clojure.run.test-exec/save" "clojure.run.test-exec/flip" ":a" "1" "[:b,:c]" "2"] {}
 
     ;; ad hoc, resolved by default-ns
     {:a 1} ["--aliases" ":x" "save" ":a" "1"] {:aliases {:x {:ns-default 'clojure.run.test-exec}}}
