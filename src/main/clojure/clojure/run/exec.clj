@@ -97,13 +97,13 @@
      :ns-aliases (combine-alias-data alias-data :ns-aliases #(apply merge %))
      :ns-default (combine-alias-data alias-data :ns-default last)}))
 
-(def arg-spec (s/cat :fns (s/* symbol?) :kvs (s/* (s/cat :k keyword? :v any?)) :trailing (s/? map?)))
+(def arg-spec (s/cat :fns (s/* symbol?) :kvs (s/* (s/cat :k (s/or :keyword keyword? :path vector?) :v any?)) :trailing (s/? map?)))
 
 (defn- build-fn-descriptor [parsed {:keys [fns kvs trailing] :as extra}]
   (cond-> parsed
     fns (assoc :function fns)
     trailing (assoc :trailing trailing)
-    kvs (assoc :overrides (reduce #(-> %1 (conj (:k %2)) (conj (:v %2))) [] kvs))))
+    kvs (assoc :overrides (reduce #(-> %1 (conj (second (:k %2))) (conj (:v %2))) [] kvs))))
 
 (defn- build-error [expl]
   (let [err-str (with-out-str
@@ -193,12 +193,17 @@
   (parse-args ['foo/bar :x 1 :y 2 {:y 42}])          ;;=> {:function [foo/bar], :overrides [:x 1 :y 2], :trailing {:y 42}}
   (parse-args ['foo/bar :x 1 :y {:y 42}])            ;;=> {:function [foo/bar], :overrides [:x 1 :y {:y 42}]}
 
+  (-> ["clojure.run.test-exec/save" ":a" "1" "[:b,:c]" "2"]
+      read-args
+      parse-args)
+  
   (s/conform arg-spec '[a b :a 1 :b 2 {}])
   (s/conform arg-spec '[a b])
   (s/conform arg-spec '[a])
   (s/conform arg-spec '[a {:a 1 :b 2}])
   (s/conform arg-spec '[:a 1 :b 2])
   (s/conform arg-spec '[foo/bar :x 1 :y])
+  (s/conform arg-spec '[clojure.run.test-exec/save :a 1 [:b :c] 2])
   
   (read-aliases {:aliases {:a {:exec-fn 'clojure.core/pr :exec-args {:a 1}}}} [:a])
   (read-aliases {:aliases {:a {:exec-fn 'pr :exec-args {:a 1} :ns-default 'clojure.core}}} [:a])
