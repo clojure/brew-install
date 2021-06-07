@@ -97,13 +97,13 @@
      :ns-aliases (combine-alias-data alias-data :ns-aliases #(apply merge %))
      :ns-default (combine-alias-data alias-data :ns-default last)}))
 
-(def arg-spec (s/cat :fns (s/* symbol?) :kvs (s/* (s/cat :k (s/or :keyword keyword? :path vector?) :v any?)) :trailing (s/? map?)))
+(def arg-spec (s/cat :fns (s/* symbol?) :kvs (s/* (s/cat :k (s/nonconforming (s/or :keyword keyword? :path vector?)) :v any?)) :trailing (s/? map?)))
 
 (defn- build-fn-descriptor [parsed {:keys [fns kvs trailing] :as extra}]
   (cond-> parsed
     fns (assoc :function fns)
     trailing (assoc :trailing trailing)
-    kvs (assoc :overrides (reduce #(-> %1 (conj (second (:k %2))) (conj (:v %2))) [] kvs))))
+    kvs (assoc :overrides (reduce #(-> %1 (conj (:k %2)) (conj (:v %2))) [] kvs))))
 
 (defn- build-error [expl]
   (let [err-str (with-out-str
@@ -115,7 +115,7 @@
   [parsed args]
   (if (seq args)
     (let [conf (s/conform arg-spec args)]
-      (if (= :clojure.spec.alpha/invalid conf)
+      (if (s/invalid? conf)
         (let [expl (s/explain-data arg-spec args)]
           (throw (build-error expl)))
         (build-fn-descriptor parsed conf)))
