@@ -364,17 +364,17 @@ cp_file      = $CpFile
   } elseif ($PrintClassPath) {
     Write-Output $CP
   } elseif ($Describe) {
-    $PathVector = ($ConfigPaths | ForEach-Object { "`"$_`"" }) -join ' '
+    $PathVector = ($ConfigPaths | ForEach-Object { "`"$($_.Replace("\","\\"))`"" }) -join ' '
     Write-Output @"
 {:version "$Version"
  :config-files [$PathVector]
- :config-user "$ConfigUser"
- :config-project "$ConfigProject"
- :install-dir "$InstallDir"
- :config-dir "$ConfigDir"
- :cache-dir "$CacheDir"
- :force $Force
- :repro $Repro
+ :config-user "$($ConfigUser.Replace("\","\\"))"
+ :config-project "$($ConfigProject.Replace("\","\\"))"
+ :install-dir "$($InstallDir.Replace("\","\\"))"
+ :config-dir "$($ConfigDir.Replace("\","\\"))"
+ :cache-dir "$($CacheDir.Replace("\","\\"))"
+ :force $(if ($Force) {"true"} else {"false"})
+ :repro $(if ($Repro) {"true"} else {"false"})
  :main-aliases "$main_aliases"
  :repl-aliases "$repl_aliases"
  :exec-aliases "$exec_aliases"}
@@ -401,7 +401,7 @@ cp_file      = $CpFile
         $MainCacheOpts = @(Get-Content $MainFile) -replace '"', '\"'
       }
       if ($ClojureArgs.Count -gt 0 -and $Mode -eq 'repl') {
-        Write-Warning "When invoking clojure.main, use -M"
+        Write-Warning "WARNING: Implicit use of clojure.main with options is deprecated, use -M"
       }
       & $JavaCmd @JvmCacheOpts @JvmOpts "-Dclojure.basis=$BasisFile" -classpath $CP clojure.main @MainCacheOpts @ClojureArgs
     }
