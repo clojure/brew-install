@@ -5,7 +5,12 @@ Changelog
 
 clj has both stable and prerelease versions. Current and former stable build are listed in **bold** are (or were) obtained from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
-Prerelease versions: none
+Prerelease versions:
+
+* next
+  * TDEPS-182 - Improve deprecation message to be more accurate
+  * TDEPS-183 - Fix -Sdescribe output to be valid edn on Windows
+  * Update to tools.deps.alpha 0.11.931
 
 **Current stable version:**
 
