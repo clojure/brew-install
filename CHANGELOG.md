@@ -10,6 +10,7 @@ Prerelease versions:
 * next
   * TDEPS-182 - Improve deprecation message to be more accurate
   * TDEPS-183 - Fix -Sdescribe output to be valid edn on Windows
+  * Update to tools.deps.alpha 0.11.931
 
 **Current stable version:**
 
