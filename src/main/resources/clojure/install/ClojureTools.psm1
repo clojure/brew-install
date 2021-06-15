@@ -180,7 +180,7 @@ then use 'clojure'.
 
 Usage:
   Start a REPL   clj     [clj-opt*] [-Aaliases] [init-opt*]
-  Exec function  clojure [clj-opt*] -X[aliases] [a/fn] [kpath v]*
+  Exec fn(s)     clojure [clj-opt*] -X[aliases] [a/fn*] [kpath v]*
   Run main       clojure [clj-opt*] -M[aliases] [init-opt*] [main-opt] [arg*]
   Prepare        clojure [clj-opt*] -P [other exec opts]
 
@@ -364,17 +364,17 @@ cp_file      = $CpFile
   } elseif ($PrintClassPath) {
     Write-Output $CP
   } elseif ($Describe) {
-    $PathVector = ($ConfigPaths | ForEach-Object { "`"$_`"" }) -join ' '
+    $PathVector = ($ConfigPaths | ForEach-Object { "`"$($_.Replace("\","\\"))`"" }) -join ' '
     Write-Output @"
 {:version "$Version"
  :config-files [$PathVector]
- :config-user "$ConfigUser"
- :config-project "$ConfigProject"
- :install-dir "$InstallDir"
- :config-dir "$ConfigDir"
- :cache-dir "$CacheDir"
- :force $Force
- :repro $Repro
+ :config-user "$($ConfigUser.Replace("\","\\"))"
+ :config-project "$($ConfigProject.Replace("\","\\"))"
+ :install-dir "$($InstallDir.Replace("\","\\"))"
+ :config-dir "$($ConfigDir.Replace("\","\\"))"
+ :cache-dir "$($CacheDir.Replace("\","\\"))"
+ :force $(if ($Force) {"true"} else {"false"})
+ :repro $(if ($Repro) {"true"} else {"false"})
  :main-aliases "$main_aliases"
  :repl-aliases "$repl_aliases"
  :exec-aliases "$exec_aliases"}
