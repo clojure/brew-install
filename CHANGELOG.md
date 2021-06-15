@@ -7,6 +7,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
+* next
+  * On -X success, exit with System/exit to avoid hang from futures
 * 1.10.3.875 on June 10, 2021
   * New: support for specifying multiple functions with -X with -> semantics
   * TDEPS-182 - Improve deprecation message to be more accurate

@@ -167,7 +167,8 @@
       (loop [fns f, args (merge (apply-overrides exec-args overrides) trailing)]
         (if (seq fns)
           (recur (rest fns) (exec (qualify-fn (first fns) ns-aliases ns-default) args))
-          args)))
+          args))
+      (System/exit 0))
     (catch ExceptionInfo e
       (if (-> e ex-data :exec-msg)
         (binding [*out* *err*]
