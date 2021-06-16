@@ -9,6 +9,7 @@ Prerelease versions:
 
 * next
   * On -X success, exit with System/exit to avoid hang from futures
+  * Bind namespace resolution context around -X
 * 1.10.3.875 on June 10, 2021
   * New: support for specifying multiple functions with -X with -> semantics
   * TDEPS-182 - Improve deprecation message to be more accurate
