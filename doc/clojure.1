@@ -9,7 +9,7 @@ clj, clojure \- runners to launch Clojure programs
 [\fBclj-opts\fR] [\fB-Aaliases\fR] [\fBinit-opts\fR]
 .br
 .B clojure
-[\fBclj-opts\fR] \fB-X\fR[\fBaliases\fR] [\fBmy/fn\fR] [\fBkpath v\fR ...]
+[\fBclj-opts\fR] \fB-X\fR[\fBaliases\fR] [\fBmy/fn\fR ...] [\fBkpath v\fR ...]
 .br
 .B clojure
 [\fBclj-opts\fR] \fB-M\fR[\fBaliases\fR] [\fBinit-opts\fR] [\fBmain-opts\fR] [\fBargs\fR]
@@ -61,9 +61,9 @@ Concatenated aliases for REPL execution, ex: -A:dev:mem
 
 .TP
 .BI \-X aliases\ \fIfn\fR " " \fIKPATH\fR " " \fIV\fR " "
-Exec alias to invoke a function that takes a map, with
-keypath/value overrides. Function must either be supplied
-or be in :exec-fn argmap for alias
+Exec alias to invoke one or more functions that take a map,
+with keypath/value overrides. Function must either be
+supplied or be in :exec-fn argmap for alias
 
 .TP
 .BI \-M aliases

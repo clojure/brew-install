@@ -2,7 +2,8 @@
   (:require
     [clojure.test :refer :all]
     [clojure.string :as str]
-    [clojure.run.exec :as exec])
+    [clojure.run.exec :as exec]
+    clojure.set)
   (:import
     [java.io File]
     [clojure.lang ExceptionInfo]))
@@ -18,15 +19,15 @@
   (are [expected args] (= expected (#'exec/parse-args args))
     nil []
     {:aliases [:a :b]} ['--aliases :a:b]
-    {:aliases [:a] :function 'foo/bar} ['--aliases :a 'foo/bar]
+    {:aliases [:a] :function '[foo/bar]} ['--aliases :a 'foo/bar]
     {:aliases [:a] :overrides [:x 1 :y 1]} ['--aliases :a :x 1 :y 1]
-    {:function 'foo} ['foo]
-    {:function 'foo :overrides [:x 1 :y 1]} ['foo :x 1 :y 1]
+    {:function '[foo]} ['foo]
+    {:function '[foo] :overrides [:x 1 :y 1]} ['foo :x 1 :y 1]
     {:overrides [:x 1 :y 1]} [:x 1 :y 1]
     {:overrides [:a 1 :b 2], :trailing {:b 42}} [:a 1 :b 2 {:b 42}]
-    {:function 'foo/bar, :trailing {:a 1}} ['foo/bar {:a 1}]
+    {:function '[foo/bar], :trailing {:a 1}} ['foo/bar {:a 1}]
     {:aliases [:a :b], :overrides [:x 1 :k 1], :trailing {:a 1}} ['--aliases :a:b :x 1 :k 1 {:a 1}]
-    {:function 'foo/bar, :overrides [:x 1 :y 2], :trailing {:y 42}} ['foo/bar :x 1 :y 2 {:y 42}])
+    {:function '[foo/bar], :overrides [:x 1 :y 2], :trailing {:y 42}} ['foo/bar :x 1 :y 2 {:y 42}])
 
   ;; missing last override value prints value missing for key (like hash-map)
   (is (thrown-with-msg? ExceptionInfo #":y" (#'exec/parse-args [:x 1 :y])))
@@ -47,6 +48,7 @@
 
 (def stash (atom nil))
 (defn save [val] (reset! stash val))
+(defn flip [val] (reset! stash (clojure.set/map-invert val)))
 
 (defn- encapsulate-main
   [basis args]
@@ -75,6 +77,8 @@
   (are [stashed args basis] (= stashed (encapsulate-main basis args))
     ;; ad hoc, fully resolved, with both key and path vector
     {:a 1, :b {:c 2}} ["clojure.run.test-exec/save" ":a" "1" "[:b,:c]" "2"] {}
+
+    {1 :a, {:c 2} :b} ["clojure.run.test-exec/save" "clojure.run.test-exec/flip" ":a" "1" "[:b,:c]" "2"] {}
 
     ;; ad hoc, resolved by default-ns
     {:a 1} ["--aliases" ":x" "save" ":a" "1"] {:aliases {:x {:ns-default 'clojure.run.test-exec}}}

@@ -11,7 +11,8 @@
     ;; NOTE: ONLY depend on Clojure core, loaded in user's classpath so can't have any deps
     [clojure.edn :as edn]
     [clojure.java.io :as jio]
-    [clojure.string :as str])
+    [clojure.string :as str]
+    [clojure.spec.alpha :as s])
   (:import
     [clojure.lang ExceptionInfo]))
 
@@ -96,25 +97,28 @@
      :ns-aliases (combine-alias-data alias-data :ns-aliases #(apply merge %))
      :ns-default (combine-alias-data alias-data :ns-default last)}))
 
-(defn- build-fn-descriptor [parsed fun args]
-  (if (odd? (count args))
-    (let [trailing (last args)]
-      (if (map? trailing)
-        (cond-> parsed
-          fun (assoc :function fun)
-          (-> args next next) (assoc :overrides (butlast args))
-          trailing (assoc :trailing trailing))
-        (throw (err "Key is missing value:" trailing))))
-    (cond-> parsed
-      fun        (assoc :function fun)
-      (seq args) (assoc :overrides args))))
+(def arg-spec (s/cat :fns (s/* symbol?) :kvs (s/* (s/cat :k (s/nonconforming (s/or :keyword keyword? :path vector?)) :v any?)) :trailing (s/? map?)))
+
+(defn- build-fn-descriptor [parsed {:keys [fns kvs trailing] :as extra}]
+  (cond-> parsed
+    fns (assoc :function fns)
+    trailing (assoc :trailing trailing)
+    kvs (assoc :overrides (reduce #(-> %1 (conj (:k %2)) (conj (:v %2))) [] kvs))))
+
+(defn- build-error [expl]
+  (let [err-str (with-out-str
+                  (doseq [problem (:clojure.spec.alpha/problems expl)]
+                    (println (:reason problem) (:clojure.spec.alpha/value expl))))]
+    (err "Problem parsing arguments: " err-str)))
 
 (defn- parse-fn
-  [parsed [expr & exprs :as args]]
+  [parsed args]
   (if (seq args)
-    (if (symbol? expr)
-      (build-fn-descriptor parsed expr exprs)
-      (build-fn-descriptor parsed nil args))
+    (let [conf (s/conform arg-spec args)]
+      (if (s/invalid? conf)
+        (let [expl (s/explain-data arg-spec args)]
+          (throw (build-error expl)))
+        (build-fn-descriptor parsed conf)))
     parsed))
 
 (defn- parse-kws
@@ -155,12 +159,16 @@
   (try
     (let [{:keys [function aliases overrides trailing]} (-> args read-args parse-args)
           {:keys [exec-fn exec-args ns-aliases ns-default]} (when aliases (read-aliases (read-basis) aliases))
-          f (or function exec-fn)]
-      (when (nil? f)
+          f (or function (if (symbol? exec-fn) [exec-fn] exec-fn))]
+      (when (or (nil? f) (empty? f))
         (if (symbol? (first overrides))
           (throw (err "Key is missing value:" (last overrides)))
           (throw (err "No function found on command line or in :exec-fn"))))
-      (exec (qualify-fn f ns-aliases ns-default) (merge (apply-overrides exec-args overrides) trailing)))
+      (loop [fns f, args (merge (apply-overrides exec-args overrides) trailing)]
+        (if (seq fns)
+          (recur (rest fns) (exec (qualify-fn (first fns) ns-aliases ns-default) args))
+          args))
+      (System/exit 0))
     (catch ExceptionInfo e
       (if (-> e ex-data :exec-msg)
         (binding [*out* *err*]
@@ -171,20 +179,32 @@
 (comment
   (parse-args []) ;;=> nil
   (parse-args ['--aliases :a:b])                     ;;=> {:aliases (:a :b)}
-  (parse-args ['--aliases :a:b 'foo/bar])            ;;=> {:aliases (:a :b), :function foo/bar}
-  (parse-args ['--aliases :a:b 'foo/bar :x 1 :y 2])  ;;=> {:aliases (:a :b), :function foo/bar, :overrides (:x 1 :y 2)}
+  (parse-args ['--aliases :a:b 'foo/bar])            ;;=> {:aliases (:a :b), :function [foo/bar]}
+  (parse-args ['--aliases :a:b 'foo/bar :x 1 :y 2])  ;;=> {:aliases (:a :b), :function [foo/bar], :overrides [:x 1 :y 2]}
   (parse-args ['--aliases :a:b 'foo/bar :x 1 :y])    ;;=> Except, missing value for :y
-  (parse-args ['--aliases :a:b :x 1 :k 1])           ;;=> {:aliases (:a :b), :overrides (:x 1 :k 1)}
-  (parse-args ['foo/bar])                            ;;=> {:function foo/bar}
+  (parse-args ['--aliases :a:b :x 1 :k 1])           ;;=> {:aliases (:a :b), :overrides [:x 1 :k 1]}
+  (parse-args ['foo/bar])                            ;;=> {:function [foo/bar]}
   (parse-args ['foo/bar :x 1 :y])                    ;;=> Except, missing value for :y
-  (parse-args [:x 1 :y])                             ;;=> Except, missing value for :y
+  (parse-args [:x 1 :ZZZZZZZZZZZ])                   ;;=> Except, missing value for :ZZZZZZZZZZZ
 
   (parse-args [:a 1 :b 2])                           ;;=> {:overrides [:a 1 :b 2]}
-  (parse-args [:a 1 :b 2 {:b 42}])                   ;;=> {:overrides (:a 1 :b 2), :trailing {:b 42}}
-  (parse-args ['foo/bar {:a 1}])                     ;;=> {:function foo/bar, :trailing {:a 1}}
-  (parse-args ['--aliases :a:b :x 1 :k 1 {:a 1}])    ;;=> {:aliases (:a :b), :overrides (:x 1 :k 1), :trailing {:a 1}}
-  (parse-args ['foo/bar :x 1 :y 2 {:y 42}])          ;;=> {:function foo/bar, :overrides (:x 1 :y 2), :trailing {:y 42}}
-  (parse-args ['foo/bar :x 1 :y {:y 42}])            ;;=> {:function foo/bar, :overrides (:x 1 :y {:y 42})}
+  (parse-args [:a 1 :b 2 {:b 42}])                   ;;=> {:overrides [:a 1 :b 2], :trailing {:b 42}}
+  (parse-args ['foo/bar {:a 1}])                     ;;=> {:function [foo/bar], :trailing {:a 1}}
+  (parse-args ['--aliases :a:b :x 1 :k 1 {:a 1}])    ;;=> {:aliases (:a :b), :overrides [:x 1 :k 1], :trailing {:a 1}}
+  (parse-args ['foo/bar :x 1 :y 2 {:y 42}])          ;;=> {:function [foo/bar], :overrides [:x 1 :y 2], :trailing {:y 42}}
+  (parse-args ['foo/bar :x 1 :y {:y 42}])            ;;=> {:function [foo/bar], :overrides [:x 1 :y {:y 42}]}
+
+  (-> ["clojure.run.test-exec/save" ":a" "1" "[:b,:c]" "2"]
+      read-args
+      parse-args)
+  
+  (s/conform arg-spec '[a b :a 1 :b 2 {}])
+  (s/conform arg-spec '[a b])
+  (s/conform arg-spec '[a])
+  (s/conform arg-spec '[a {:a 1 :b 2}])
+  (s/conform arg-spec '[:a 1 :b 2])
+  (s/conform arg-spec '[foo/bar :x 1 :y])
+  (s/conform arg-spec '[clojure.run.test-exec/save :a 1 [:b :c] 2])
   
   (read-aliases {:aliases {:a {:exec-fn 'clojure.core/pr :exec-args {:a 1}}}} [:a])
   (read-aliases {:aliases {:a {:exec-fn 'pr :exec-args {:a 1} :ns-default 'clojure.core}}} [:a])
