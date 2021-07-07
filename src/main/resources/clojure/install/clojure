@@ -261,6 +261,7 @@ if "$help"; then
 	Programs provided by :deps alias:
 	 -X:deps mvn-install       Install a maven jar to the local repository cache
 	 -X:deps git-resolve-tags  Resolve git coord tags to shas and update deps.edn
+	 -X:deps prep              Prepare all unprepped libs in the dep tree
 
 	For more info, see:
 	 https://clojure.org/guides/deps_and_cli
