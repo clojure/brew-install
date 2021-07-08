@@ -3,12 +3,13 @@ Changelog
 
 **Also see [tools.deps changelog](https://github.com/clojure/tools.deps.alpha/blob/master/CHANGELOG.md)**
 
-clj has both stable and prerelease versions. Current and former stable build are listed in **bold** are (or were) obtained from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
+clj has both stable and prerelease versions. Current and former stable build are listed in **bold** and are (or were) available from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
 Prerelease versions:
 
-* next
+* 1.10.3.882 on June 15, 2021
   * On -X success, exit with System/exit to avoid hang from futures
+  * Bind namespace resolution context around -X
 * 1.10.3.875 on June 10, 2021
   * New: support for specifying multiple functions with -X with -> semantics
   * TDEPS-182 - Improve deprecation message to be more accurate

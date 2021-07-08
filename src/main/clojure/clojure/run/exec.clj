@@ -17,6 +17,8 @@
     [clojure.lang ExceptionInfo]))
 
 (set! *warn-on-reflection* true)
+(def ^:dynamic *ns-default* nil)
+(def ^:dynamic *ns-aliases* nil)
 
 (defn- err
   ^Throwable [& msg]
@@ -164,11 +166,13 @@
         (if (symbol? (first overrides))
           (throw (err "Key is missing value:" (last overrides)))
           (throw (err "No function found on command line or in :exec-fn"))))
-      (loop [fns f, args (merge (apply-overrides exec-args overrides) trailing)]
-        (if (seq fns)
-          (recur (rest fns) (exec (qualify-fn (first fns) ns-aliases ns-default) args))
-          args))
-      (System/exit 0))
+      (binding [*ns-default* ns-default
+                *ns-aliases* ns-aliases]
+        (loop [fns f, args (merge (apply-overrides exec-args overrides) trailing)]
+          (if (seq fns)
+            (recur (rest fns) (exec (qualify-fn (first fns) ns-aliases ns-default) args))
+            args)))
+      (*exit* 0))
     (catch ExceptionInfo e
       (if (-> e ex-data :exec-msg)
         (binding [*out* *err*]
