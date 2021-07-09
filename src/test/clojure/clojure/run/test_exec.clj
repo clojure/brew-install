@@ -78,7 +78,8 @@
     ;; ad hoc, fully resolved, with both key and path vector
     {:a 1, :b {:c 2}} ["clojure.run.test-exec/save" ":a" "1" "[:b,:c]" "2"] {}
 
-    {1 :a, {:c 2} :b} ["clojure.run.test-exec/save" "clojure.run.test-exec/flip" ":a" "1" "[:b,:c]" "2"] {}
+    ;; TODO: address when function comp is back
+    ;;{1 :a, {:c 2} :b} ["clojure.run.test-exec/save" "clojure.run.test-exec/flip" ":a" "1" "[:b,:c]" "2"] {}
 
     ;; ad hoc, resolved by default-ns
     {:a 1} ["--aliases" ":x" "save" ":a" "1"] {:aliases {:x {:ns-default 'clojure.run.test-exec}}}
