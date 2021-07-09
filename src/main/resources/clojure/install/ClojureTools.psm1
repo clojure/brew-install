@@ -180,13 +180,15 @@ then use 'clojure'.
 
 Usage:
   Start a REPL   clj     [clj-opt*] [-Aaliases] [init-opt*]
-  Exec fn(s)     clojure [clj-opt*] -X[aliases] [a/fn*] [kpath v]*
+  Exec fn(s)     clojure [clj-opt*] -X[aliases] a/fn? [kpath v]* kv-map?
+  Run tool       clojure [clj-opt*] -T[name|aliases] a/fn [kpath v] kv-map?
   Run main       clojure [clj-opt*] -M[aliases] [init-opt*] [main-opt] [arg*]
   Prepare        clojure [clj-opt*] -P [other exec opts]
 
 exec-opts:
   -Aaliases      Use concatenated aliases to modify classpath
   -X[aliases]    Use concatenated aliases to modify classpath or supply exec fn/args
+  -T[name|aliases]  Invoke tool by name or via aliases ala -X
   -M[aliases]    Use concatenated aliases to modify classpath or supply main opts
   -P             Prepare deps - download libs, cache classpath, but don't exec
 

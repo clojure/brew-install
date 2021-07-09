@@ -218,15 +218,16 @@ if "$help"; then
 
 	Usage:
 	  Start a REPL  clj     [clj-opt*] [-Aaliases] [init-opt*]
-	  Exec fn(s)    clojure [clj-opt*] -X[aliases] [a/fn*] [kpath v]*
+	  Exec fn(s)    clojure [clj-opt*] -X[aliases] a/fn? [kpath v]* kv-map?
+	  Run tool      clojure [clj-opt*] -T[name|aliases] a/fn [kpath v] kv-map?
 	  Run main      clojure [clj-opt*] -M[aliases] [init-opt*] [main-opt] [arg*]
 	  Prepare       clojure [clj-opt*] -P [other exec opts]
 
 	exec-opts:
 	 -Aaliases      Use concatenated aliases to modify classpath
 	 -X[aliases]    Use concatenated aliases to modify classpath or supply exec fn/args
-	 -M[aliases]    Use concatenated aliases to modify classpath or supply main opts
 	 -T[toolname|aliases]  Invoke tool by name or via aliases ala -X
+	 -M[aliases]    Use concatenated aliases to modify classpath or supply main opts
 	 -P             Prepare deps - download libs, cache classpath, but don't exec
 
 	clj-opts:
@@ -261,6 +262,7 @@ if "$help"; then
 	Programs provided by :deps alias:
 	 -X:deps mvn-install       Install a maven jar to the local repository cache
 	 -X:deps git-resolve-tags  Resolve git coord tags to shas and update deps.edn
+	 -X:deps find-versions     Find available versions of a library
 	 -X:deps prep              Prepare all unprepped libs in the dep tree
 
 	For more info, see:
