@@ -7,6 +7,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
+* 1.10.3.905 on July 9, 2021
+  * Removing multi-function support from -X and -T for now
 * 1.10.3.899 on July 9, 2021
   * New tools support
   * Added -T
