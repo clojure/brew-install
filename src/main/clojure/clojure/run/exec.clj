@@ -99,7 +99,7 @@
      :ns-aliases (combine-alias-data alias-data :ns-aliases #(apply merge %))
      :ns-default (combine-alias-data alias-data :ns-default last)}))
 
-(def arg-spec (s/cat :fns (s/? symbol?) :kvs (s/* (s/cat :k (s/nonconforming (s/or :keyword keyword? :path vector?)) :v any?)) :trailing (s/? map?)))
+(def arg-spec (s/cat :fns (s/? symbol?) :kvs (s/* (s/cat :k (s/nonconforming (s/or :keyword any? :path vector?)) :v any?)) :trailing (s/? map?)))
 
 (defn- build-fn-descriptor [parsed {:keys [fns kvs trailing] :as extra}]
   (cond-> parsed
