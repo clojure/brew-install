@@ -153,8 +153,8 @@
       read-args)))
 
 (defn ^:dynamic *exit*
-  [code]
-  (System/exit code))
+  ([] (shutdown-agents))
+  ([^Throwable t] (System/exit 1)))
 
 (defn -main
   [& args]
@@ -172,12 +172,12 @@
           (if (seq fns)
             (recur (rest fns) (exec (qualify-fn (first fns) ns-aliases ns-default) args))
             args)))
-      (*exit* 0))
+      (*exit*))
     (catch ExceptionInfo e
       (if (-> e ex-data :exec-msg)
         (binding [*out* *err*]
           (println (.getMessage e))
-          (*exit* 1))
+          (*exit* e))
         (throw e)))))
 
 (comment
