@@ -7,7 +7,7 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* next
+* 1.10.3.912 on July 15, 2021
   * On -X success, exit with (shutdown-agents) instead of System/exit
   * TDEPS-187 - pass -A aliases along with -Ttool
 * 1.10.3.905 on July 9, 2021
