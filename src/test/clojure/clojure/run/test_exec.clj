@@ -27,7 +27,9 @@
     {:overrides [:a 1 :b 2], :trailing {:b 42}} [:a 1 :b 2 {:b 42}]
     {:function '[foo/bar], :trailing {:a 1}} ['foo/bar {:a 1}]
     {:aliases [:a :b], :overrides [:x 1 :k 1], :trailing {:a 1}} ['--aliases :a:b :x 1 :k 1 {:a 1}]
-    {:function '[foo/bar], :overrides [:x 1 :y 2], :trailing {:y 42}} ['foo/bar :x 1 :y 2 {:y 42}])
+    {:function '[foo/bar], :overrides [:x 1 :y 2], :trailing {:y 42}} ['foo/bar :x 1 :y 2 {:y 42}]
+    {:aliases [:a :b] :function '[foo/bar]} ['--aliases :a '--aliases :b 'foo/bar]
+    {:aliases [:a :b :c :d] :function '[foo/bar]} ['--aliases :a:b '--aliases :c:d 'foo/bar])
 
   ;; missing last override value prints value missing for key (like hash-map)
   (is (thrown-with-msg? ExceptionInfo #":y" (#'exec/parse-args [:x 1 :y])))

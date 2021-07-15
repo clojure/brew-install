@@ -135,10 +135,12 @@
          (keyword %)))))
 
 (defn- parse-args
-  [[a1 & as :as all]]
-  (if (= a1 '--aliases)
-    (parse-fn {:aliases (parse-kws (pr-str (first as)))} (rest as))
-    (parse-fn nil all)))
+  [args]
+  (loop [[a1 & as :as all] args
+         aliases nil]
+    (if (= a1 '--aliases)
+      (recur (rest as) (update aliases :aliases concat (parse-kws (pr-str (first as)))))
+      (parse-fn aliases all))))
 
 (defn- read-args
   [args]
@@ -197,6 +199,8 @@
   (parse-args ['--aliases :a:b :x 1 :k 1 {:a 1}])    ;;=> {:aliases (:a :b), :overrides [:x 1 :k 1], :trailing {:a 1}}
   (parse-args ['foo/bar :x 1 :y 2 {:y 42}])          ;;=> {:function [foo/bar], :overrides [:x 1 :y 2], :trailing {:y 42}}
   (parse-args ['foo/bar :x 1 :y {:y 42}])            ;;=> {:function [foo/bar], :overrides [:x 1 :y {:y 42}]}
+
+  (parse-args ['--aliases :a:b '--aliases :c:d 'foo/bar :x 1])
 
   (-> ["clojure.run.test-exec/save" ":a" "1" "[:b,:c]" "2"]
       read-args

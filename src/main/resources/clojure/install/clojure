@@ -471,6 +471,9 @@ else
 
   if [ "$mode" == "tool" ]; then
     tool_args=()
+    if [[ ${#repl_aliases[@]} -gt 0 ]]; then
+      tool_args+=("--aliases" "$(join '' ${repl_aliases[@]})")
+    fi
     if [[ -n "$tool_aliases" ]]; then
       tool_args+=("--aliases" "$tool_aliases")
     fi
