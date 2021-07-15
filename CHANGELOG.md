@@ -9,6 +9,7 @@ Prerelease versions:
 
 * next
   * On -X success, exit with (shutdown-agents) instead of System/exit
+  * TDEPS-187 - pass -A aliases along with -Ttool
 * 1.10.3.905 on July 9, 2021
   * Removing multi-function support from -X and -T for now
 * 1.10.3.899 on July 9, 2021
