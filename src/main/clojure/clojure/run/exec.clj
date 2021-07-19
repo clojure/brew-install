@@ -67,16 +67,6 @@
         (symbol (str ns-default) (str fsym))
         (throw (err "Unqualified function can't be resolved:" fsym))))))
 
-(defn- combine-alias-data
-  "Combine the data from multiple aliases, for a particular key, given a combining rule"
-  [alias-data key rule]
-  (->> alias-data (map key) (remove nil?) rule))
-
-(defn- resolve-alias
-  "Retrieve an alias's data in basis"
-  [basis alias]
-  (get-in basis [:aliases alias]))
-
 (defn- read-basis
   []
   (when-let [f (jio/file (System/getProperty "clojure.basis"))]
@@ -84,25 +74,10 @@
       (->> f slurp (edn/read-string {:default tagged-literal}))
       (throw (err "No basis declared in clojure.basis system property")))))
 
-(defn- read-aliases
-  "Given some aliases, look up the aliases in the basis, combine the data per key,
-  specifically the keys :exec-fn, :exec-args, :ns-aliases, and :ns-default.
-  If :exec-args is an alias, resolve it."
-  [basis aliases]
-  (let [alias-data (map #(resolve-alias basis %) aliases)
-        exec-args (combine-alias-data alias-data :exec-args #(apply merge %))
-        resolved-args (if (keyword? exec-args) (resolve-alias basis exec-args) exec-args)]
-    (when (not (or (nil? resolved-args) (map? resolved-args)))
-      (throw (err "Invalid :exec-args, must be map or alias keyword:" resolved-args)))
-    {:exec-fn (combine-alias-data alias-data :exec-fn last)
-     :exec-args resolved-args
-     :ns-aliases (combine-alias-data alias-data :ns-aliases #(apply merge %))
-     :ns-default (combine-alias-data alias-data :ns-default last)}))
-
 (def arg-spec (s/cat :fns (s/? symbol?) :kvs (s/* (s/cat :k (s/nonconforming (s/or :keyword any? :path vector?)) :v any?)) :trailing (s/? map?)))
 
-(defn- build-fn-descriptor [parsed {:keys [fns kvs trailing] :as extra}]
-  (cond-> parsed
+(defn- build-fn-descriptor [{:keys [fns kvs trailing] :as extra}]
+  (cond-> {}
     fns (assoc :function [fns])
     trailing (assoc :trailing trailing)
     kvs (assoc :overrides (reduce #(-> %1 (conj (:k %2)) (conj (:v %2))) [] kvs))))
@@ -114,33 +89,13 @@
     (err "Problem parsing arguments: " err-str)))
 
 (defn- parse-fn
-  [parsed args]
-  (if (seq args)
+  [args]
+  (when (seq args)
     (let [conf (s/conform arg-spec args)]
       (if (s/invalid? conf)
         (let [expl (s/explain-data arg-spec args)]
           (throw (build-error expl)))
-        (build-fn-descriptor parsed conf)))
-    parsed))
-
-(defn- parse-kws
-  "Parses a concatenated string of keywords into a collection of keywords
-  Ex: (parse-kws \":a:b:c\") ;; returns: (:a :b :c)"
-  [s]
-  (->> (str/split (or s "") #":")
-    (remove str/blank?)
-    (map
-      #(if-let [i (str/index-of % \/)]
-         (keyword (subs % 0 i) (subs % (inc i)))
-         (keyword %)))))
-
-(defn- parse-args
-  [args]
-  (loop [[a1 & as :as all] args
-         aliases nil]
-    (if (= a1 '--aliases)
-      (recur (rest as) (update aliases :aliases concat (parse-kws (pr-str (first as)))))
-      (parse-fn aliases all))))
+        (build-fn-descriptor conf)))))
 
 (defn- read-args
   [args]
@@ -159,10 +114,34 @@
   ([^Throwable t] (System/exit 1)))
 
 (defn -main
+  "Execute a function with map kvs.
+
+  The classpath is determined by the clojure script and make-classpath programs
+  and has already been set. The runtime basis will contain both the classpath
+  context and the merged alias argmaps, in particular the exec argmap.
+
+  The function must be either looked up or resolved in terms of the :execute-args
+  argmap, which is a merge of active aliases and/or a tool (which may have a usage
+  declaration in its deps.edn) and has the following possible keys:
+    :exec-fn - symbol to be resolved in terms of the namespace context, will
+               be overridden if passed as arg
+    :exec-args - map of kv args
+    :ns-default - namespace default for resolving functions
+    :ns-aliases - map of alias symbol to namespace symbol for resolving functions
+
+  The actual args to exec are essentially same as to -X:
+    [fn] (kpath v)+ map?
+
+  fn is resolved from either :exec-fn or fn
+  map to pass to fn is built from merge of:
+    exec-args map
+    map built from kpath/v's
+    trailing map"
   [& args]
   (try
-    (let [{:keys [function aliases overrides trailing]} (-> args read-args parse-args)
-          {:keys [exec-fn exec-args ns-aliases ns-default]} (when aliases (read-aliases (read-basis) aliases))
+    (let [{:keys [function overrides trailing]} (-> args read-args parse-fn)
+          execute-args (:execute-args (read-basis))
+          {:keys [exec-fn exec-args ns-aliases ns-default]} execute-args
           f (or function (if (symbol? exec-fn) [exec-fn] exec-fn))]
       (when (or (nil? f) (empty? f))
         (if (symbol? (first overrides))
@@ -183,28 +162,25 @@
         (throw e)))))
 
 (comment
-  (parse-args []) ;;=> nil
-  (parse-args ['--aliases :a:b])                     ;;=> {:aliases (:a :b)}
-  (parse-args ['--aliases :a:b 'foo/bar])            ;;=> {:aliases (:a :b), :function [foo/bar]}
-  (parse-args ['--aliases :a:b 'foo/bar :x 1 :y 2])  ;;=> {:aliases (:a :b), :function [foo/bar], :overrides [:x 1 :y 2]}
-  (parse-args ['--aliases :a:b 'foo/bar :x 1 :y])    ;;=> Except, missing value for :y
-  (parse-args ['--aliases :a:b :x 1 :k 1])           ;;=> {:aliases (:a :b), :overrides [:x 1 :k 1]}
-  (parse-args ['foo/bar])                            ;;=> {:function [foo/bar]}
-  (parse-args ['foo/bar :x 1 :y])                    ;;=> Except, missing value for :y
-  (parse-args [:x 1 :ZZZZZZZZZZZ])                   ;;=> Except, missing value for :ZZZZZZZZZZZ
+  (parse-fn []) ;;=> nil
+  (parse-fn [:a:b 'foo/bar])            ;;=> {:function [foo/bar]}
+  (parse-fn [:a:b 'foo/bar :x 1 :y 2])  ;;=> {:function [foo/bar], :overrides [:x 1 :y 2]}
+  (parse-fn [:a:b 'foo/bar :x 1 :y])    ;;=> Except, missing value for :y
+  (parse-fn [:x 1 :k 1])           ;;=> {:overrides [:x 1 :k 1]}
+  (parse-fn ['foo/bar])                            ;;=> {:function [foo/bar]}
+  (parse-fn ['foo/bar :x 1 :y])                    ;;=> Except, missing value for :y
+  (parse-fn [:x 1 :ZZZZZZZZZZZ])                   ;;=> Except, missing value for :ZZZZZZZZZZZ
 
-  (parse-args [:a 1 :b 2])                           ;;=> {:overrides [:a 1 :b 2]}
-  (parse-args [:a 1 :b 2 {:b 42}])                   ;;=> {:overrides [:a 1 :b 2], :trailing {:b 42}}
-  (parse-args ['foo/bar {:a 1}])                     ;;=> {:function [foo/bar], :trailing {:a 1}}
-  (parse-args ['--aliases :a:b :x 1 :k 1 {:a 1}])    ;;=> {:aliases (:a :b), :overrides [:x 1 :k 1], :trailing {:a 1}}
-  (parse-args ['foo/bar :x 1 :y 2 {:y 42}])          ;;=> {:function [foo/bar], :overrides [:x 1 :y 2], :trailing {:y 42}}
-  (parse-args ['foo/bar :x 1 :y {:y 42}])            ;;=> {:function [foo/bar], :overrides [:x 1 :y {:y 42}]}
-
-  (parse-args ['--aliases :a:b '--aliases :c:d 'foo/bar :x 1])
+  (parse-fn [:a 1 :b 2])                           ;;=> {:overrides [:a 1 :b 2]}
+  (parse-fn [:a 1 :b 2 {:b 42}])                   ;;=> {:overrides [:a 1 :b 2], :trailing {:b 42}}
+  (parse-fn ['foo/bar {:a 1}])                     ;;=> {:function [foo/bar], :trailing {:a 1}}
+  (parse-fn [:x 1 :k 1 {:a 1}])    ;;=> {:overrides [:x 1 :k 1], :trailing {:a 1}}
+  (parse-fn ['foo/bar :x 1 :y 2 {:y 42}])          ;;=> {:function [foo/bar], :overrides [:x 1 :y 2], :trailing {:y 42}}
+  (parse-fn ['foo/bar :x 1 :y {:y 42}])            ;;=> {:function [foo/bar], :overrides [:x 1 :y {:y 42}]}
 
   (-> ["clojure.run.test-exec/save" ":a" "1" "[:b,:c]" "2"]
       read-args
-      parse-args)
+      parse-fn)
   
   (s/conform arg-spec '[a b :a 1 :b 2 {}])
   (s/conform arg-spec '[a b])
@@ -213,10 +189,4 @@
   (s/conform arg-spec '[:a 1 :b 2])
   (s/conform arg-spec '[foo/bar :x 1 :y])
   (s/conform arg-spec '[clojure.run.test-exec/save :a 1 [:b :c] 2])
-  
-  (read-aliases {:aliases {:a {:exec-fn 'clojure.core/pr :exec-args {:a 1}}}} [:a])
-  (read-aliases {:aliases {:a {:exec-fn 'pr :exec-args {:a 1} :ns-default 'clojure.core}}} [:a])
-  (read-aliases {:aliases {:a {:exec-fn 'core/pr :exec-args {:a 1} :ns-aliases {'core 'clojure.core}}}} [:a])
-
-  (read-aliases nil [:a])
   )

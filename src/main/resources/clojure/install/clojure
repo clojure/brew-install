@@ -92,8 +92,6 @@ do
       mode="tool"
       tool_name="${1:2}"
       shift
-      tool_function="${1}"
-      shift
       break
       ;;
     -T)
@@ -326,7 +324,7 @@ else
 fi
 
 # Construct location of cached classpath file
-val="$(join '' ${resolve_aliases[@]})|$(join '' ${classpath_aliases[@]})|$(join '' ${repl_aliases[@]})|$exec_aliases|$main_aliases|$deps_data|$tool_name|$tool_function|$tool_aliases"
+val="$(join '' ${resolve_aliases[@]})|$(join '' ${classpath_aliases[@]})|$(join '' ${repl_aliases[@]})|$exec_aliases|$main_aliases|$deps_data|$tool_name|$tool_aliases"
 for config_path in "${config_paths[@]}"; do
   if [[ -f "$config_path" ]]; then
     val="$val|$config_path"
@@ -396,9 +394,6 @@ if "$stale" || "$pom"; then
   if [[ -n "$tool_name" ]]; then
     tools_args+=("--tool-name" "$tool_name")
   fi
-  if [[ -n "$tool_function" ]]; then
-    tools_args+=("--function" "$tool_function")
-  fi
   if [[ -n "$tool_aliases" ]]; then
     tools_args+=("-T$tool_aliases")
   fi
@@ -421,7 +416,7 @@ if [[ "$stale" = true && "$describe" = false ]]; then
   if "$verbose"; then
     >&2 echo "Refreshing classpath"
   fi
-  "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" --function-file "$function_file" "${tools_args[@]}"
+  "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" "${tools_args[@]}"
 fi
 
 if "$describe"; then
@@ -470,17 +465,7 @@ else
   fi
 
   if [ "$mode" == "tool" ]; then
-    tool_args=()
-    if [[ ${#repl_aliases[@]} -gt 0 ]]; then
-      tool_args+=("--aliases" "$(join '' ${repl_aliases[@]})")
-    fi
-    if [[ -n "$tool_aliases" ]]; then
-      tool_args+=("--aliases" "$tool_aliases")
-    fi
-    if [[ -e "$function_file" ]]; then
-      tool_args+=($(cat "$function_file"))
-    fi
-    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp:$install_dir/libexec/exec.jar" clojure.main -m clojure.run.exec "${tool_args[@]}" "$@"
+    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp:$install_dir/libexec/exec.jar" clojure.main -m clojure.run.exec "$@"
   elif [ "$mode" == "exec" ]; then
     exec_args=()
     if [[ -n "$exec_aliases" ]]; then

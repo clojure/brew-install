@@ -15,24 +15,21 @@
   ;; unreadable arg message contains the bad value
   (is (thrown-with-msg? ExceptionInfo #":::a" (#'exec/read-args [":::a"]))))
 
-(deftest test-parse-args
-  (are [expected args] (= expected (#'exec/parse-args args))
+(deftest test-parse-fn
+  (are [expected args] (= expected (#'exec/parse-fn args))
     nil []
-    {:aliases [:a :b]} ['--aliases :a:b]
-    {:aliases [:a] :function '[foo/bar]} ['--aliases :a 'foo/bar]
-    {:aliases [:a] :overrides [:x 1 :y 1]} ['--aliases :a :x 1 :y 1]
+    {:function '[foo/bar]} ['foo/bar]
+    {:overrides [:x 1 :y 1]} [:x 1 :y 1]
     {:function '[foo]} ['foo]
     {:function '[foo] :overrides [:x 1 :y 1]} ['foo :x 1 :y 1]
     {:overrides [:x 1 :y 1]} [:x 1 :y 1]
     {:overrides [:a 1 :b 2], :trailing {:b 42}} [:a 1 :b 2 {:b 42}]
     {:function '[foo/bar], :trailing {:a 1}} ['foo/bar {:a 1}]
-    {:aliases [:a :b], :overrides [:x 1 :k 1], :trailing {:a 1}} ['--aliases :a:b :x 1 :k 1 {:a 1}]
-    {:function '[foo/bar], :overrides [:x 1 :y 2], :trailing {:y 42}} ['foo/bar :x 1 :y 2 {:y 42}]
-    {:aliases [:a :b] :function '[foo/bar]} ['--aliases :a '--aliases :b 'foo/bar]
-    {:aliases [:a :b :c :d] :function '[foo/bar]} ['--aliases :a:b '--aliases :c:d 'foo/bar])
+    {:overrides [:x 1 :k 1], :trailing {:a 1}} [:x 1 :k 1 {:a 1}]
+    {:function '[foo/bar], :overrides [:x 1 :y 2], :trailing {:y 42}} ['foo/bar :x 1 :y 2 {:y 42}])
 
   ;; missing last override value prints value missing for key (like hash-map)
-  (is (thrown-with-msg? ExceptionInfo #":y" (#'exec/parse-args [:x 1 :y])))
+  (is (thrown-with-msg? ExceptionInfo #":y" (#'exec/parse-fn [:x 1 :y])))
   )
 
 (deftest test-qualify-fn
@@ -84,17 +81,16 @@
     ;;{1 :a, {:c 2} :b} ["clojure.run.test-exec/save" "clojure.run.test-exec/flip" ":a" "1" "[:b,:c]" "2"] {}
 
     ;; ad hoc, resolved by default-ns
-    {:a 1} ["--aliases" ":x" "save" ":a" "1"] {:aliases {:x {:ns-default 'clojure.run.test-exec}}}
+    {:a 1} ["save" ":a" "1"] {:execute-args {:ns-default 'clojure.run.test-exec}}
 
     ;; ad hoc, resolved alias
-    {:a 1} ["--aliases" ":x" "a/save" ":a" "1"] {:aliases {:x {:ns-aliases {'a 'clojure.run.test-exec}}}}
+    {:a 1} ["a/save" ":a" "1"] {:execute-args {:ns-aliases {'a 'clojure.run.test-exec}}}
 
     ;; exec-fn with overrides
-    {:a 1, :b 2} ["--aliases" ":x" ":b" "2"] {:aliases {:x {:exec-fn 'clojure.run.test-exec/save :exec-args {:a 1 :b 1}}}}
+    {:a 1, :b 2} [":b" "2"] {:execute-args {:exec-fn 'clojure.run.test-exec/save :exec-args {:a 1 :b 1}}}
 
     ;; exec-fn resolved by :ns-default, aliased exec-args
-    {:a 1, :b 1} ["--aliases" ":x"] {:aliases {:x {:exec-fn 'save, :exec-args :y :ns-default 'clojure.run.test-exec}
-                                               :y {:a 1, :b 1}}})
+    {:a 1, :b 1} [] {:execute-args {:exec-fn 'save, :exec-args {:a 1, :b 1} :ns-default 'clojure.run.test-exec}})
 
   ;; missing override val: "Key is missing value: :foo\n"
   (is (str/includes? (with-err-str (encapsulate-main {} [":foo"])) ":foo"))
