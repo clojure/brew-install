@@ -467,11 +467,7 @@ else
   if [ "$mode" == "tool" ]; then
     exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp:$install_dir/libexec/exec.jar" clojure.main -m clojure.run.exec "$@"
   elif [ "$mode" == "exec" ]; then
-    exec_args=()
-    if [[ -n "$exec_aliases" ]]; then
-      exec_args+=("--aliases" "$exec_aliases")
-    fi
-    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp:$install_dir/libexec/exec.jar" clojure.main -m clojure.run.exec "${exec_args[@]}" "$@"
+    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp:$install_dir/libexec/exec.jar" clojure.main -m clojure.run.exec "$@"
   else
     if [[ -e "$main_file" ]]; then
       set +e

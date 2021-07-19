@@ -7,6 +7,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
+* next
+  * Fix regression in -X execution
 * 1.10.3.916 on July 19, 2021
   * TDEPS-187 - redo how -X and -T get execute arg data
   * Update to tools.deps.alpha 0.12.1003
