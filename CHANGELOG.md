@@ -7,7 +7,7 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* next
+* 1.10.3.929 on July 21, 2021
   * TDEPS-189 Port -T changes to Windows
   * Did some script cleanup in bash
 * 1.10.3.920 on July 19, 2021
