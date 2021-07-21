@@ -307,8 +307,6 @@ fi
 config_project="deps.edn"
 if "$repro"; then
   config_paths=("$install_dir/deps.edn" "deps.edn")
-elif [ "$mode" == "tool" ]; then
-  config_paths=("$install_dir/deps.edn" "$config_dir/deps.edn")
 else
   config_user="$config_dir/deps.edn"
   config_paths=("$install_dir/deps.edn" "$config_dir/deps.edn" "deps.edn")
