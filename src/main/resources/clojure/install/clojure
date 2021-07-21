@@ -459,9 +459,7 @@ else
     set -e
   fi
 
-  if [ "$mode" == "tool" ]; then
-    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp:$install_dir/libexec/exec.jar" clojure.main -m clojure.run.exec "$@"
-  elif [ "$mode" == "exec" ]; then
+  if [ "$mode" == "tool" ] || [ "$mode" == "exec" ]; then
     exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp:$install_dir/libexec/exec.jar" clojure.main -m clojure.run.exec "$@"
   else
     if [[ -e "$main_file" ]]; then
