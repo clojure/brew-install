@@ -313,8 +313,6 @@ else
   config_user="$config_dir/deps.edn"
   config_paths=("$install_dir/deps.edn" "$config_dir/deps.edn" "deps.edn")
 fi
-config_str=$(printf ",%s" "${config_paths[@]}")
-config_str=${config_str:1}
 
 # Determine whether to use user or project cache
 if [[ -f deps.edn ]]; then
@@ -339,7 +337,6 @@ cp_file="$cache_dir/$ck.cp"
 jvm_file="$cache_dir/$ck.jvm"
 main_file="$cache_dir/$ck.main"
 basis_file="$cache_dir/$ck.basis"
-function_file="$cache_dir/$ck.function"
 
 # Print paths in verbose mode
 if "$verbose"; then
