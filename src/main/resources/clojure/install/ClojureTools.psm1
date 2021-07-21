@@ -78,9 +78,21 @@ function Invoke-Clojure {
       $MainAliases = ":$kw"
       $ClojureArgs += $params
       break
+    } elseif ($arg -ceq '-T:') {
+      $Mode = "tool"
+      $kw, $params = $params
+      $ToolAliases = ":$kw"
+      $ClojureArgs += $params
+      break
+    } elseif ($arg -ceq '-T') {
+      $Mode = "tool"
+      $ClojureArgs += $params
+      break
     } elseif ($arg.StartsWith('-T')) {
-      Write-Error "-T is no longer supported, use -A with repl, -M for main, or -X for exec"
-      return
+      $Mode = "tool"
+      $ToolName = $arg.Substring(2)
+      $ClojureArgs += $params
+      break
     } elseif ($arg.StartsWith('-A')) {
       $aliases, $params = $params
       if ($aliases) {
@@ -224,6 +236,7 @@ main-opt:
 Programs provided by :deps alias:
  -X:deps mvn-install       Install a maven jar to the local repository cache
  -X:deps git-resolve-tags  Resolve git coord tags to shas and update deps.edn
+ -X:deps find-versions     Find available versions of a library
  -X:deps prep              Prepare all unprepped libs in the dep tree
 
 For more info, see:
@@ -249,6 +262,12 @@ For more info, see:
   if (!(Test-Path "$ConfigDir\deps.edn")) {
     Copy-Item "$InstallDir\example-deps.edn" "$ConfigDir\deps.edn"
   }
+  if (!(Test-Path "$ConfigDir\tools")) {
+    New-Item -Type Directory "$ConfigDir\tools" | Out-Null
+  }
+  if (Test-NewerFile "$InstallDir\tools.edn" "$ConfigDir\tools\tools.edn") {
+    Copy-Item "$InstallDir\tools.edn" "$ConfigDir\tools\tools.edn"
+  }
 
   # Determine user cache directory
   if ($env:CLJ_CACHE) {
@@ -265,7 +284,6 @@ For more info, see:
     $ConfigUser = "$ConfigDir\deps.edn"
     $ConfigPaths = "$InstallDir\deps.edn", "$ConfigDir\deps.edn", 'deps.edn'
   }
-  $ConfigStr = $ConfigPaths -join ','
 
   # Determine whether to use user or project cache
   if (Test-Path deps.edn) {
@@ -275,7 +293,7 @@ For more info, see:
   }
 
   # Construct location of cached classpath file
-  $CacheKey = "$($ResolveAliases -join '')|$($ClassPathAliases -join '')|$($ReplAliases -join '')|$($JvmAliases -join '')|$ExecAliases|$MainAliases|$DepsData|$($ConfigPaths -join '|')"
+  $CacheKey = "$($ResolveAliases -join '')|$($ClassPathAliases -join '')|$($ReplAliases -join '')|$($JvmAliases -join '')|$ExecAliases|$MainAliases|$DepsData|$ToolName|$ToolAliases|$($ConfigPaths -join '|')"
   $CacheKeyHash = (Get-StringHash $CacheKey) -replace '-', ''
 
   $LibsFile = "$CacheDir\$CacheKeyHash.libs"
@@ -299,6 +317,8 @@ cp_file      = $CpFile
   # Check for stale classpath file
   $Stale = $FALSE
   if ($Force -or $Trace -or $Tree -or $Prep -or !(Test-Path $CpFile)) {
+    $Stale = $TRUE
+  } elseif ($ToolName -and (Test-NewerFile "$ConfigDir\tools\$ToolName.edn" "$CpFile" )) {
     $Stale = $TRUE
   } elseif ($ConfigPaths | Where-Object { Test-NewerFile $_ $CpFile }) {
     $Stale = $TRUE
@@ -325,6 +345,16 @@ cp_file      = $CpFile
     }
     if ($ExecAliases) {
       $ToolsArgs += "-X$ExecAliases"
+    }
+    if ($Mode -ceq 'tool') {
+      $ToolsArgs += "--tool-mode"
+    }
+    if ($ToolName) {
+      $ToolsArgs += "--tool-name"
+      $ToolsArgs += "$ToolName"
+    }
+    if ($ToolAliases) {
+      $ToolsArgs += "-T$ToolAliases"
     }
     if ($ForceCp) {
       $ToolsArgs += '--skip-cp'
@@ -391,13 +421,8 @@ cp_file      = $CpFile
       $JvmCacheOpts = @(Get-Content $JvmFile)
     }
 
-    if ($Mode -eq 'exec') {
-      $ExecArgs=@()
-      if ($ExecAliases) {
-        $ExecArgs += '--aliases'
-        $ExecArgs += $ExecAliases
-      }
-      & $JavaCmd @JvmCacheOpts @JvmOpts "-Dclojure.basis=$BasisFile" -classpath "$CP;$InstallDir/exec.jar" clojure.main -m clojure.run.exec @ExecArgs @ClojureArgs
+    if (($Mode -eq 'exec') -or ($Mode -eq 'tool')) {
+      & $JavaCmd @JvmCacheOpts @JvmOpts "-Dclojure.basis=$BasisFile" -classpath "$CP;$InstallDir/exec.jar" clojure.main -m clojure.run.exec @ClojureArgs
     } else {
       if (Test-Path $MainFile) {
         # TODO this seems dangerous
