@@ -7,6 +7,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
+* next
+  * TDEPS-198 - on -X, don't use System/exit or shutdown-agents (but don't let agent threads block exit)
 * 1.10.3.929 on July 21, 2021
   * TDEPS-189 Port -T changes to Windows
   * Did some script cleanup in bash

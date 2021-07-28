@@ -14,7 +14,8 @@
     [clojure.string :as str]
     [clojure.spec.alpha :as s])
   (:import
-    [clojure.lang ExceptionInfo]))
+    [clojure.lang ExceptionInfo]
+    [java.util.concurrent Executors ThreadFactory]))
 
 (set! *warn-on-reflection* true)
 (def ^:dynamic *ns-default* nil)
@@ -109,8 +110,25 @@
         (recur as (conj read-args r)))
       read-args)))
 
+(defn- set-daemon-agent-executor
+  "Set Clojure's send-off agent executor (also affects futures). This is almost
+  an exact rewrite of the Clojure's executor, but the Threads are created as
+  daemons."
+  []
+  (let [thread-counter (atom 0)
+        thread-factory (reify ThreadFactory
+                         (newThread [_ runnable]
+                           (doto (Thread. runnable)
+                             (.setDaemon true) ;; DIFFERENT
+                             (.setName (format "CLI-agent-send-off-pool-%d"
+                                         (first (swap-vals! thread-counter inc)))))))
+        executor (Executors/newCachedThreadPool thread-factory)]
+    (set-agent-send-off-executor! executor)))
+
 (defn ^:dynamic *exit*
-  ([] (shutdown-agents))
+  ;; normal exit
+  ([])
+  ;; abnormal exit
   ([^Throwable t] (System/exit 1)))
 
 (defn -main
@@ -147,6 +165,7 @@
         (if (symbol? (first overrides))
           (throw (err "Key is missing value:" (last overrides)))
           (throw (err "No function found on command line or in :exec-fn"))))
+      (set-daemon-agent-executor)
       (binding [*ns-default* ns-default
                 *ns-aliases* ns-aliases]
         (loop [fns f, args (merge (apply-overrides exec-args overrides) trailing)]
