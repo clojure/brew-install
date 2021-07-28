@@ -5,10 +5,15 @@ Changelog
 
 clj has both stable and prerelease versions. Current and former stable build are listed in **bold** and are (or were) available from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
-Prerelease versions:
+Prerelease versions: none
 
-* 1.10.3.933 on July 28, 2021
-  * TDEPS-198 - on -X, don't use System/exit or shutdown-agents (but don't let agent threads block exit)
+**Current stable version:**
+
+* **1.10.3.933 on July 28, 2021**
+  * **TDEPS-198 - on -X, don't use System/exit or shutdown-agents (but don't let agent threads block exit)**
+
+Older versions (previous stable builds in bold):
+
 * 1.10.3.929 on July 21, 2021
   * TDEPS-189 Port -T changes to Windows
   * Did some script cleanup in bash
@@ -34,14 +39,8 @@ Prerelease versions:
   * TDEPS-182 - Improve deprecation message to be more accurate
   * TDEPS-183 - Fix -Sdescribe output to be valid edn on Windows
   * Update to tools.deps.alpha 0.11.931
-
-**Current stable version:**
-
 * **1.10.3.855 on May 25, 2021**
   * **Fix bug in applying :jvm-opts flags for -X on Windows**
-
-Older versions (previous stable builds in bold):
-
 * **1.10.3.849 on May 20, 2021**
   * **Add support for trailing map in -X calls**
   * **Update to tools.deps.alpha 0.11.922**
