@@ -26,7 +26,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <clojure.version>1.10.3</clojure.version>
-    <tools.deps.version>0.12.1003</tools.deps.version>
+    <tools.deps.version>0.12.1013</tools.deps.version>
   </properties>
 
   <dependencies>
