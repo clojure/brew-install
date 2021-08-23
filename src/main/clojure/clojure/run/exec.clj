@@ -15,6 +15,7 @@
     [clojure.spec.alpha :as s])
   (:import
     [clojure.lang ExceptionInfo]
+    [java.io FileNotFoundException]
     [java.util.concurrent Executors ThreadFactory]))
 
 (set! *warn-on-reflection* true)
@@ -38,10 +39,13 @@
 (defn exec
   "Resolve and execute the function f (a symbol) with args"
   [f & args]
-  (let [resolved-f (requiring-resolve' f)]
-    (if resolved-f
-      (apply resolved-f args)
-      (throw (err "Function not found:" f)))))
+  (try
+    (let [resolved-f (requiring-resolve' f)]
+      (if resolved-f
+        (apply resolved-f args)
+        (throw (err "Namespace" (namespace f) "loaded but function not found:" (name f)))))
+    (catch FileNotFoundException _
+      (throw (err "Namespace could not be loaded:" (namespace f))))))
 
 (defn- apply-overrides
   [args overrides]

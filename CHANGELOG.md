@@ -17,6 +17,8 @@ Prerelease versions: none
 
 Older versions (previous stable builds in bold):
 
+* next
+  * Refine exec exceptions for missing namespace vs missing function in namespace
 * 1.10.3.939 on Aug 9, 2021
   * Update to tools.deps.alpha 0.12.1013
 * **1.10.3.933 on July 28, 2021**
