@@ -7,9 +7,10 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions: none
 
-* next
+* 1.10.3.956 on Aug 27, 2021
   * Refine exec exceptions for missing namespace vs missing function in namespace
   * Update to tools.deps.alpha 0.12.1030
+  * Build the Clojure CLI with tools.build, instead of Maven
 * 1.10.3.949 on Aug 17, 2021
   * Update to tools.deps.alpha 0.12.1026
 
