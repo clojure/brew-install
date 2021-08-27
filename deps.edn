@@ -1,14 +1,12 @@
-{:paths ["x"]
+{:paths []
+
  :deps
  {org.clojure/clojure {:mvn/version "1.10.3"}
-  org.clojure/tools.deps.alpha {:mvn/version "0.11.922"}
-  org.slf4j/slf4j-nop {:mvn/version "1.7.30"}
-  ;;org.clojure/tools.build {:mvn/version "0.1.0-SNAPSHOT"}
-  }
+  org.clojure/tools.deps.alpha {:mvn/version "0.12.1030"}
+  org.slf4j/slf4j-nop {:mvn/version "1.7.30"}}
+
  :aliases
- {:t1 {:exec-fn clojure.core/prn :exec-args {:a 1}}
-  :t2 {:exec-fn check/hi :exec-args {:a 1} :paths ["x"] :deps {cheshire/cheshire {:mvn/version "5.10.0"}}}
-  :t3 {:exec-fn check/hi :exec-args {:a 1} :replace-paths ["x"] :replace-deps {cheshire/cheshire {:mvn/version "5.10.0"}}}
-  :m {:main-opts ["-m" "m" "1"]}
-  :r {:extra-deps {cheshire/cheshire {:mvn/version "RELEASE"}}}
-  :c {:extra-paths ["x"]}}}
+ {:build
+  {:deps {io.github.clojure/tools.build {:git/tag "v0.1.9" :git/sha "6736c83"}}
+   :paths ["script"]
+   :ns-default build}}}

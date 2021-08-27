@@ -5,7 +5,7 @@ set -e
 echo "Building scripts version $version"
 
 # Grab version
-version=$(mvn -B help:evaluate -Dexpression=project.version 2>/dev/null| grep -v "^\[")
+version=$(cat VERSION)
 
 # Checkout tap repo
 git clone git@github.com:clojure/homebrew-tools.git target/homebrew-tools

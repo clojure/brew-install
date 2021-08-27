@@ -4,5 +4,5 @@ set -e
 
 v=$(script/print_version)
 echo "Setting version to $v"
-mvn -B versions:set -DgenerateBackupPoms=false -DnewVersion="$v"
-git commit -m "update version to $v" pom.xml
+echo "$v" > VERSION
+git commit -m "update version to $v" VERSION
