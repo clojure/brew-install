@@ -7,6 +7,7 @@
 (def lib 'org.clojure/clojure-tools)
 (def version (str/trim (slurp "VERSION")))
 (def basis (b/create-basis {}))
+(def clojure-ver (get-in basis [:libs 'org.clojure/clojure :mvn/version]))
 (def stable (str/split (str/trim (slurp "stable.properties")) #" "))
 
 ;; dirs
@@ -35,16 +36,26 @@
                :target-dir filtered-dir
                :replace {"${project.version}" version
                          "${version.short}" (str/replace version "." "")
-                         "${clojure.version}" (get-in basis [:libs 'org.clojure/clojure :mvn/version])
+                         "${clojure.version}" clojure-ver
                          "${tools.deps.version}" (get-in basis [:libs 'org.clojure/tools.deps.alpha :mvn/version])
                          "${stable.version}" (first stable)
                          "${stable.sha}" (second stable)}})
 
   ;; Make the uber jar
-  (b/uber {:class-dir class-dir :uber-file uber-file :basis basis})
+  (b/compile-clj {:basis basis :class-dir class-dir :src-dirs []
+                  :compile-opts {:elide-meta [:doc :file :line] :direct-linking true}
+                  :ns-compile '[clojure.tools.deps.alpha.script.make-classpath2
+                                clojure.tools.deps.alpha.script.generate-manifest2]})
+  (b/uber {:basis basis :class-dir class-dir :uber-file uber-file})
 
   ;; Make the exec jar
   (b/copy-dir {:src-dirs ["src/main/clojure"] :target-dir exec-dir})
+  (b/compile-clj {:basis (b/create-basis {:user nil
+                                          :project {:paths ["src/main/clojure"]
+                                                    :deps {'org.clojure/clojure {:mvn/version clojure-ver}}}})
+                  :class-dir exec-dir :src-dirs []
+                  :compile-opts {:elide-meta [:doc :file :line] :direct-linking true}
+                  :ns-compile '[clojure.run.exec]})
   (b/jar {:class-dir exec-dir :jar-file exec-file})
 
   ;; Collect the tar file contents and make the tar and installer
@@ -71,46 +82,3 @@
         version-recipe (slurp (str filtered-dir "/clojure/install/clojure@version.rb"))]
     (b/write-file {:path "target/clojure.rb" :string (str/replace brew-recipe "SHA" sha)})
     (b/write-file {:path (format "target/clojure@%s.rb" version) :string (str/replace version-recipe "SHA" sha)})))
-
-
-
-;(defn -main
-;  "Args - alternating key/value pairs. Should set:
-;    :build/version
-;    :clj/version-short
-;    :clj/stable-sha
-;    :clj/stable-version
-;    :clj/clojure-version
-;    :clj/tdeps-version"
-;  [& args]
-;  (let [vals (map #(if (= ":" (subs % 0 1)) (keyword (subs % 1)) %) args)
-;        params (apply hash-map vals)]
-;    (build/build
-;      {:tasks '[[dirs] [clean] [sync-pom] [compile-clj] [copy] [jar] [uber]]
-;       :params (merge
-;                 '{:build/ns-compile [clojure.tools.build
-;                                      clojure.tools.build.tasks.clean
-;                                      clojure.tools.build.tasks.compile-clj
-;                                      clojure.tools.build.tasks.copy
-;                                      clojure.tools.build.tasks.dirs
-;                                      clojure.tools.build.tasks.format-str
-;                                      clojure.tools.build.tasks.install
-;                                      clojure.tools.build.tasks.jar
-;                                      clojure.tools.build.tasks.javac
-;                                      clojure.tools.build.tasks.pom
-;                                      clojure.tools.build.tasks.process
-;                                      clojure.tools.build.tasks.sync-pom
-;                                      clojure.tools.build.tasks.uber
-;                                      clojure.tools.build.tasks.zip]
-;                   :build/compiler-opts {:elide-meta [:doc :file :line]
-;                                         :direct-linking true}
-;                   :build/copy-to "target/resources"
-;                   :build/copy-specs [{:from "src/main/resources"
-;                                       :replace {"${project.version}" :build/version
-;                                                 "${version.short}" :clj/version-short
-;                                                 "${stable.version}" :clj/stable-version
-;                                                 "${stable.sha}" :clj/stable-sha
-;                                                 "${clojure.version}" :clj/clojure-version
-;                                                 "${tools.deps.version}" :clj/tdeps-version}}]
-;                   :build/lib org.clojure/clojure-tools}
-;                 params)})))
