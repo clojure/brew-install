@@ -7,6 +7,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions: none
 
+* next
+  * Undo compilation of exec stub jar
 * 1.10.3.962 on Aug 30, 2021
   * Modify build to compile tools.deps entry points and exec stub jar
   * Update to tools.deps.alpha 0.12.1036
