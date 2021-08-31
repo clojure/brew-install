@@ -50,12 +50,6 @@
 
   ;; Make the exec jar
   (b/copy-dir {:src-dirs ["src/main/clojure"] :target-dir exec-dir})
-  (b/compile-clj {:basis (b/create-basis {:user nil
-                                          :project {:paths ["src/main/clojure"]
-                                                    :deps {'org.clojure/clojure {:mvn/version clojure-ver}}}})
-                  :class-dir exec-dir :src-dirs []
-                  :compile-opts {:elide-meta [:doc :file :line] :direct-linking true}
-                  :ns-compile '[clojure.run.exec]})
   (b/jar {:class-dir exec-dir :jar-file exec-file})
 
   ;; Collect the tar file contents and make the tar and installer
