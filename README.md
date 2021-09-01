@@ -9,7 +9,9 @@ brew central tap.
 The tar file contains:
 
 * clojure-tools jar - an uberjar for constructing classpaths via tools.deps
-* deps.edn - the initial user deps.edn file
+* deps.edn - a copy of the root deps.edn file (no longer used at runtime)
+* example-deps.edn - the initial user deps.edn file
+* tools.edn - the tools.tools tool to auto install
 * clojure script - the main Clojure runner
 * clj script - a clojure wrapper for interactive repl use (adds rlwrap)
 
@@ -17,22 +19,28 @@ The tar file contains:
 
 The clojure-tools version is defined by the pom.xml project version. It 
 should be updated only by running script/build/update_version (the build does
-this automatically).
+this automatically). The current version is stored in the VERSION file.
 
 The Clojure and tools.deps.alpha versions to include in the clojure-tools are
-defined in the pom.xml as properties and make their way from there into all the
-other files via several means.
+taken from the deps.edn.
 
 ## Package script
 
-The script/package.sh script is used to build the tar file and clojure.rb file.
+To create the packages and installers, run:
+
+```
+clojure -T:build release
+```
 
 ## Release Information
 
 These files are not released into Maven central like other libraries. Instead, the tar
 file is created and published to https://download.clojure.org.
 
-The clojure.rb file is then manually updated in the brew central tap via PR.
+The [Clojure homebrew tap](https://github.com/clojure/homebrew-tools) is updated when new releases
+are created or promoted to stable.
+
+The Homebrew Central Clojure recipe is updated manually so may lag the Clojure tap.
 
 ## References
 
@@ -51,6 +59,6 @@ See the following resources for more information:
 
 ## License
 
-Copyright © 2019 Rich Hickey, Alex Miller and contributors
+Copyright © 2019-2021 Rich Hickey, Alex Miller and contributors
 
 Distributed under the Eclipse Public License 1.0, the same as Clojure.
