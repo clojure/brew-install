@@ -18,7 +18,7 @@ The tar file contains:
 ## Updating versions
 
 The clojure-tools version is defined by the pom.xml project version. It 
-should be updated only by running script/build/update_version (the build does
+should be updated only by running script/update_version (the build does
 this automatically). The current version is stored in the VERSION file.
 
 The Clojure and tools.deps.alpha versions to include in the clojure-tools are
