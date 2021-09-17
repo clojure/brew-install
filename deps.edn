@@ -6,7 +6,7 @@
   org.slf4j/slf4j-nop {:mvn/version "1.7.30"}}
 
  :aliases
- {:build
+ {:build    ;; clj -T:build release
   {:deps {io.github.clojure/tools.build {:git/tag "v0.5.0" :git/sha "7d77952"}}
    :paths ["script"]
    :ns-default build}}}
