@@ -9,12 +9,14 @@ Prerelease versions: none
 
 **Current stable version:**
 
-* **1.10.3.981 on Sept 17, 2021**
+* **1.10.3.986 on Sept 22, 2021**
+  * **Rebuild to actually include latest tools.deps.alpha**
   * **Update to tools.deps.alpha 0.12.1048**
-  * **Update to tools.build v0.5.0**
 
 Older versions (previous stable builds in bold):
 
+* **1.10.3.981 on Sept 17, 2021**
+  * **Update to tools.build v0.5.0**
 * 1.10.3.976 on Sept 17, 2021
   * Update to tools.deps.alpha 0.12.1041
 * **1.10.3.967 on Aug 31, 2021**
