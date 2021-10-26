@@ -5,8 +5,6 @@ class Clojure < Formula
   sha256 "${stable.sha}"
   license "EPL-1.0"
 
-  bottle :unneeded
-
   depends_on "rlwrap"
 
   uses_from_macos "ruby" => :build
