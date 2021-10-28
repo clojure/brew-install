@@ -40,12 +40,13 @@
   "Resolve and execute the function f (a symbol) with args"
   [f & args]
   (try
-    (let [resolved-f (requiring-resolve' f)]
+    (let [resolved-f (try
+                       (requiring-resolve' f)
+                       (catch FileNotFoundException _
+                         (throw (err "Namespace could not be loaded:" (namespace f)))))]
       (if resolved-f
         (apply resolved-f args)
-        (throw (err "Namespace" (namespace f) "loaded but function not found:" (name f)))))
-    (catch FileNotFoundException _
-      (throw (err "Namespace could not be loaded:" (namespace f))))))
+        (throw (err "Namespace" (namespace f) "loaded but function not found:" (name f)))))))
 
 (defn- apply-overrides
   [args overrides]
