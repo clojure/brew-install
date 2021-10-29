@@ -8,6 +8,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 Prerelease versions:
 
 * next
+  * TDEPS-83 - invalidate cp cache when local lib manifests are stale
+  * -Stree no longer forces cache recompute
   * Clean up exception handling for -X
   * **Update to tools.deps.alpha 0.12.1063**
 
