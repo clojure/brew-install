@@ -9,6 +9,7 @@ Prerelease versions:
 
 * next
   * Clean up exception handling for -X
+  * **Update to tools.deps.alpha 0.12.1063**
 
 **Current stable version:**
 
