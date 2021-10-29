@@ -335,6 +335,7 @@ cp_file="$cache_dir/$ck.cp"
 jvm_file="$cache_dir/$ck.jvm"
 main_file="$cache_dir/$ck.main"
 basis_file="$cache_dir/$ck.basis"
+manifest_file="$cache_dir/$ck.manifest"
 
 # Print paths in verbose mode
 if "$verbose"; then
@@ -360,6 +361,17 @@ else
       break
     fi
   done
+  if [[ "$stale" = false && -f "$manifest_file" ]]; then
+    set +e
+    IFS=$'\n' read -ra manifest_files -d '' <"$manifest_file"
+    set -e
+    for manifest in "${manifest_files[@]}"; do
+      if [ "$manifest" -nt "$cp_file" ]; then
+        stale=true
+        break
+      fi
+    done
+  fi
 fi
 
 # Make tools args if needed
@@ -411,7 +423,7 @@ if [[ "$stale" = true && "$describe" = false ]]; then
   if "$verbose"; then
     >&2 echo "Refreshing classpath"
   fi
-  "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" "${tools_args[@]}"
+  "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" --manifest-file "$manifest_file" "${tools_args[@]}"
 fi
 
 if "$describe"; then
@@ -453,7 +465,7 @@ elif "$trace"; then
   >&2 echo "Wrote trace.edn"
 else
   set -f
-  if [[ -e "$jvm_file" ]]; then
+  if [[ -f "$jvm_file" ]]; then
     set +e
     IFS=$'\n' read -ra jvm_cache_opts -d '' <"$jvm_file"
     set -e
@@ -462,7 +474,7 @@ else
   if [ "$mode" == "tool" ] || [ "$mode" == "exec" ]; then
     exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp:$install_dir/libexec/exec.jar" clojure.main -m clojure.run.exec "$@"
   else
-    if [[ -e "$main_file" ]]; then
+    if [[ -f "$main_file" ]]; then
       set +e
       IFS=$'\n' read -ra main_cache_opts -d '' <"$main_file"
       set -e

@@ -301,6 +301,7 @@ For more info, see:
   $JvmFile = "$CacheDir\$CacheKeyHash.jvm"
   $MainFile = "$CacheDir\$CacheKeyHash.main"
   $BasisFile = "$CacheDir\$CacheKeyHash.basis"
+  $ManifestFile = "$CacheDir\$CacheKeyHash.manifest"
 
   # Print paths in verbose mode
   if ($Verbose) {
@@ -320,8 +321,16 @@ cp_file      = $CpFile
     $Stale = $TRUE
   } elseif ($ToolName -and (Test-NewerFile "$ConfigDir\tools\$ToolName.edn" "$CpFile" )) {
     $Stale = $TRUE
-  } elseif ($ConfigPaths | Where-Object { Test-NewerFile $_ $CpFile }) {
-    $Stale = $TRUE
+  } else {
+    if ($ConfigPaths | Where-Object { Test-NewerFile $_ $CpFile }) {
+      $Stale = $TRUE
+    }
+    if (Test-Path $ManifestFile) {
+      $Manifests = @(Get-Content $ManifestFile)
+      if ($Manifests | Where-Object { Test-NewerFile $_ $CpFile }) {
+        $Stale = $TRUE
+      }
+    }
   }
 
   # Make tools args if needed
@@ -376,7 +385,7 @@ cp_file      = $CpFile
     if ($Verbose) {
       Write-Host "Refreshing classpath"
     }
-    & $JavaCmd -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user $ConfigUser --config-project $ConfigProject --basis-file $BasisFile --libs-file $LibsFile --cp-file $CpFile --jvm-file $JvmFile --main-file $MainFile @ToolsArgs
+    & $JavaCmd -classpath $ToolsCp clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user $ConfigUser --config-project $ConfigProject --basis-file $BasisFile --libs-file $LibsFile --cp-file $CpFile --jvm-file $JvmFile --main-file $MainFile --manifest-file $ManifestFile @ToolsArgs
     if ($LastExitCode -ne 0) {
       return
     }
