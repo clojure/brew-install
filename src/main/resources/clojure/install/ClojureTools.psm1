@@ -317,7 +317,7 @@ cp_file      = $CpFile
 
   # Check for stale classpath file
   $Stale = $FALSE
-  if ($Force -or $Trace -or $Tree -or $Prep -or !(Test-Path $CpFile)) {
+  if ($Force -or $Trace -or $Prep -or !(Test-Path $CpFile)) {
     $Stale = $TRUE
   } elseif ($ToolName -and (Test-NewerFile "$ConfigDir\tools\$ToolName.edn" "$CpFile" )) {
     $Stale = $TRUE

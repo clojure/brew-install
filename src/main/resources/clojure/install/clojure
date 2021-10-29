@@ -350,7 +350,7 @@ fi
 
 # Check for stale classpath file
 stale=false
-if "$force" || "$trace" || "$tree" || "$prep" || [ ! -f "$cp_file" ]; then
+if "$force" || "$trace" || "$prep" || [ ! -f "$cp_file" ]; then
   stale=true
 elif [[ -n "$tool_name" ]] && [ "$config_dir/tools/$tool_name.edn" -nt "$cp_file" ]; then
   stale=true
