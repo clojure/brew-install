@@ -11,7 +11,7 @@ Prerelease versions:
   * TDEPS-83 - invalidate cp cache when local lib manifests are stale
   * -Stree no longer forces cache recompute
   * Clean up exception handling for -X
-  * **Update to tools.deps.alpha 0.12.1063**
+  * Update to tools.deps.alpha 0.12.1063
 
 **Current stable version:**
 
