@@ -7,6 +7,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
+* next
+  * Undo: -Stree no longer forces cache recompute
 * 1.10.3.1007 on Oct 29, 2021
   * TDEPS-83 - invalidate cp cache when local lib manifests are stale
   * -Stree no longer forces cache recompute
