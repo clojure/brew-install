@@ -366,7 +366,7 @@ else
     IFS=$'\n' read -ra manifest_files -d '' <"$manifest_file"
     set -e
     for manifest in "${manifest_files[@]}"; do
-      if [ "$manifest" -nt "$cp_file" ]; then
+      if [[ ! -f "$manifest" || "$manifest" -nt "$cp_file" ]]; then
         stale=true
         break
       fi
