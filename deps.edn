@@ -2,8 +2,8 @@
 
  :deps
  {org.clojure/clojure {:mvn/version "1.10.3"}
-  org.clojure/tools.deps.alpha {:mvn/version "0.12.1063"}
-  org.slf4j/slf4j-nop {:mvn/version "1.7.30"}}
+  org.clojure/tools.deps.alpha {:mvn/version "0.12.1067"}
+  org.slf4j/slf4j-nop {:mvn/version "1.7.32"}}
 
  :aliases
  {:build    ;; clj -T:build release

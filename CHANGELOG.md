@@ -9,6 +9,7 @@ Prerelease versions:
 
 * next
   * TDEPS-83 - invalidate cp cache when local manifest is missing
+  * Update to tools.deps.alpha 0.12.1067
 * 1.10.3.1013 on Oct 30, 2021
   * Undo: -Stree no longer forces cache recompute
 * 1.10.3.1007 on Oct 29, 2021
