@@ -327,7 +327,7 @@ cp_file      = $CpFile
     }
     if (Test-Path $ManifestFile) {
       $Manifests = @(Get-Content $ManifestFile)
-      if ($Manifests | Where-Object { Test-NewerFile $_ $CpFile }) {
+      if ($Manifests | Where-Object { !(Test-Path $_) -or (Test-NewerFile $_ $CpFile) }) {
         $Stale = $TRUE
       }
     }
