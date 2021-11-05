@@ -5,11 +5,16 @@ Changelog
 
 clj has both stable and prerelease versions. Current and former stable build are listed in **bold** and are (or were) available from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
-Prerelease versions:
+Prerelease versions: none
 
-* 1.10.3.1020 on Nov 4, 2021
-  * TDEPS-83 - invalidate cp cache when local manifest is missing
-  * Update to tools.deps.alpha 0.12.1067
+**Current stable version:**
+
+* **1.10.3.1020 on Nov 4, 2021**
+  * **TDEPS-83 - invalidate cp cache when local manifest is missing**
+  * **Update to tools.deps.alpha 0.12.1067**
+
+Older versions (previous stable builds in bold):
+
 * 1.10.3.1013 on Oct 30, 2021
   * Undo: -Stree no longer forces cache recompute
 * 1.10.3.1007 on Oct 29, 2021
@@ -17,16 +22,10 @@ Prerelease versions:
   * -Stree no longer forces cache recompute
   * Clean up exception handling for -X
   * Update to tools.deps.alpha 0.12.1063
-
-**Current stable version:**
-
 * **1.10.3.998 on Oct 26, 2021**
   * **Remove `bottle :unneeded` from brew formulas**
   * **Update to tools.deps.alpha 0.12.1058**
   * **Update to tools.tools v0.2.1**
-
-Older versions (previous stable builds in bold):
-
 * **1.10.3.986 on Sept 22, 2021**
   * **Rebuild to actually include latest tools.deps.alpha**
   * **Update to tools.deps.alpha 0.12.1048**
