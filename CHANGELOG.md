@@ -10,6 +10,7 @@ Prerelease versions:
 * next
   * Update to tools.deps.alpha 0.12.1071
   * Update to tools.tools 0.2.2
+  * Update to tools.build 0.6.3
 
 **Current stable version:**
 
