@@ -7,20 +7,19 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* 1.10.3.1040 on Dec 1, 2021
-  * Update to tools.deps.alpha 0.12.1084
-* 1.10.3.1036 on Nov 30, 2021
-  * Update to tools.deps.alpha 0.12.1080
-
 **Current stable version:**
 
+* **1.10.3.1040 on Dec 1, 2021**
+  * **Update to tools.deps.alpha 0.12.1084**
+
+Older versions (previous stable builds in bold):
+
+* 1.10.3.1036 on Nov 30, 2021
+  * Update to tools.deps.alpha 0.12.1080
 * **1.10.3.1029 on Nov 8, 2021**
   * **Update to tools.deps.alpha 0.12.1071**
   * **Update to tools.tools 0.2.2**
   * **Update to tools.build 0.6.3**
-
-Older versions (previous stable builds in bold):
-
 * **1.10.3.1020 on Nov 4, 2021**
   * **TDEPS-83 - invalidate cp cache when local manifest is missing**
   * **Update to tools.deps.alpha 0.12.1067**
