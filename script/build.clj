@@ -45,7 +45,8 @@
   (b/compile-clj {:basis basis :class-dir class-dir :src-dirs []
                   :compile-opts {:elide-meta [:doc :file :line] :direct-linking true}
                   :ns-compile '[clojure.tools.deps.alpha.script.make-classpath2
-                                clojure.tools.deps.alpha.script.generate-manifest2]})
+                                clojure.tools.deps.alpha.script.generate-manifest2
+                                clojure.tools.deps.alpha.util.s3-aws-client]})
   (b/uber {:basis basis :class-dir class-dir :uber-file uber-file})
 
   ;; Make the exec jar
