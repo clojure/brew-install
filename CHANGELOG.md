@@ -7,7 +7,7 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* next
+* 1.10.3.1058 on Jan 4, 2022
   * Update to tools.deps.alpha 0.12.1109
 * 1.10.3.1053 on Dec 23, 2021
   * Update to tools.deps.alpha 0.12.1104
