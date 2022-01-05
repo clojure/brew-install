@@ -7,6 +7,6 @@
 
  :aliases
  {:build    ;; clj -T:build release
-  {:deps {io.github.clojure/tools.build {:git/tag "v0.7.3" :git/sha "2699924"}}
+  {:deps {io.github.clojure/tools.build {:git/tag "v0.7.5" :git/sha "34727f7"}}
    :paths ["script"]
    :ns-default build}}}
