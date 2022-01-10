@@ -170,6 +170,8 @@
         (if (symbol? (first overrides))
           (throw (err "Key is missing value:" (last overrides)))
           (throw (err "No function found on command line or in :exec-fn"))))
+      (when (not= 1 (count f))
+        (throw (err "Invalid exec function:" exec-fn)))
       (set-daemon-agent-executor)
       (binding [*ns-default* ns-default
                 *ns-aliases* ns-aliases]
