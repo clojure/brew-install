@@ -7,6 +7,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
+* 1.11.0.1097 on Mar 25, 2022
+  * Update to clojure 1.11.0
 * 1.10.3.1093 on Mar 21, 2022
   * Update to tools.deps.alpha 0.12.1162
 
