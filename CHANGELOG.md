@@ -5,18 +5,17 @@ Changelog
 
 clj has both stable and prerelease versions. Current and former stable build are listed in **bold** and are (or were) available from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
-Prerelease versions:
-
-* next
-  * Update to clojure 1.11.1
+Prerelease versions: none
 
 **Current stable version:**
 
-* **1.11.0.1100 on Mar 28, 2022**
-  * **No changes from prior**
+* **1.11.1.1105 on Apr 5, 2022**
+  * **Update to clojure 1.11.1**
 
 Older versions (previous stable builds in bold):
 
+* **1.11.0.1100 on Mar 28, 2022**
+  * **No changes from prior**
 * 1.11.0.1097 on Mar 25, 2022
   * Update to clojure 1.11.0
 * 1.10.3.1093 on Mar 21, 2022
