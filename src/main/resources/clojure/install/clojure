@@ -197,7 +197,7 @@ if "$help"; then
 	on the JVM, e.g. to start a REPL or invoke a specific function with data.
 	The Clojure tools will configure the JVM process by defining a classpath
 	(of desired libraries), an execution environment (JVM options) and
-	specifying a main class and args. 
+	specifying a main class and args.
 
 	Using a deps.edn file (or files), you tell Clojure where your source code
 	resides and what libraries you need. Clojure will then calculate the full
@@ -423,7 +423,7 @@ if [[ "$stale" = true && "$describe" = false ]]; then
   if "$verbose"; then
     >&2 echo "Refreshing classpath"
   fi
-  "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" --manifest-file "$manifest_file" "${tools_args[@]}"
+  "$JAVA_CMD" $CLJ_JVM_OPTS -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" --manifest-file "$manifest_file" "${tools_args[@]}"
 fi
 
 if "$describe"; then
@@ -437,7 +437,7 @@ fi
 if "$prep"; then
   exit 0
 elif "$pom"; then
-  exec "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest2 --config-user "$config_user" --config-project "$config_project" --gen=pom "${tools_args[@]}"
+  exec "$JAVA_CMD" $CLJ_JVM_OPTS -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest2 --config-user "$config_user" --config-project "$config_project" --gen=pom "${tools_args[@]}"
 elif "$print_classpath"; then
   echo "$cp"
 elif "$describe"; then
@@ -472,7 +472,7 @@ else
   fi
 
   if [ "$mode" == "tool" ] || [ "$mode" == "exec" ]; then
-    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp:$install_dir/libexec/exec.jar" clojure.main -m clojure.run.exec "$@"
+    exec "$JAVA_CMD" $JAVA_OPTS "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp:$install_dir/libexec/exec.jar" clojure.main -m clojure.run.exec "$@"
   else
     if [[ -f "$main_file" ]]; then
       set +e
@@ -482,6 +482,6 @@ else
     if [ "$#" -gt 0 ] && [ "$mode" == "repl" ]; then
       >&2 echo "WARNING: Implicit use of clojure.main with options is deprecated, use -M"
     fi
-    exec "$JAVA_CMD" "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp" clojure.main "${main_cache_opts[@]}" "$@"
+    exec "$JAVA_CMD" $JAVA_OPTS "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp" clojure.main "${main_cache_opts[@]}" "$@"
   fi
 fi
