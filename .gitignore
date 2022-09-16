@@ -5,3 +5,5 @@ clojure-tools.iml
 .cpcache/
 *.iml
 .nrepl-port
+.lsp/
+.clj-kondo/
