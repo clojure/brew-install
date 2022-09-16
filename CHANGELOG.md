@@ -7,7 +7,7 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* next
+* 1.11.1.1161 on Sep 16, 2022
   * Use `$CLJ_JVM_OPTS` as jvm options on calls to internal tooling (making classpaths etc)
   * Use `$JAVA_OPTS` as jvm options on calls to user programs
 
