@@ -5,19 +5,20 @@ Changelog
 
 clj has both stable and prerelease versions. Current and former stable build are listed in **bold** and are (or were) available from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
-Prerelease versions:
+Prerelease versions: none
+
+**Current stable version:**
+
+* **1.11.1.1165 on Sep 18, 2022**
+  * Extended the env var support to Windows
+
+Older versions (previous stable builds in bold):
 
 * 1.11.1.1161 on Sep 16, 2022
   * Use `$CLJ_JVM_OPTS` as jvm options on calls to internal tooling (making classpaths etc)
   * Use `$JAVA_OPTS` as jvm options on calls to user programs
-
-**Current stable version:**
-
 * **1.11.1.1155 on Aug 5, 2022**
   * **Update to tools.deps.alpha 0.14.1222**
-
-Older versions (previous stable builds in bold):
-
 * **1.11.1.1149 on Jun 21, 2022**
   * **Update to tools.tools 0.2.8**
 * 1.11.1.1145 on Jun 20, 2022
