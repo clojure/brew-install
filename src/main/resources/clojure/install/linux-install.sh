@@ -35,21 +35,22 @@ man_dir="$prefix_dir/share/man/man1"
 clojure_lib_dir="$lib_dir/clojure"
 
 echo "Installing libs into $clojure_lib_dir"
-install -Dm644 clojure-tools/deps.edn "$clojure_lib_dir/deps.edn"
-install -Dm644 clojure-tools/example-deps.edn "$clojure_lib_dir/example-deps.edn"
-install -Dm644 clojure-tools/tools.edn "$clojure_lib_dir/tools.edn"
-install -Dm644 clojure-tools/exec.jar "$clojure_lib_dir/libexec/exec.jar"
-install -Dm644 clojure-tools/clojure-tools-${project.version}.jar "$clojure_lib_dir/libexec/clojure-tools-${project.version}.jar"
+mkdir -p $bin_dir $man_dir $clojure_lib_dir/libexec
+install -m644 clojure-tools/deps.edn "$clojure_lib_dir/deps.edn"
+install -m644 clojure-tools/example-deps.edn "$clojure_lib_dir/example-deps.edn"
+install -m644 clojure-tools/tools.edn "$clojure_lib_dir/tools.edn"
+install -m644 clojure-tools/exec.jar "$clojure_lib_dir/libexec/exec.jar"
+install -m644 clojure-tools/clojure-tools-${project.version}.jar "$clojure_lib_dir/libexec/clojure-tools-${project.version}.jar"
 
 echo "Installing clojure and clj into $bin_dir"
 sed -i -e 's@PREFIX@'"$clojure_lib_dir"'@g' clojure-tools/clojure
 sed -i -e 's@BINDIR@'"$bin_dir"'@g' clojure-tools/clj
-install -Dm755 clojure-tools/clojure "$bin_dir/clojure"
-install -Dm755 clojure-tools/clj "$bin_dir/clj"
+install -m755 clojure-tools/clojure "$bin_dir/clojure"
+install -m755 clojure-tools/clj "$bin_dir/clj"
 
 echo "Installing man pages into $man_dir"
-install -Dm644 clojure-tools/clojure.1 "$man_dir/clojure.1"
-install -Dm644 clojure-tools/clj.1 "$man_dir/clj.1"
+install -m644 clojure-tools/clojure.1 "$man_dir/clojure.1"
+install -m644 clojure-tools/clj.1 "$man_dir/clj.1"
 
 echo "Removing download"
 rm -rf clojure-tools
