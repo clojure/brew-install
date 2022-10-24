@@ -8,6 +8,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 Prerelease versions:
 
 * next
+  * Fix bug in posix-install.sh
+* 1.11.1.1174 on Oct 23, 2022
   * TDEPS-70 - Detect missing jar in classpath and recompute
   * TDEPS-200 - Clean up default user deps.edn
   * TDEPS-232 - Add more generic posix installer

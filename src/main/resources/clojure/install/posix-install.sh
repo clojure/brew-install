@@ -17,7 +17,7 @@ default_prefix_dir="/usr/local"
 prefix_dir=$default_prefix_dir
 prefix_param=${1:-}
 prefix_value=${2:-}
-if [[ "$prefix_param" = "-p" -o "$prefix_param" = "--prefix" ]]; then
+if [ "$prefix_param" = "-p" -o "$prefix_param" = "--prefix" ]; then
   if [ -z "$prefix_value" ]; then
     do_usage
   else
