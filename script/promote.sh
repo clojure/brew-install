@@ -29,3 +29,9 @@ cp devel.properties stable.properties
 
 git add stable.properties
 git commit -m "update stable to $devel_version"
+
+# Publish stable version file
+if [[ ! -z "$S3_BUCKET" ]]; then
+  echo "Deploying https://download.clojure.org/install/stable.properties"
+  aws s3 cp --only-show-errors "stable.properties" "$S3_BUCKET/install/stable.properties"
+fi
