@@ -54,7 +54,7 @@
   (b/jar {:class-dir exec-dir :jar-file exec-file})
 
   ;; Collect the tar file contents and make the tar and installer
-  (doseq [f ["clojure" "clj" "install.sh" "linux-install.sh"]]
+  (doseq [f ["clojure" "clj" "install.sh" "linux-install.sh" "posix-install.sh"]]
     (b/process {:command-args ["chmod" "+x" (str filtered-dir "/clojure/install/" f)]}))
   (doseq [f ["clj" "clojure" "install.sh" "deps.edn" "example-deps.edn" "tools.edn"]]
     (b/copy-file {:src (str filtered-dir "/clojure/install/" f) :target (str tar-dir "/" f)}))
@@ -63,6 +63,7 @@
   (b/copy-dir {:src-dirs [target-dir] :target-dir tar-dir :include "*.jar"})
   (b/process {:command-args ["tar" "-cvzf" tar-file "-Ctarget" "clojure-tools"]})
   (b/copy-file {:src (str filtered-dir "/clojure/install/linux-install.sh") :target (str target-dir "/linux-install.sh")})
+  (b/copy-file {:src (str filtered-dir "/clojure/install/posix-install.sh") :target (str target-dir "/posix-install.sh")})
 
   ;; Collect the windows files and make the windows zip file and installer
   (doseq [f ["ClojureTools.psd1" "ClojureTools.psm1" "deps.edn" "example-deps.edn" "tools.edn"]]

@@ -10,6 +10,7 @@ Prerelease versions:
 * next
   * TDEPS-70 - Detect missing jar in classpath and recompute
   * TDEPS-200 - Clean up default user deps.edn
+  * TDEPS-232 - Add more generic posix installer
   * Update to tools.deps.alpha 0.15.1237
 
 **Current stable version:**
