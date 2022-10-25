@@ -7,6 +7,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
+* next
+  * Update to tools.deps.alpha 0.15.1244
 * 1.11.1.1177 on Oct 23, 2022
   * Fix bug in posix-install.sh
 * 1.11.1.1174 on Oct 23, 2022
