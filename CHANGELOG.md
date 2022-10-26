@@ -5,10 +5,15 @@ Changelog
 
 clj has both stable and prerelease versions. Current and former stable build are listed in **bold** and are (or were) available from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
-Prerelease versions:
+Prerelease versions: none
 
-* 1.11.1.1182 on Oct 24, 2022
-  * Update to tools.deps.alpha 0.15.1244
+**Current stable version:**
+
+* **1.11.1.1182 on Oct 24, 2022**
+  * **Update to tools.deps.alpha 0.15.1244**
+
+Older versions (previous stable builds in bold):
+
 * 1.11.1.1177 on Oct 23, 2022
   * Fix bug in posix-install.sh
 * 1.11.1.1174 on Oct 23, 2022
@@ -16,14 +21,8 @@ Prerelease versions:
   * TDEPS-200 - Clean up default user deps.edn
   * TDEPS-232 - Add more generic posix installer
   * Update to tools.deps.alpha 0.15.1237
-
-**Current stable version:**
-
 * **1.11.1.1165 on Sep 18, 2022**
   * Extended the env var support to Windows
-
-Older versions (previous stable builds in bold):
-
 * 1.11.1.1161 on Sep 16, 2022
   * Use `$CLJ_JVM_OPTS` as jvm options on calls to internal tooling (making classpaths etc)
   * Use `$JAVA_OPTS` as jvm options on calls to user programs
