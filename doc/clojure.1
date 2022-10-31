@@ -85,6 +85,10 @@ Deps data to use as the last deps file to be merged
 Compute classpath and echo to stdout only
 
 .TP
+.BI \-Stree
+Print dependency tree
+
+.TP
 .BI \-Scp\  CP
 Do NOT compute or cache classpath, use this one instead
 
@@ -184,10 +188,8 @@ Deps and CLI Guide
 Deps and CLI Reference
 .IP https://clojure.org/reference/repl_and_main
 REPL and Main Entrypoints
-.IP https://github.com/clojure/brew-install/blob/1.11.1/CHANGELOG.md
-Changelog for scripts
-.IP https://github.com/clojure/tools.deps.alpha/blob/master/CHANGELOG.md
-Changelog for tools.deps library
+.IP https://clojure.org/releases/tools
+Release history and changelog
 
 .SH BUGS
 
@@ -201,7 +203,7 @@ This man page was written by Elana Hashman <ehashman@debian.org>.
 
 .SH COPYRIGHT
 
-Copyright \(co 2018-2020 Rich Hickey, Alex Miller and contributors.
+Copyright \(co 2018-2022 Rich Hickey, Alex Miller and contributors.
 
 Distributed under the Eclipse Public License 1.0, the same as
 Clojure.
