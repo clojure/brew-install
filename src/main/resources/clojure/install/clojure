@@ -367,7 +367,7 @@ else
   done
 
   # Are .jar files in classpath missing?
-  IFS=':'; read -ra cp_entries <<<"$(cat $cp_file)"
+  IFS=':' read -ra cp_entries <<<"$(cat $cp_file)"
   for cp_entry in "${cp_entries[@]}"; do
     if [[ "$cp_entry" == *.jar && ! -f "$cp_entry" ]]; then
       stale=true

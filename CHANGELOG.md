@@ -8,6 +8,7 @@ clj has both stable and prerelease versions. Current and former stable build are
 Prerelease versions:
 
 * next
+  * TDEPS-233 bash script fixes from stale jar check changes
   * Add some missing items on help and man page
 
 **Current stable version:**
