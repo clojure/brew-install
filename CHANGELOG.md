@@ -9,6 +9,7 @@ Prerelease versions:
 
 * next
   * Update to tools.deps.alpha 0.15.1254
+  * Update to tools.tools v0.2.9
 * 1.11.1.1194 on Nov 14, 2022
   * Update to tools.deps.alpha 0.15.1250
 
