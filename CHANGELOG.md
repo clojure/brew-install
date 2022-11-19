@@ -7,6 +7,9 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
+* next
+  * TDEPS-234 - Set -XX:-OmitStackTraceInFastThrow always
+
 **Current stable version:**
 
 * **1.11.1.1200 on Nov 14, 2022**
