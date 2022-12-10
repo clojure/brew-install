@@ -8,6 +8,7 @@ clj has both stable and prerelease versions. Current and former stable build are
 Prerelease versions:
 
 * next
+  * Switch to tools.deps
   * TDEPS-234 - Set -XX:-OmitStackTraceInFastThrow always
 
 **Current stable version:**

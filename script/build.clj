@@ -37,16 +37,16 @@
                :replace {"${project.version}" version
                          "${version.short}" (str/replace version "." "")
                          "${clojure.version}" clojure-ver
-                         "${tools.deps.version}" (get-in basis [:libs 'org.clojure/tools.deps.alpha :mvn/version])
+                         "${tools.deps.version}" (get-in basis [:libs 'org.clojure/tools.deps :mvn/version])
                          "${stable.version}" (first stable)
                          "${stable.sha}" (second stable)}})
 
   ;; Make the uber jar
   (b/compile-clj {:basis basis :class-dir class-dir :src-dirs []
                   :compile-opts {:elide-meta [:doc :file :line] :direct-linking true}
-                  :ns-compile '[clojure.tools.deps.alpha.script.make-classpath2
-                                clojure.tools.deps.alpha.script.generate-manifest2
-                                clojure.tools.deps.alpha.util.s3-aws-client]})
+                  :ns-compile '[clojure.tools.deps.script.make-classpath2
+                                clojure.tools.deps.script.generate-manifest2
+                                clojure.tools.deps.util.s3-aws-client]})
   (b/uber {:basis basis :class-dir class-dir :uber-file uber-file})
 
   ;; Make the exec jar

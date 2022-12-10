@@ -438,7 +438,7 @@ if [[ "$stale" = true && "$describe" = false ]]; then
   if "$verbose"; then
     >&2 echo "Refreshing classpath"
   fi
-  "$JAVA_CMD" -XX:-OmitStackTraceInFastThrow $CLJ_JVM_OPTS -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" --manifest-file "$manifest_file" "${tools_args[@]}"
+  "$JAVA_CMD" -XX:-OmitStackTraceInFastThrow $CLJ_JVM_OPTS -classpath "$tools_cp" clojure.main -m clojure.tools.deps.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" --manifest-file "$manifest_file" "${tools_args[@]}"
 fi
 
 if "$describe"; then
@@ -452,7 +452,7 @@ fi
 if "$prep"; then
   exit 0
 elif "$pom"; then
-  exec "$JAVA_CMD" -XX:-OmitStackTraceInFastThrow $CLJ_JVM_OPTS -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest2 --config-user "$config_user" --config-project "$config_project" --gen=pom "${tools_args[@]}"
+  exec "$JAVA_CMD" -XX:-OmitStackTraceInFastThrow $CLJ_JVM_OPTS -classpath "$tools_cp" clojure.main -m clojure.tools.deps.script.generate-manifest2 --config-user "$config_user" --config-project "$config_project" --gen=pom "${tools_args[@]}"
 elif "$print_classpath"; then
   echo "$cp"
 elif "$describe"; then

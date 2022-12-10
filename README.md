@@ -21,7 +21,7 @@ The clojure-tools version is defined by the pom.xml project version. It
 should be updated only by running script/update_version (the build does
 this automatically). The current version is stored in the VERSION file.
 
-The Clojure and tools.deps.alpha versions to include in the clojure-tools are
+The Clojure and tools.deps versions to include in the clojure-tools are
 taken from the deps.edn.
 
 ## Package script
@@ -49,7 +49,7 @@ See the following resources for more information:
 * https://clojure.org/guides/getting_started - installation
 * https://clojure.org/guides/deps_and_cli - deps and CLI guide
 * https://clojure.org/reference/deps_and_cli - deps and CLI reference
-* https://github.com/clojure/tools.deps.alpha - dependency and classpath library
+* https://github.com/clojure/tools.deps - dependency and classpath library
 
 ## Developer Information
 
