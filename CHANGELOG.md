@@ -5,7 +5,10 @@ Changelog
 
 clj has both stable and prerelease versions. Current and former stable build are listed in **bold** and are (or were) available from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
-Prerelease versions: none
+Prerelease versions:
+
+* next
+  * TDEPS-236 Add rlwrap -m to clj for multiline editing
 
 **Current stable version:**
 
