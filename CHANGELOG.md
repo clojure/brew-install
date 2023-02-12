@@ -8,7 +8,7 @@ clj has both stable and prerelease versions. Current and former stable build are
 Prerelease versions:
 
 * next
-  * Switch to tools.deps 0.16.1273
+  * Switch to tools.deps 0.16.1277
   * TDEPS-236 Add rlwrap -m to clj for multiline editing
 
 **Current stable version:**
