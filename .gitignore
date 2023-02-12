@@ -4,3 +4,6 @@ target
 *.iml
 .nrepl*
 .idea/
+.calva/
+.clj-kondo/
+.lsp/
