@@ -47,16 +47,15 @@
 
 (def stash (atom nil))
 (defn save [val] (reset! stash val))
-(defn flip [val] (reset! stash (clojure.set/map-invert val)))
 
 (defn- encapsulate-main
-  [basis args]
-  (let [fake-basis (File/createTempFile "basis" nil)]
+  [exec-args args]
+  (let [fake-exec (File/createTempFile "exec" nil)]
     (save nil)
-    (.deleteOnExit fake-basis)
+    (.deleteOnExit fake-exec)
     (binding [*print-namespace-maps* false]
-      (spit fake-basis (pr-str basis))
-      (System/setProperty "clojure.basis" (.getAbsolutePath fake-basis)))
+      (spit fake-exec (pr-str exec-args))
+      (System/setProperty "clojure.exec" (.getAbsolutePath fake-exec)))
     (binding [exec/*exit* (constantly nil)]
       (apply exec/-main args))
     @stash))
@@ -73,7 +72,7 @@
        (str s#))))
 
 (deftest test-main
-  (are [stashed args basis] (= stashed (encapsulate-main basis args))
+  (are [stashed args exec-args] (= stashed (encapsulate-main exec-args args))
     ;; ad hoc, fully resolved, with both key and path vector
     {:a 1, :b {:c 2}} ["clojure.run.test-exec/save" ":a" "1" "[:b,:c]" "2"] {}
 
@@ -81,16 +80,16 @@
     ;;{1 :a, {:c 2} :b} ["clojure.run.test-exec/save" "clojure.run.test-exec/flip" ":a" "1" "[:b,:c]" "2"] {}
 
     ;; ad hoc, resolved by default-ns
-    {:a 1} ["save" ":a" "1"] {:execute-args {:ns-default 'clojure.run.test-exec}}
+    {:a 1} ["save" ":a" "1"] {:ns-default 'clojure.run.test-exec}
 
     ;; ad hoc, resolved alias
-    {:a 1} ["a/save" ":a" "1"] {:execute-args {:ns-aliases {'a 'clojure.run.test-exec}}}
+    {:a 1} ["a/save" ":a" "1"] {:ns-aliases {'a 'clojure.run.test-exec}}
 
     ;; exec-fn with overrides
-    {:a 1, :b 2} [":b" "2"] {:execute-args {:exec-fn 'clojure.run.test-exec/save :exec-args {:a 1 :b 1}}}
+    {:a 1, :b 2} [":b" "2"] {:exec-fn 'clojure.run.test-exec/save :exec-args {:a 1 :b 1}}
 
     ;; exec-fn resolved by :ns-default, aliased exec-args
-    {:a 1, :b 1} [] {:execute-args {:exec-fn 'save, :exec-args {:a 1, :b 1} :ns-default 'clojure.run.test-exec}})
+    {:a 1, :b 1} [] {:exec-fn 'save, :exec-args {:a 1, :b 1} :ns-default 'clojure.run.test-exec})
 
   ;; missing override val: "Key is missing value: :foo\n"
   (is (str/includes? (with-err-str (encapsulate-main {} [":foo"])) ":foo"))
@@ -100,4 +99,8 @@
 
   ;; unqualified function: "Unqualified function can't be resolved: foo\n"
   (is (str/includes? (with-err-str (encapsulate-main {} ["foo"])) "foo"))
+  )
+
+(comment
+  (test-main)
   )

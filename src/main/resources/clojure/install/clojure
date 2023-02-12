@@ -323,7 +323,8 @@ else
 fi
 
 # Construct location of cached classpath file
-val="$(join '' ${resolve_aliases[@]})|$(join '' ${classpath_aliases[@]})|$(join '' ${repl_aliases[@]})|$exec_aliases|$main_aliases|$deps_data|$tool_name|$tool_aliases"
+cache_version=1
+val="$cache_version|$(join '' ${resolve_aliases[@]})|$(join '' ${classpath_aliases[@]})|$(join '' ${repl_aliases[@]})|$exec_aliases|$main_aliases|$deps_data|$tool_name|$tool_aliases"
 for config_path in "${config_paths[@]}"; do
   if [[ -f "$config_path" ]]; then
     val="$val|$config_path"
@@ -333,12 +334,12 @@ for config_path in "${config_paths[@]}"; do
 done
 ck=$(echo "$val" | cksum | cut -d" " -f 1)
 
-libs_file="$cache_dir/$ck.libs"
 cp_file="$cache_dir/$ck.cp"
 jvm_file="$cache_dir/$ck.jvm"
 main_file="$cache_dir/$ck.main"
 basis_file="$cache_dir/$ck.basis"
 manifest_file="$cache_dir/$ck.manifest"
+exec_file="$cache_dir/$ck.exec"
 
 # Print paths in verbose mode
 if "$verbose"; then
@@ -438,7 +439,7 @@ if [[ "$stale" = true && "$describe" = false ]]; then
   if "$verbose"; then
     >&2 echo "Refreshing classpath"
   fi
-  "$JAVA_CMD" -XX:-OmitStackTraceInFastThrow $CLJ_JVM_OPTS -classpath "$tools_cp" clojure.main -m clojure.tools.deps.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" --manifest-file "$manifest_file" "${tools_args[@]}"
+  "$JAVA_CMD" -XX:-OmitStackTraceInFastThrow $CLJ_JVM_OPTS -classpath "$tools_cp" clojure.main -m clojure.tools.deps.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" --manifest-file "$manifest_file" --exec-file "$exec_file" "${tools_args[@]}"
 fi
 
 if "$describe"; then
@@ -487,7 +488,7 @@ else
   fi
 
   if [ "$mode" == "tool" ] || [ "$mode" == "exec" ]; then
-    exec "$JAVA_CMD" -XX:-OmitStackTraceInFastThrow $JAVA_OPTS "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" -classpath "$cp:$install_dir/libexec/exec.jar" clojure.main -m clojure.run.exec "$@"
+    exec "$JAVA_CMD" -XX:-OmitStackTraceInFastThrow $JAVA_OPTS "${jvm_cache_opts[@]}" "${jvm_opts[@]}" "-Dclojure.basis=$basis_file" "-Dclojure.exec=$exec_file" -classpath "$cp:$install_dir/libexec/exec.jar" clojure.main -m clojure.run.exec "$@"
   else
     if [[ -f "$main_file" ]]; then
       set +e

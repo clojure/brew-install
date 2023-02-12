@@ -15,7 +15,7 @@
     [clojure.spec.alpha :as s])
   (:import
     [clojure.lang ExceptionInfo]
-    [java.io FileNotFoundException]
+    [java.io StringWriter Writer FileNotFoundException]
     [java.util.concurrent Executors ThreadFactory]))
 
 (set! *warn-on-reflection* true)
@@ -36,6 +36,45 @@
         (-> sym namespace symbol require)
         (resolve sym)))))
 
+(defn remove-ns-keys
+  "Remove keys in m with namespace string ns-str"
+  [m ns-str]
+  (reduce-kv #(if (= ns-str (namespace %2)) %1 (assoc %1 %2 %3)) {} m))
+
+(defn- add-stream
+  [envelope stream-tag ^Writer writer]
+  (.flush writer)
+  (let [s (str writer)]
+    (if (str/blank? s)
+      envelope
+      (assoc envelope stream-tag s))))
+
+(defn- envelope
+  [args tag val out-wr err-wr start]
+  (let [end (System/currentTimeMillis)]
+    (cond-> {:tag tag
+             :val (binding [*print-namespace-maps* false] (pr-str val))
+             :ms (- end start)}
+      (= :capture (:clojure.exec/out args)) (add-stream :out out-wr)
+      (= :capture (:clojure.exec/err args)) (add-stream :err err-wr))))
+
+(defn apply-program
+  [f args]
+  (let [clean-args (remove-ns-keys args "clojure.exec")
+        out-wr (StringWriter.)
+        err-wr (StringWriter.)
+        start (System/currentTimeMillis)
+        env (binding [*out* out-wr, *err* err-wr]
+              (try
+                (envelope args :ret (f clean-args) out-wr err-wr start)
+                (catch Throwable t
+                  (envelope args :err (Throwable->map t) out-wr err-wr start))
+                (finally
+                  (.close out-wr)
+                  (.close err-wr))))]
+    (binding [*print-namespace-maps* false]
+      (prn env))))
+
 (defn exec
   "Resolve and execute the function f (a symbol) with args"
   [f & args]
@@ -45,7 +84,9 @@
                        (catch FileNotFoundException _
                          (throw (err "Namespace could not be loaded:" (namespace f)))))]
       (if resolved-f
-        (apply resolved-f args)
+        (if (= :fn (:clojure.exec/invoke args))
+          (apply-program resolved-f args)
+          (resolved-f args))
         (throw (err "Namespace" (namespace f) "loaded but function not found:" (name f)))))))
 
 (defn- apply-overrides
@@ -73,12 +114,12 @@
         (symbol (str ns-default) (str fsym))
         (throw (err "Unqualified function can't be resolved:" fsym))))))
 
-(defn- read-basis
-  []
-  (when-let [f (jio/file (System/getProperty "clojure.basis"))]
-    (if (and f (.exists f))
-      (->> f slurp (edn/read-string {:default tagged-literal}))
-      (throw (err "No basis declared in clojure.basis system property")))))
+(defn- read-exec
+  [exec-file]
+  (when-not (str/blank? exec-file)
+    (when-let [f (jio/file exec-file)]
+      (when (and f (.exists f))
+        (->> f slurp (edn/read-string {:default tagged-literal}))))))
 
 (def arg-spec (s/cat :fns (s/? symbol?) :kvs (s/* (s/cat :k (s/nonconforming (s/or :keyword any? :path vector?)) :v any?)) :trailing (s/? map?)))
 
@@ -140,12 +181,9 @@
   "Execute a function with map kvs.
 
   The classpath is determined by the clojure script and make-classpath programs
-  and has already been set. The runtime basis will contain both the classpath
-  context and the merged alias argmaps, in particular the exec argmap.
-
-  The function must be either looked up or resolved in terms of the :execute-args
-  argmap, which is a merge of active aliases and/or a tool (which may have a usage
-  declaration in its deps.edn) and has the following possible keys:
+  and has already been set. Any execute argmap keys indicated via aliases will
+  be read from an edn file passed via -Dclojure.exec. This edn map has the
+  following possible keys:
     :exec-fn - symbol to be resolved in terms of the namespace context, will
                be overridden if passed as arg
     :exec-args - map of kv args
@@ -162,23 +200,20 @@
     trailing map"
   [& args]
   (try
-    (let [{:keys [function overrides trailing]} (-> args read-args parse-fn)
-          execute-args (:execute-args (read-basis))
+    (let [execute-args (read-exec (System/getProperty "clojure.exec"))
+          {:keys [function overrides trailing]} (-> args read-args parse-fn)
           {:keys [exec-fn exec-args ns-aliases ns-default]} execute-args
-          f (or function (if (symbol? exec-fn) [exec-fn] exec-fn))]
-      (when (or (nil? f) (empty? f))
+          f (or function exec-fn)]
+      (when (nil? f)
         (if (symbol? (first overrides))
           (throw (err "Key is missing value:" (last overrides)))
           (throw (err "No function found on command line or in :exec-fn"))))
-      (when (not= 1 (count f))
-        (throw (err "Invalid exec function:" exec-fn)))
       (set-daemon-agent-executor)
       (binding [*ns-default* ns-default
                 *ns-aliases* ns-aliases]
-        (loop [fns f, args (merge (apply-overrides exec-args overrides) trailing)]
-          (if (seq fns)
-            (recur (rest fns) (exec (qualify-fn (first fns) ns-aliases ns-default) args))
-            args)))
+        (let [qualified-fn (qualify-fn f ns-aliases ns-default)
+              args (merge (apply-overrides exec-args overrides) trailing)]
+          (exec qualified-fn args)))
       (*exit*))
     (catch ExceptionInfo e
       (if (-> e ex-data :exec-msg)
@@ -207,12 +242,12 @@
   (-> ["clojure.run.test-exec/save" ":a" "1" "[:b,:c]" "2"]
       read-args
       parse-fn)
-  
+
   (s/conform arg-spec '[a b :a 1 :b 2 {}])
   (s/conform arg-spec '[a b])
   (s/conform arg-spec '[a])
   (s/conform arg-spec '[a {:a 1 :b 2}])
   (s/conform arg-spec '[:a 1 :b 2])
   (s/conform arg-spec '[foo/bar :x 1 :y])
-  (s/conform arg-spec '[clojure.run.test-exec/save :a 1 [:b :c] 2])
-  )
+  (s/conform arg-spec '[clojure.run.test-exec/save :a 1 [:b :c] 2]))
+
