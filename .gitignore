@@ -7,3 +7,4 @@ clojure-tools.iml
 .nrepl-port
 .lsp/
 .clj-kondo/
+.calva/
