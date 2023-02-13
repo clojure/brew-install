@@ -8,6 +8,7 @@ clj has both stable and prerelease versions. Current and former stable build are
 Prerelease versions:
 
 * next
+  * Remove deprecated support for -R and -C
   * Help clean up around repl supporting init-opts
 
 **Current stable version:**
