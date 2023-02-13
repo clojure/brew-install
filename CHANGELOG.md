@@ -7,6 +7,9 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
+* next
+  * Help clean up around repl supporting init-opts
+
 **Current stable version:**
 
 * **1.11.1.1224** on Feb 12, 2023**
