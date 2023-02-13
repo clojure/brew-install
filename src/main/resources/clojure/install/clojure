@@ -19,8 +19,6 @@ pom=false
 help=false
 prep=false
 jvm_opts=()
-resolve_aliases=()
-classpath_aliases=()
 repl_aliases=()
 mode="repl"
 while [ $# -gt 0 ]
@@ -39,14 +37,12 @@ do
       shift
       ;;
     -R*)
-      resolve_aliases+=("${1:2}")
-      shift
-      >&2 echo "-R is deprecated, use -A with repl, -M for main, or -X for exec"
+      >&2 echo "-R is no longer supported, use -A with repl, -M for main, or -X for exec"
+      exit 1
       ;;
     -C*)
-      classpath_aliases+=("${1:2}")
-      shift
-      >&2 echo "-C is deprecated, use -A with repl, -M for main, or -X for exec"
+      >&2 echo "-C is no longer supported, use -A with repl, -M for main, or -X for exec"
+      exit 1
       ;;
     -O*)
       >&2 echo "-O is no longer supported, use -A with repl, -M for main, or -X for exec"
@@ -323,7 +319,8 @@ else
 fi
 
 # Construct location of cached classpath file
-val="$(join '' ${resolve_aliases[@]})|$(join '' ${classpath_aliases[@]})|$(join '' ${repl_aliases[@]})|$exec_aliases|$main_aliases|$deps_data|$tool_name|$tool_aliases"
+cache_version=1
+val="$cache_version|$(join '' ${repl_aliases[@]})|$exec_aliases|$main_aliases|$deps_data|$tool_name|$tool_aliases"
 for config_path in "${config_paths[@]}"; do
   if [[ -f "$config_path" ]]; then
     val="$val|$config_path"
@@ -394,12 +391,6 @@ if "$stale" || "$pom"; then
   tools_args=()
   if [[ -n "$deps_data" ]]; then
     tools_args+=("--config-data" "$deps_data")
-  fi
-  if [[ ${#resolve_aliases[@]} -gt 0 ]]; then
-    tools_args+=("-R$(join '' ${resolve_aliases[@]})")
-  fi
-  if [[ ${#classpath_aliases[@]} -gt 0 ]]; then
-    tools_args+=("-C$(join '' ${classpath_aliases[@]})")
   fi
   if [[ -n "$main_aliases" ]]; then
     tools_args+=("-M$main_aliases")
