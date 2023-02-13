@@ -8,16 +8,19 @@ clj has both stable and prerelease versions. Current and former stable build are
 Prerelease versions:
 
 * next
-  * TDEPS-236 Add rlwrap -m to clj for multiline editing
+  * Help clean up around repl supporting init-opts
 
 **Current stable version:**
+
+* **1.11.1.1224** on Feb 12, 2023**
+  * **Switch to tools.deps 0.16.1281**
+  * **TDEPS-236 Add rlwrap -m to clj for multiline editing**
+
+Older versions (previous stable builds in bold):
 
 * **1.11.1.1208 on Dec 11, 2022**
   * **Switch to tools.deps 0.16.1264**
   * **TDEPS-234 - Set -XX:-OmitStackTraceInFastThrow always**
-
-Older versions (previous stable builds in bold):
-
 * **1.11.1.1200 on Nov 14, 2022**
   * **Update to tools.deps.alpha 0.15.1254**
   * **Update to tools.tools v0.2.9**
