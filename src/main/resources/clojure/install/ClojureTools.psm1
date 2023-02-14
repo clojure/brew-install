@@ -36,8 +36,6 @@ function Invoke-Clojure {
   $Prep = $FALSE
   $Help = $FALSE
   $JvmOpts = @()
-  $ResolveAliases = @()
-  $ClasspathAliases = @()
   $ReplAliases = @()
   $ClojureArgs = @()
   $Mode = "repl"
@@ -54,17 +52,11 @@ function Invoke-Clojure {
     } elseif ($arg.StartsWith('-J')) {
       $JvmOpts += $arg.Substring(2)
     } elseif ($arg.StartsWith('-R')) {
-      Write-Warning "-R is deprecated, use -A with repl, -M for main, or -X for exec"
-      $aliases, $params = $params
-      if ($aliases) {
-        $ResolveAliases += ":$aliases"
-      }
+      Write-Error "-R is deprecated, use -A with repl, -M for main, or -X for exec"
+      return
     } elseif ($arg.StartsWith('-C')) {
-      Write-Warning "-C is deprecated, use -A with repl, -M for main, or -X for exec"
-      $aliases, $params = $params
-      if ($aliases) {
-        $ClassPathAliases += ":$aliases"
-      }
+      Write-Error "-C is deprecated, use -A with repl, -M for main, or -X for exec"
+      return
     } elseif ($arg.StartsWith('-O')) {
       Write-Error "-O is no longer supported, use -A with repl, -M for main, or -X for exec"
       return
@@ -303,7 +295,8 @@ For more info, see:
   }
 
   # Construct location of cached classpath file
-  $CacheKey = "$($ResolveAliases -join '')|$($ClassPathAliases -join '')|$($ReplAliases -join '')|$($JvmAliases -join '')|$ExecAliases|$MainAliases|$DepsData|$ToolName|$ToolAliases|$($ConfigPaths -join '|')"
+  $CacheVersion = "1"
+  $CacheKey = "$CacheVersion|$($ReplAliases -join '')|$($JvmAliases -join '')|$ExecAliases|$MainAliases|$DepsData|$ToolName|$ToolAliases|$($ConfigPaths -join '|')"
   $CacheKeyHash = (Get-StringHash $CacheKey) -replace '-', ''
 
   $LibsFile = "$CacheDir\$CacheKeyHash.libs"
@@ -349,12 +342,6 @@ cp_file      = $CpFile
     if ($DepsData) {
       $ToolsArgs += '--config-data'
       $ToolsArgs += $DepsData
-    }
-    if ($ResolveAliases) {
-      $ToolsArgs += "-R$($ResolveAliases -join '')"
-    }
-    if ($ClassPathAliases) {
-      $ToolsArgs += "-C$($ClassPathAliases -join '')"
     }
     if ($MainAliases) {
       $ToolsArgs += "-M$MainAliases"
