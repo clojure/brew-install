@@ -295,7 +295,7 @@ For more info, see:
   }
 
   # Construct location of cached classpath file
-  $CacheVersion = "1"
+  $CacheVersion = "2"
   $CacheKey = "$CacheVersion|$($ReplAliases -join '')|$($JvmAliases -join '')|$ExecAliases|$MainAliases|$DepsData|$ToolName|$ToolAliases|$($ConfigPaths -join '|')"
   $CacheKeyHash = (Get-StringHash $CacheKey) -replace '-', ''
 

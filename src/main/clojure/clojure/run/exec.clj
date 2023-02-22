@@ -64,20 +64,20 @@
         out-wr (StringWriter.)
         err-wr (StringWriter.)
         start (System/currentTimeMillis)
-        env (binding [*out* out-wr, *err* err-wr]
-              (try
-                (envelope args :ret (f clean-args) out-wr err-wr start)
-                (catch Throwable t
-                  (envelope args :err (Throwable->map t) out-wr err-wr start))
-                (finally
-                  (.close out-wr)
-                  (.close err-wr))))]
+        envelope (binding [*out* out-wr, *err* err-wr]
+                   (try
+                     (envelope args :ret (f clean-args) out-wr err-wr start)
+                     (catch Throwable t
+                       (envelope args :err (Throwable->map t) out-wr err-wr start))
+                     (finally
+                       (.close out-wr)
+                       (.close err-wr))))]
     (binding [*print-namespace-maps* false]
-      (prn env))))
+      (prn envelope))))
 
 (defn exec
   "Resolve and execute the function f (a symbol) with args"
-  [f & args]
+  [f args]
   (try
     (let [resolved-f (try
                        (requiring-resolve' f)
@@ -114,18 +114,18 @@
         (symbol (str ns-default) (str fsym))
         (throw (err "Unqualified function can't be resolved:" fsym))))))
 
-(defn- read-exec
-  [exec-file]
-  (when-not (str/blank? exec-file)
-    (when-let [f (jio/file exec-file)]
-      (when (and f (.exists f))
-        (->> f slurp (edn/read-string {:default tagged-literal}))))))
+(defn- read-basis
+ []
+ (when-let [f (jio/file (System/getProperty "clojure.basis"))]
+   (if (and f (.exists f))
+     (->> f slurp (edn/read-string {:default tagged-literal}))
+     (throw (err "No basis declared in clojure.basis system property")))))
 
 (def arg-spec (s/cat :fns (s/? symbol?) :kvs (s/* (s/cat :k (s/nonconforming (s/or :keyword any? :path vector?)) :v any?)) :trailing (s/? map?)))
 
 (defn- build-fn-descriptor [{:keys [fns kvs trailing] :as extra}]
   (cond-> {}
-    fns (assoc :function [fns])
+    fns (assoc :function fns)
     trailing (assoc :trailing trailing)
     kvs (assoc :overrides (reduce #(-> %1 (conj (:k %2)) (conj (:v %2))) [] kvs))))
 
@@ -182,8 +182,8 @@
 
   The classpath is determined by the clojure script and make-classpath programs
   and has already been set. Any execute argmap keys indicated via aliases will
-  be read from an edn file passed via -Dclojure.exec. This edn map has the
-  following possible keys:
+  be read from the basis file :argmap passed via -Dclojure.basis. The exec args
+  have the following possible keys:
     :exec-fn - symbol to be resolved in terms of the namespace context, will
                be overridden if passed as arg
     :exec-args - map of kv args
@@ -200,7 +200,7 @@
     trailing map"
   [& args]
   (try
-    (let [execute-args (read-exec (System/getProperty "clojure.exec"))
+    (let [execute-args (:argmap (read-basis))
           {:keys [function overrides trailing]} (-> args read-args parse-fn)
           {:keys [exec-fn exec-args ns-aliases ns-default]} execute-args
           f (or function exec-fn)]
