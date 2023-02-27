@@ -9,7 +9,8 @@ Prerelease versions:
 
 * next
   * Remove deprecated support for -R and -C
-  * Help clean up around repl supporting init-opts
+  * Clean up help text around repl supporting init-opts
+  * Switch to tools.deps 0.16.1285
 
 **Current stable version:**
 
