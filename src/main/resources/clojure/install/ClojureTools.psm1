@@ -52,13 +52,13 @@ function Invoke-Clojure {
     } elseif ($arg.StartsWith('-J')) {
       $JvmOpts += $arg.Substring(2)
     } elseif ($arg.StartsWith('-R')) {
-      Write-Error "-R is deprecated, use -A with repl, -M for main, or -X for exec"
+      Write-Error "-R is no longer supported, use -A with repl, -M for main, -X for exec, -T for tool"
       return
     } elseif ($arg.StartsWith('-C')) {
-      Write-Error "-C is deprecated, use -A with repl, -M for main, or -X for exec"
+      Write-Error "-C is no longer supported, use -A with repl, -M for main, -X for exec, -T for tool"
       return
     } elseif ($arg.StartsWith('-O')) {
-      Write-Error "-O is no longer supported, use -A with repl, -M for main, or -X for exec"
+      Write-Error "-O is no longer supported, use -A with repl, -M for main, -X for exec, -T for tool"
       return
     } elseif ($arg -ceq '-M') {
       $Mode = "main"

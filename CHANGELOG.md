@@ -5,20 +5,22 @@ Changelog
 
 clj has both stable and prerelease versions. Current and former stable build are listed in **bold** and are (or were) available from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
-Prerelease versions:
-
-* next
-  * Remove deprecated support for -R and -C
-  * Help clean up around repl supporting init-opts
+Prerelease versions: none
 
 **Current stable version:**
 
-* **1.11.1.1224** on Feb 12, 2023**
-  * **Switch to tools.deps 0.16.1281**
-  * **TDEPS-236 Add rlwrap -m to clj for multiline editing**
+* **1.11.1.1237 on Feb 27, 2023**
+  * **Updates on -R and -C error messages**
 
 Older versions (previous stable builds in bold):
 
+* 1.11.1.1234 on Feb 27, 2023
+  * Remove deprecated support for -R and -C
+  * Clean up help text around repl supporting init-opts
+  * Switch to tools.deps 0.16.1285
+* **1.11.1.1224** on Feb 12, 2023**
+  * **Switch to tools.deps 0.16.1281**
+  * **TDEPS-236 Add rlwrap -m to clj for multiline editing**
 * **1.11.1.1208 on Dec 11, 2022**
   * **Switch to tools.deps 0.16.1264**
   * **TDEPS-234 - Set -XX:-OmitStackTraceInFastThrow always**

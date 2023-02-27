@@ -37,15 +37,15 @@ do
       shift
       ;;
     -R*)
-      >&2 echo "-R is no longer supported, use -A with repl, -M for main, or -X for exec"
+      >&2 echo "-R is no longer supported, use -A with repl, -M for main, -X for exec, -T for tool"
       exit 1
       ;;
     -C*)
-      >&2 echo "-C is no longer supported, use -A with repl, -M for main, or -X for exec"
+      >&2 echo "-C is no longer supported, use -A with repl, -M for main, -X for exec, -T for tool"
       exit 1
       ;;
     -O*)
-      >&2 echo "-O is no longer supported, use -A with repl, -M for main, or -X for exec"
+      >&2 echo "-O is no longer supported, use -A with repl, -M for main, -X for exec, -T for tool"
       exit 1
       ;;
     -A)
