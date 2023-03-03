@@ -299,7 +299,6 @@ For more info, see:
   $CacheKey = "$CacheVersion|$($ReplAliases -join '')|$($JvmAliases -join '')|$ExecAliases|$MainAliases|$DepsData|$ToolName|$ToolAliases|$($ConfigPaths -join '|')"
   $CacheKeyHash = (Get-StringHash $CacheKey) -replace '-', ''
 
-  $LibsFile = "$CacheDir\$CacheKeyHash.libs"
   $CpFile = "$CacheDir\$CacheKeyHash.cp"
   $JvmFile = "$CacheDir\$CacheKeyHash.jvm"
   $MainFile = "$CacheDir\$CacheKeyHash.main"
@@ -382,7 +381,7 @@ cp_file      = $CpFile
     if ($Verbose) {
       Write-Host "Refreshing classpath"
     }
-    & $JavaCmd -XX:-OmitStackTraceInFastThrow @CljJvmOpts -classpath $ToolsCp clojure.main -m clojure.tools.deps.script.make-classpath2 --config-user $ConfigUser --config-project $ConfigProject --basis-file $BasisFile --libs-file $LibsFile --cp-file $CpFile --jvm-file $JvmFile --main-file $MainFile --manifest-file $ManifestFile @ToolsArgs
+    & $JavaCmd -XX:-OmitStackTraceInFastThrow @CljJvmOpts -classpath $ToolsCp clojure.main -m clojure.tools.deps.script.make-classpath2 --config-user $ConfigUser --config-project $ConfigProject --basis-file $BasisFile --cp-file $CpFile --jvm-file $JvmFile --main-file $MainFile --manifest-file $ManifestFile @ToolsArgs
     if ($LastExitCode -ne 0) {
       return
     }
