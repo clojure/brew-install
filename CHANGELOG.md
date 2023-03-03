@@ -10,6 +10,7 @@ Prerelease versions:
 * next
   * Switch to passing exec args via the basis :argmap
   * Function execution protocol support for -X/-T
+  * Switch to tools.deps 0.17.1297
 
 **Current stable version:**
 
