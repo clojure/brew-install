@@ -5,20 +5,19 @@ Changelog
 
 clj has both stable and prerelease versions. Current and former stable build are listed in **bold** and are (or were) available from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
-Prerelease versions:
-
-* next
-  * Switch to passing exec args via the basis :argmap
-  * Function execution protocol support for -X/-T
-  * Switch to tools.deps 0.17.1297
+Prerelease versions: none
 
 **Current stable version:**
 
-* **1.11.1.1237 on Feb 27, 2023**
-  * **Updates on -R and -C error messages**
+* **1.11.1.1252 on Mar 6, 2023**
+  * **Switch to passing exec args via the basis :argmap**
+  * **Function execution protocol support for -X/-T**
+  * **Switch to tools.deps 0.17.1297**
 
 Older versions (previous stable builds in bold):
 
+* **1.11.1.1237 on Feb 27, 2023**
+  * **Updates on -R and -C error messages**
 * 1.11.1.1234 on Feb 27, 2023
   * Remove deprecated support for -R and -C
   * Clean up help text around repl supporting init-opts
