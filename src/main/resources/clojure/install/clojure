@@ -318,7 +318,7 @@ else
 fi
 
 # Construct location of cached classpath file
-cache_version=3
+cache_version=4
 val="$cache_version|$(join '' ${repl_aliases[@]})|$exec_aliases|$main_aliases|$deps_data|$tool_name|$tool_aliases"
 for config_path in "${config_paths[@]}"; do
   if [[ -f "$config_path" ]]; then
