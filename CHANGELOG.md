@@ -10,11 +10,13 @@ Prerelease versions: none
 
 **Current stable version:**
 
-* **1.11.1.1257 on Mar 15, 2023**
-  * **Switch to tools.deps 0.18.1308**
+* **1.11.1.1262 on Mar 27, 2023**
+  * **Switch to tools.deps 0.18.1317**
 
 Older versions (previous stable builds in bold):
 
+* **1.11.1.1257 on Mar 15, 2023**
+  * **Switch to tools.deps 0.18.1308**
 * **1.11.1.1252 on Mar 6, 2023**
   * **Switch to passing exec args via the basis :argmap**
   * **Function execution protocol support for -X/-T**
