@@ -9,6 +9,7 @@ Prerelease versions:
 
 * next 
   * Change help text to point to -X:deps mvn-pom instead of -Spom
+  * Switch to tools.deps 0.18.1335
 
 **Current stable version:**
 
