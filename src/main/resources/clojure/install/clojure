@@ -228,7 +228,6 @@ if "$help"; then
 	 -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
 	 -Sdeps EDN     Deps data to use as the last deps file to be merged
 	 -Spath         Compute classpath and echo to stdout only
-	 -Spom          Generate (or update) pom.xml with deps and paths
 	 -Stree         Print dependency tree
 	 -Scp CP        Do NOT compute or cache classpath, use this one instead
 	 -Srepro        Ignore the ~/.clojure/deps.edn config file
@@ -258,6 +257,7 @@ if "$help"; then
 	 -X:deps tree              Print deps tree
 	 -X:deps find-versions     Find available versions of a library
 	 -X:deps prep              Prepare all unprepped libs in the dep tree
+	 -X:deps mvn-pom           Generate (or update) pom.xml with deps and paths
 	 -X:deps mvn-install       Install a maven jar to the local repository cache
 	 -X:deps git-resolve-tags  Resolve git coord tags to shas and update deps.edn
 

@@ -210,7 +210,6 @@ clj-opts:
   -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
   -Sdeps EDN     Deps data to use as the final deps file
   -Spath         Compute classpath and echo to stdout only
-  -Spom          Generate (or update) pom.xml with deps and paths
   -Stree         Print dependency tree
   -Scp CP        Do NOT compute or cache classpath, use this one instead
   -Srepro        Use only the local deps.edn (ignore other config files)
@@ -236,6 +235,7 @@ main-opt:
   -h, -?, --help      Print this help message and exit
 
 Programs provided by :deps alias:
+ -X:deps mvn-pom           Generate (or update) pom.xml with deps and paths
  -X:deps mvn-install       Install a maven jar to the local repository cache
  -X:deps git-resolve-tags  Resolve git coord tags to shas and update deps.edn
  -X:deps find-versions     Find available versions of a library
