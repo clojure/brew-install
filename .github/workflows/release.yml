@@ -17,7 +17,6 @@ jobs:
       with:
         java-version: 8
         distribution: 'temurin'
-        cache: 'maven'
     - name: Set up Clojure
       uses: DeLaGuardo/setup-clojure@9.5
       with:
