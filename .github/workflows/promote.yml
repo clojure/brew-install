@@ -1,0 +1,20 @@
+name: Promote
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out
+      uses: actions/checkout@v3
+    - name: Set Github identity
+      run: |
+        git config --global user.name clojure-build
+        git config --global user.email "clojure-build@users.noreply.github.com"
+    - name: Promote release
+      run: script/promote.sh
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        S3_BUCKET: ${{ secrets.S3_BUCKET }}

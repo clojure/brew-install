@@ -1,0 +1,49 @@
+name: Release
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out
+      uses: actions/checkout@v3
+    - name: Set Github identity
+      run: |
+        git config --global user.name clojure-build
+        git config --global user.email "clojure-build@users.noreply.github.com"
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: 8
+        distribution: 'temurin'
+        cache: 'maven'
+    - name: Set up Clojure
+      uses: DeLaGuardo/setup-clojure@9.5
+      with:
+        cli: latest
+    - name: Cache clojure dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.m2/repository
+          ~/.gitlibs
+        key: cljdeps-${{ hashFiles('deps.edn') }}
+        restore-keys: cljdeps-
+    - name: Calculate version
+      run: script/update_version
+    - name: Package release
+      run: clojure -T:build release
+    - name: Upload to site
+      run: script/publish.sh
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        S3_BUCKET: ${{ secrets.S3_BUCKET }}
+    - name: Update tap
+      run: script/update_tap.sh
+    - name: Tag and push
+      run: |
+        git tag -a `cat VERSION` -m `cat VERSION`
+        git push --tags
+        git push
