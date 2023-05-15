@@ -42,10 +42,15 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         S3_BUCKET: ${{ secrets.S3_BUCKET }}
-    - name: Update tap
-      run: script/update_tap.sh
     - name: Tag and push
       run: |
         git tag -a `cat VERSION` -m `cat VERSION`
         git push --tags
         git push
+    - name: Checkout tap repo
+      uses: actions/checkout@v3
+      with:
+        repository: clojure/homebrew-tools
+        path: target/homebrew-tools
+    - name: Update tap
+      run: script/update_tap.sh
