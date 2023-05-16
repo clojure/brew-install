@@ -48,10 +48,6 @@ jobs:
         git push --tags
         git push
     - name: Publish versioned brew recipe to tap
-      run: |
-        echo "Publishing $(cat VERSION) to tap"
-        gh auth login
-        # gh workflow run -R clojure/homebrew-tools publish -f version=$(cat VERSION)
-        echo "Done!"
+      run: gh workflow run -R clojure/homebrew-tools publish -f version=$(cat VERSION)
       env:
         GH_TOKEN: ${{secrets.GH_TOKEN}}
