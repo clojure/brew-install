@@ -35,21 +35,22 @@ jobs:
       run: script/update_version
     - name: Package release
       run: clojure -T:build release
-    - name: Upload to site
+    - name: Upload release to site
       run: script/publish.sh
       env:
         AWS_REGION: us-east-1
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         S3_BUCKET: ${{ secrets.S3_BUCKET }}
-    - name: Tag and push
+    - name: Tag release
       run: |
         git tag -a `cat VERSION` -m `cat VERSION`
         git push --tags
         git push
-    - name: Publish versioned recipe to tap
+    - name: Publish versioned brew recipe to tap
       run: |
         gh auth login
-        gh workflow run -R clojure/homebrew-tools publish -f version=`cat VERSION`
+        cat "Publishing $(cat VERSION) to tap"
+        gh workflow run -R clojure/homebrew-tools publish -f version=$(cat VERSION)
       env:
         GH_TOKEN: ${{secrets.GH_TOKEN}}
