@@ -27,6 +27,6 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         S3_BUCKET: ${{ secrets.S3_BUCKET }}
     - name: Change brew recipe in tap
-      run: gh workflow run -R clojure/homebrew-tools promote -r master -f old_version=$STABLE_VERSION -f old_sha=$STABLE_SHA -f new_version=$DEVEL_VERSION -f new_sha=$DEVEL_SHA
+      run: gh workflow run -R clojure/homebrew-tools promote -r master -f old_version="$STABLE_VERSION" -f old_sha="$STABLE_SHA" -f new_version="$DEVEL_VERSION" -f new_sha="$DEVEL_SHA"
       env:
         GH_TOKEN: ${{secrets.GH_TOKEN}}
