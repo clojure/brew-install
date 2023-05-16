@@ -49,6 +49,7 @@ jobs:
         git push
     - name: Publish versioned recipe to tap
       run:
+        gh auth login
         gh workflow run -R clojure/homebrew-tools publish -f version=`cat VERSION`
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
