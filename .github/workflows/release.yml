@@ -47,5 +47,8 @@ jobs:
         git tag -a `cat VERSION` -m `cat VERSION`
         git push --tags
         git push
-    - name: Update tap
-      run: curl -X POST -H "Authorization:token ${{ secrets.GH_TOKEN }}" -H "Accept:application/vnd.github.v3+json" --data '{"event_type":"publish"}'  https://api.github.com/repos/clojure/homebrew-tools/dispatches
+    - name: Publish versioned recipe to tap
+      run:
+        gh workflow run -R clojure/homebrew-tools publish -f version=`cat VERSION`
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
