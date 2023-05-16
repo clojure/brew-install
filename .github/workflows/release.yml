@@ -47,10 +47,5 @@ jobs:
         git tag -a `cat VERSION` -m `cat VERSION`
         git push --tags
         git push
-    - name: Checkout tap repo
-      uses: actions/checkout@v3
-      with:
-        repository: clojure/homebrew-tools
-        path: target/homebrew-tools
     - name: Update tap
-      run: script/update_tap.sh
+      run: curl -X POST -H "Authorization:token ${{ secrets.GH_TOKEN }}" -H "Accept:application/vnd.github.v3+json" --data '{"event_type":"publish"}'  https://api.github.com/repos/clojure/homebrew-tools/dispatches
