@@ -1,4 +1,4 @@
-name: Promote
+name: Promote dev to stable
 
 on: [workflow_dispatch]
 
