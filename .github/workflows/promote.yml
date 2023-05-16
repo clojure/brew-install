@@ -16,20 +16,17 @@ jobs:
       run: |
         source script/read_versions.sh
         cp devel.properties stable.properties
-        echo "dv $DEVEL_VERSION $DEVEL_SHA"
-        echo "st $STABLE_VERSION $STABLE_SHA"
-        
-    #     git add stable.properties
-    #     git commit -m "update stable to $DEVEL_VERSION"
-    #     git push
-    # - name: Publish new stable version
-    #   run: aws s3 cp --only-show-errors "stable.properties" "$S3_BUCKET/install/stable.properties"
-    #   env:
-    #     AWS_REGION: us-east-1
-    #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #     S3_BUCKET: ${{ secrets.S3_BUCKET }}
-    # - name: Change brew recipe in tap
-    #   run: gh workflow run -R clojure/homebrew-tools promote -r master -f old_version=$STABLE_VERSION -f old_sha=$STABLE_SHA -f new_version=$DEVEL_VERSION -f new_sha=$DEVEL_SHA
-    #   env:
-    #     GH_TOKEN: ${{secrets.GH_TOKEN}}
+        git add stable.properties
+        git commit -m "update stable to $DEVEL_VERSION"
+        git push
+    - name: Publish new stable version
+      run: aws s3 cp --only-show-errors "stable.properties" "$S3_BUCKET/install/stable.properties"
+      env:
+        AWS_REGION: us-east-1
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        S3_BUCKET: ${{ secrets.S3_BUCKET }}
+    - name: Change brew recipe in tap
+      run: gh workflow run -R clojure/homebrew-tools promote -r master -f old_version=$STABLE_VERSION -f old_sha=$STABLE_SHA -f new_version=$DEVEL_VERSION -f new_sha=$DEVEL_SHA
+      env:
+        GH_TOKEN: ${{secrets.GH_TOKEN}}
