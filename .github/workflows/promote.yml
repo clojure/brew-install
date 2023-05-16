@@ -12,9 +12,15 @@ jobs:
       run: |
         git config --global user.name clojure-build
         git config --global user.email "clojure-build@users.noreply.github.com"
-    - name: Read versions
+    - name: Read versions and save for later use
       run: |
         source script/read_versions.sh
+        echo "DEVEL_VERSION=$DEVEL_VERSION" >> "$GITHUB_ENV"
+        echo "DEVEL_SHA=$DEVEL_SHA" >> "$GITHUB_ENV"
+        echo "STABLE_VERSION=$STABLE_VERSION" >> "$GITHUB_ENV"
+        echo "STABLE_SHA=$STABLE_SHA" >> "$GITHUB_ENV"
+    - name: Read versions
+      run: |
         cp devel.properties stable.properties
         git add stable.properties
         git commit -m "update stable to $DEVEL_VERSION"
