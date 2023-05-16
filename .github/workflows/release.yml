@@ -48,7 +48,7 @@ jobs:
         git push --tags
         git push
     - name: Publish versioned recipe to tap
-      run:
+      run: |
         gh auth login
         gh workflow run -R clojure/homebrew-tools publish -f version=`cat VERSION`
       env:
