@@ -15,7 +15,7 @@
     [clojure.spec.alpha :as s])
   (:import
     [clojure.lang ExceptionInfo]
-    [java.io StringWriter Writer FileNotFoundException]
+    [java.io StringWriter Writer FileNotFoundException PushbackReader]
     [java.util.concurrent Executors ThreadFactory]))
 
 (set! *warn-on-reflection* true)
@@ -144,16 +144,28 @@
           (throw (build-error expl)))
         (build-fn-descriptor conf)))))
 
+(defn- read-args-stdin
+  [prior-args]
+  (let [eof (Object.)
+        r (PushbackReader. (java.io.BufferedReader. *in*))]
+    (loop [args prior-args]
+      (let [arg (edn/read {:eof eof :default tagged-literal} r)]
+        (if (= eof arg)
+          args
+          (recur (conj args arg)))))))
+
 (defn- read-args
   [args]
   (loop [[a & as] args
          read-args []]
     (if a
-      (let [r (try
-                (edn/read-string {:default tagged-literal} a)
-                (catch Throwable _
-                  (throw (err "Unreadable arg:" (pr-str a)))))]
-        (recur as (conj read-args r)))
+      (if (= a "-")
+        (read-args-stdin read-args)
+        (let [r (try
+                  (edn/read-string {:default tagged-literal} a)
+                  (catch Throwable _
+                    (throw (err "Unreadable arg:" (pr-str a)))))]
+          (recur as (conj read-args r))))
       read-args)))
 
 (defn- set-daemon-agent-executor

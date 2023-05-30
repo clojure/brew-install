@@ -8,6 +8,7 @@ clj has both stable and prerelease versions. Current and former stable build are
 Prerelease versions:
 
 * next
+  * With -X or -T accept `-` as a trailing argument to read the remainder of args from stdin
   * On windows installer, hide progress bar on download
 
 **Current stable version:**
