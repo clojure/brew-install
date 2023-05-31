@@ -10,6 +10,7 @@ Prerelease versions:
 * next
   * With -X or -T accept `-` as a trailing argument to read the remainder of args from stdin
   * On windows installer, hide progress bar on download
+  * Update to tools.tools 0.3.1
 
 **Current stable version:**
 
