@@ -2,10 +2,18 @@ name: Release dev version
 
 on: [workflow_dispatch]
 
+permissions:        # Exchange the OIDC token (JWT) for a cloud access token
+  id-token: write   # This is required for requesting the JWT
+  contents: read    # This is required for actions/checkout
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: arn:aws:iam::173728190221:role/github-CLI-upload
+        aws-region: us-east-2
     - name: Check out
       uses: actions/checkout@v3
       with:
@@ -37,11 +45,6 @@ jobs:
       run: clojure -T:build release
     - name: Upload release to site
       run: script/publish.sh
-      env:
-        AWS_REGION: us-east-1
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        S3_BUCKET: ${{ secrets.S3_BUCKET }}
     - name: Tag release
       run: |
         git tag -a `cat VERSION` -m `cat VERSION`
