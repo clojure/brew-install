@@ -45,6 +45,8 @@ jobs:
       run: clojure -T:build release
     - name: Upload release to site
       run: script/publish.sh
+      env:
+        S3_BUCKET: ${{ secrets.S3_BUCKET }}
     - name: Tag release
       run: |
         git tag -a `cat VERSION` -m `cat VERSION`

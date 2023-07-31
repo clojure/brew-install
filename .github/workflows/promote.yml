@@ -4,7 +4,7 @@ on: [workflow_dispatch]
 
 permissions:        # Exchange the OIDC token (JWT) for a cloud access token
   id-token: write   # This is required for requesting the JWT
-  contents: read    # This is required for actions/checkout
+  contents: write   # This is required for actions/checkout
 
 jobs:
   build:
@@ -35,6 +35,8 @@ jobs:
         git push
     - name: Publish new stable version
       run: aws s3 cp --only-show-errors "stable.properties" "$S3_BUCKET/install/stable.properties"
+      env:
+        S3_BUCKET: ${{ secrets.S3_BUCKET }}
     - name: Change brew recipe in tap
       run: |
         echo "old $STABLE_VERSION"
