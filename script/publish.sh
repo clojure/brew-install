@@ -7,7 +7,7 @@ if [[ ! -z "$S3_BUCKET" ]]; then
   # Write devel properties
   version=$(cat VERSION)
   sha=$(shasum -a 256 "target/clojure-tools-$version.tar.gz" | cut -c 1-64)
-  echo "$sha" > target/clojure-tools-$version.tar.gz.sha
+  echo "$sha" > target/clojure-tools-$version.tar.gz.sha256
   echo "$version $sha" > devel.properties
   git add devel.properties
   git commit -m "update devel to $version"
@@ -25,7 +25,7 @@ if [[ ! -z "$S3_BUCKET" ]]; then
   aws s3 cp --only-show-errors "target/posix-install.sh" "$S3_BUCKET/install/posix-install.sh"
   aws s3 cp --only-show-errors "target/posix-install.sh" "$S3_BUCKET/install/posix-install-$version.sh"
   echo "Deploying https://download.clojure.org/install/clojure-tools-$version.zip"
-  echo "$(shasum -a 256 target/clojure-tools.zip | cut -c 1-64)" > target/clojure-tools.zip.sha
+  echo "$(shasum -a 256 target/clojure-tools.zip | cut -c 1-64)" > target/clojure-tools.zip.sha256
   aws s3 cp --only-show-errors "target/clojure-tools.zip" "$S3_BUCKET/install/clojure-tools.zip"
   aws s3 cp --only-show-errors "target/clojure-tools.zip" "$S3_BUCKET/install/clojure-tools-$version.zip"
   echo "Deploying https://download.clojure.org/install/win-install-$version.ps1"
