@@ -1,0 +1,27 @@
+name: Check get latest
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: arn:aws:iam::173728190221:role/github-CLI-upload
+        aws-region: us-east-2
+    - name: Set Github identity
+      run: |
+        git config --global user.name clojure-build
+        git config --global user.email "clojure-build@users.noreply.github.com"
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: 8
+        distribution: 'temurin'
+    - name: Set up Clojure
+      uses: DeLaGuardo/setup-clojure@9.5
+      with:
+        cli: latest
+    - name: Use clojure
+      run: clojure --version
