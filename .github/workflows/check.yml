@@ -1,11 +1,12 @@
 name: Check get latest
 
-on: [workflow_dispatch]
-  inputs:
-    version:
-      description: 'Version to check installation with'
-      required: true
-      default: 'latest'
+on:
+  workflow_dispatch
+    inputs:
+      version:
+        description: 'Version to check installation with'
+        required: true
+        default: 'latest'
 
 jobs:
   build:
