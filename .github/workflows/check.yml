@@ -1,6 +1,11 @@
 name: Check get latest
 
 on: [workflow_dispatch]
+  inputs:
+    version:
+      description: 'Version to check installation with'
+      required: true
+      default: 'latest'
 
 jobs:
   build:
@@ -18,6 +23,6 @@ jobs:
     - name: Set up Clojure
       uses: DeLaGuardo/setup-clojure@9.5
       with:
-        cli: latest
+        cli: ${{ github.event.inputs.version }}
     - name: Use clojure
       run: clojure --version
