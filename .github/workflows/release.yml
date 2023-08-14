@@ -55,7 +55,7 @@ jobs:
         git push --tags
         git push
     - name: Upload to github release
-      run: gh release create "$VERSION" -p -t "$VERSION" "target/clojure.rb" "target/clojure@$VERSION.rb" "target/clojure-tools-$VERSION.tar.gz" "target/linux-install.sh" "target/posix-install.sh" "target/clojure-tools.zip" "target/win-install.ps1"
+      run: gh release create "$VERSION" -p -t "$VERSION" "target/clojure.rb" "target/clojure@$VERSION.rb" "target/clojure-tools-$VERSION.tar.gz" "target/clojure-tools-$VERSION.tar.gz.sha" "target/linux-install.sh" "target/posix-install.sh" "target/clojure-tools.zip" "target/win-install.ps1" "target/clojure-tools.zip.sha"
       env:
         GH_TOKEN: ${{secrets.GH_TOKEN}}
     - name: Publish versioned brew recipe to tap
