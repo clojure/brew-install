@@ -40,7 +40,9 @@ jobs:
         key: cljdeps-${{ hashFiles('deps.edn') }}
         restore-keys: cljdeps-
     - name: Calculate version
-      run: script/update_version
+      run: |
+        script/update_version
+        echo "VERSION=$(cat VERSION)" >> "$GITHUB_ENV"
     - name: Package release
       run: clojure -T:build release
     - name: Upload release to site
@@ -49,9 +51,13 @@ jobs:
         S3_BUCKET: ${{ secrets.S3_BUCKET }}
     - name: Tag release
       run: |
-        git tag -a `cat VERSION` -m `cat VERSION`
+        git tag -a "$VERSION" -m "$VERSION"
         git push --tags
         git push
+    - name: Upload to github release
+      run: gh release create "$VERSION" -p -t "$VERSION" "target/clojure.rb" "target/clojure@$VERSION.rb" "target/clojure-tools-$VERSION.tar.gz" "target/linux-install.sh" "target/posix-install.sh" "target/clojure-tools.zip" "target/win-install.ps1"
+      env:
+        GH_TOKEN: ${{secrets.GH_TOKEN}}
     - name: Publish versioned brew recipe to tap
       run: gh workflow run -R clojure/homebrew-tools publish -r master -f version=$(cat VERSION)
       env:
