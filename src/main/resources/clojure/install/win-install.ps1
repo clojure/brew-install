@@ -4,7 +4,7 @@ $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
 $Version = '${project.version}'
-$ClojureToolsUrl = "https://download.clojure.org/install/clojure-tools-$Version.zip"
+$ClojureToolsUrl = "https://github.com/clojure/brew-install/releases/download/$Version/clojure-tools.zip"
 
 Write-Host 'Downloading Clojure tools' -ForegroundColor Gray
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]'Tls12'

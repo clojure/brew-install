@@ -1,7 +1,8 @@
 class Clojure < Formula
   desc "The Clojure Programming Language"
   homepage "https://clojure.org"
-  url "https://download.clojure.org/install/clojure-tools-${stable.version}.tar.gz"
+  url "https://github.com/clojure/brew-install/releases/download/${stable.version}/clojure-tools-${stable.version}.tar.gz"
+  mirror "https://download.clojure.org/install/clojure-tools-${stable.version}.tar.gz"
   sha256 "${stable.sha}"
   license "EPL-1.0"
 

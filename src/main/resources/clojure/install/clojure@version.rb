@@ -1,7 +1,8 @@
 class ClojureAT${version.short} < Formula
   desc "The Clojure Programming Language"
   homepage "https://clojure.org"
-  url "https://download.clojure.org/install/clojure-tools-${project.version}.tar.gz"
+  url "https://github.com/clojure/brew-install/releases/download/${project.version}/clojure-tools-${project.version}.tar.gz"
+  mirror "https://download.clojure.org/install/clojure-tools-${project.version}.tar.gz"
   sha256 "SHA"
   license "EPL-1.0"
 
