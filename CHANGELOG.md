@@ -9,14 +9,20 @@ Prerelease versions: none
 
 **Current stable version:**
 
+* **1.11.1.1386 on Aug 14, 2023**
+  * **Release artifacts are now published to GitHub, and the download archive is used only as a mirror**
+
+Older versions (previous stable builds in bold):
+
+* **1.11.1.1369 on Aug 14, 2023**
+  * **Download and mirroring wip**
+* **1.11.1.1365 on Aug 13, 2023**
+  * **Download and mirroring wip**
 * **1.11.1.1347 on May 31, 2023**
   * **With -X or -T accept `-` as a trailing argument to read the remainder of args from stdin**
   * **On windows installer, hide progress bar on download**
   * **Update to tools.deps 0.18.1354**
   * **Update to tools.tools 0.3.1**
-
-Older versions (previous stable builds in bold):
-
 * **1.11.1.1273 on Apr 3, 2023**
   * **Change help text to point to -X:deps mvn-pom instead of -Spom**
   * **Switch to tools.deps 0.18.1335**
