@@ -6,10 +6,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: aws-actions/configure-aws-credentials@v2
-      with:
-        role-to-assume: arn:aws:iam::173728190221:role/github-CLI-upload
-        aws-region: us-east-2
     - name: Set Github identity
       run: |
         git config --global user.name clojure-build
