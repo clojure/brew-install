@@ -25,7 +25,7 @@ if [[ ! -z "$S3_BUCKET" ]]; then
   aws s3 cp --only-show-errors "target/posix-install.sh" "$S3_BUCKET/install/posix-install.sh"
   aws s3 cp --only-show-errors "target/posix-install.sh" "$S3_BUCKET/install/posix-install-$version.sh"
   echo "Deploying https://download.clojure.org/install/clojure-tools-$version.zip"
-  echo "$(shasum -a 256 "target/clojure-tools.zip" | cut -c 1-64)" > clojure-tools.zip.sha
+  echo "$(shasum -a 256 "target/clojure-tools.zip" | cut -c 1-64)" > target/clojure-tools.zip.sha
   aws s3 cp --only-show-errors "target/clojure-tools.zip" "$S3_BUCKET/install/clojure-tools.zip"
   aws s3 cp --only-show-errors "target/clojure-tools.zip" "$S3_BUCKET/install/clojure-tools-$version.zip"
   echo "Deploying https://download.clojure.org/install/win-install-$version.ps1"
