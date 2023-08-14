@@ -1,8 +1,12 @@
-name: Check get latest
+name: Check download via setup-clojure
 
 on:
   workflow_dispatch:
     inputs:
+      os:
+        description: 'OS to check installation with'
+        required: true
+        default: 'ubuntu-latest'
       version:
         description: 'Version to check installation with'
         required: true
@@ -10,7 +14,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.os }}
     steps:
     - name: Set Github identity
       run: |
@@ -22,7 +26,7 @@ jobs:
         java-version: 8
         distribution: 'temurin'
     - name: Set up Clojure
-      uses: DeLaGuardo/setup-clojure@9.5
+      uses: DeLaGuardo/setup-clojure@latest
       with:
         cli: ${{ github.event.inputs.version }}
     - name: Use clojure
