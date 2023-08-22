@@ -9,11 +9,13 @@ Prerelease versions: none
 
 **Current stable version:**
 
-* **1.11.1.1386 on Aug 14, 2023**
-  * **Release artifacts are now published to GitHub, and the download archive is used only as a mirror**
+* **1.11.1.1405 on Aug 22, 2023**
+  * **GitHub releases now contain .sha256 files for binaries**
 
 Older versions (previous stable builds in bold):
 
+* **1.11.1.1386 on Aug 14, 2023**
+  * **Release artifacts are now published to GitHub, and the download archive is used only as a mirror**
 * **1.11.1.1369 on Aug 14, 2023**
   * **Download and mirroring wip**
 * **1.11.1.1365 on Aug 13, 2023**
