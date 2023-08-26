@@ -9,11 +9,13 @@ Prerelease versions: none
 
 **Current stable version:**
 
-* **1.11.1.1409 on Aug 25, 2023**
+* **1.11.1.1413 on Aug 26, 2023**
   * **No changes from prior**
 
 Older versions (previous stable builds in bold):
 
+* **1.11.1.1409 on Aug 25, 2023**
+  * **No changes from prior**
 * **1.11.1.1405 on Aug 22, 2023**
   * **GitHub releases now contain .sha256 files for binaries**
 * **1.11.1.1386 on Aug 14, 2023**
