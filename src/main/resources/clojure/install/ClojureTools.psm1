@@ -290,13 +290,22 @@ For more info, see:
   # Determine whether to use user or project cache
   if (Test-Path deps.edn) {
     $CacheDir = '.cpcache'
+    if(!(Test-Path $CacheDir -PathType container)) {
+      Try {
+        New-Item -Name $CacheDir -ItemType "directory"
+      }
+      Catch { # fall back to user cache dir
+        $CacheDirKey = Get-Location
+        $CacheDir = $UserCacheDir
+      }
+    }
   } else {
     $CacheDir = $UserCacheDir
   }
 
   # Construct location of cached classpath file
-  $CacheVersion = "4"
-  $CacheKey = "$CacheVersion|$($ReplAliases -join '')|$($JvmAliases -join '')|$ExecAliases|$MainAliases|$DepsData|$ToolName|$ToolAliases|$($ConfigPaths -join '|')"
+  $CacheVersion = "5"
+  $CacheKey = "$CacheVersion|$CacheDirKey|$($ReplAliases -join '')|$($JvmAliases -join '')|$ExecAliases|$MainAliases|$DepsData|$ToolName|$ToolAliases|$($ConfigPaths -join '|')"
   $CacheKeyHash = (Get-StringHash $CacheKey) -replace '-', ''
 
   $CpFile = "$CacheDir\$CacheKeyHash.cp"

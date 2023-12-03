@@ -312,14 +312,19 @@ fi
 
 # Determine whether to use user or project cache
 if [[ -f deps.edn ]]; then
-  cache_dir=.cpcache
+  if [ -w "." ]; then
+    cache_dir=.cpcache
+  else # can't write to .cpcache
+    cache_dir_key="$PWD"
+    cache_dir="$user_cache_dir"
+  fi
 else
   cache_dir="$user_cache_dir"
 fi
 
 # Construct location of cached classpath file
-cache_version=4
-val="$cache_version|$(join '' ${repl_aliases[@]})|$exec_aliases|$main_aliases|$deps_data|$tool_name|$tool_aliases"
+cache_version=5
+val="$cache_version|$cache_dir_key|$(join '' ${repl_aliases[@]})|$exec_aliases|$main_aliases|$deps_data|$tool_name|$tool_aliases"
 for config_path in "${config_paths[@]}"; do
   if [[ -f "$config_path" ]]; then
     val="$val|$config_path"
