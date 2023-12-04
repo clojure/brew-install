@@ -29,5 +29,8 @@ jobs:
       uses: DeLaGuardo/setup-clojure@11.0
       with:
         cli: ${{ github.event.inputs.version }}
-    - name: Use clojure
+    - name: Check downloaded version
       run: clojure --version
+    - name: Run CLI
+      run: clojure -M -e nil
+      
