@@ -5,20 +5,19 @@ Changelog
 
 clj has both stable and prerelease versions. Current and former stable build are listed in **bold** and are (or were) available from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
-Prerelease versions:
-
-* 1.11.1.1420 on Dec 4, 2023
-  * TDEPS-119 Unable to start CLI in write-protected project directory
-  * Update to tools.deps 1.18.1370
-  * Update to tools.tools 0.3.2
+Prerelease versions: none
 
 **Current stable version:**
 
-* **1.11.1.1413 on Aug 26, 2023**
-  * **No changes from prior**
+* **1.11.1.1420 on Dec 4, 2023**
+  * **TDEPS-119 Unable to start CLI in write-protected project directory**
+  * **Update to tools.deps 1.18.1370**
+  * **Update to tools.tools 0.3.2**
 
 Older versions (previous stable builds in bold):
 
+* **1.11.1.1413 on Aug 26, 2023**
+  * **No changes from prior**
 * **1.11.1.1409 on Aug 25, 2023**
   * **No changes from prior**
 * **1.11.1.1405 on Aug 22, 2023**
