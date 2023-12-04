@@ -7,7 +7,7 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions:
 
-* next
+* 1.11.1.1420 on Dec 4, 2023
   * TDEPS-119 Unable to start CLI in write-protected project directory
   * Update to tools.deps 1.18.1370
   * Update to tools.tools 0.3.2
