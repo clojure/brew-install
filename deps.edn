@@ -2,8 +2,8 @@
 
  :deps
  {org.clojure/clojure {:mvn/version "1.11.1"}
-  org.clojure/tools.deps {:mvn/version "0.18.1354"}
-  org.slf4j/slf4j-nop {:mvn/version "1.7.32"}}
+  org.clojure/tools.deps {:mvn/version "0.18.1370"}
+  org.slf4j/slf4j-nop {:mvn/version "1.7.36"}}
 
  :aliases
  {
