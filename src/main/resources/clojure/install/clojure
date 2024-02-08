@@ -18,6 +18,7 @@ tree=false
 pom=false
 help=false
 prep=false
+custom_cache_dir=
 jvm_opts=()
 repl_aliases=()
 mode="repl"
@@ -97,6 +98,11 @@ do
       ;;
     -P)
       prep=true
+      shift
+      ;;
+    -Scache_dir)
+      shift
+      custom_cache_dir="${1}"
       shift
       ;;
     -Sdeps)
@@ -226,6 +232,7 @@ if "$help"; then
 
 	clj-opts:
 	 -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
+         -Scachedir DIR Use the provided directory as a cache directory
 	 -Sdeps EDN     Deps data to use as the last deps file to be merged
 	 -Spath         Compute classpath and echo to stdout only
 	 -Stree         Print dependency tree
@@ -310,16 +317,20 @@ else
   config_paths=("$install_dir/deps.edn" "$config_dir/deps.edn" "deps.edn")
 fi
 
-# Determine whether to use user or project cache
-if [[ -f deps.edn ]]; then
-  if [ -w "." ]; then
-    cache_dir=.cpcache
-  else # can't write to .cpcache
-    cache_dir_key="$PWD"
-    cache_dir="$user_cache_dir"
-  fi
+if [[ -n "${custom_cache_dir}" ]]; then
+  cache_dir="${custom_cache_dir}"
 else
-  cache_dir="$user_cache_dir"
+	# Determine whether to use user or project cache
+	if [[ -f deps.edn ]]; then
+	  if [ -w "." ]; then
+	    cache_dir=.cpcache
+	  else # can't write to .cpcache
+	    cache_dir_key="$PWD"
+	    cache_dir="$user_cache_dir"
+	  fi
+	else
+	  cache_dir="$user_cache_dir"
+	fi
 fi
 
 # Construct location of cached classpath file
