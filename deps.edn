@@ -1,23 +1,22 @@
 {:paths []
 
  :deps
- {org.clojure/clojure {:mvn/version "1.11.1"}
-  org.clojure/tools.deps {:mvn/version "0.18.1394"}
+ {org.clojure/clojure {:mvn/version "1.11.2"}
+  org.clojure/tools.deps {:mvn/version "0.18.1398"}
   org.slf4j/slf4j-nop {:mvn/version "1.7.36"}}
 
  :aliases
  {
   ;; clj -T:build release
   :build    
-  {:deps {io.github.clojure/tools.build {:git/tag "v0.8.1" :git/sha "7d40500"}}
+  {:deps {io.github.clojure/tools.build {:git/tag "v0.9.6" :git/sha "8e78bcc"}}
    :paths ["script"]
    :ns-default build}
   
   ;; clj -X:test
   :test {:extra-paths ["src/test/clojure" "src/main/clojure"]
          :extra-deps {io.github.cognitect-labs/test-runner
-                      {:git/url "https://github.com/cognitect-labs/test-runner.git"
-                       :sha "705ad25bbf0228b1c38d0244a36001c2987d7337"}}
+                      {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
          :exec-fn cognitect.test-runner.api/test
          :exec-args {:dirs ["src/test/clojure"]
                      :patterns [".*"]}

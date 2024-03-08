@@ -59,6 +59,6 @@ See the following resources for more information:
 
 ## License
 
-Copyright © 2019-2021 Rich Hickey, Alex Miller and contributors
+Copyright © Rich Hickey, Alex Miller and contributors
 
 Distributed under the Eclipse Public License 1.0, the same as Clojure.
