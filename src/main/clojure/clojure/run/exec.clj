@@ -15,7 +15,7 @@
     [clojure.spec.alpha :as s])
   (:import
     [clojure.lang ExceptionInfo]
-    [java.io StringWriter Writer FileNotFoundException PushbackReader]
+    [java.io StringWriter Writer FileNotFoundException PushbackReader BufferedReader]
     [java.util.concurrent Executors ThreadFactory]))
 
 (set! *warn-on-reflection* true)
@@ -78,16 +78,15 @@
 (defn exec
   "Resolve and execute the function f (a symbol) with args"
   [f args]
-  (try
-    (let [resolved-f (try
-                       (requiring-resolve' f)
-                       (catch FileNotFoundException _
-                         (throw (err "Namespace could not be loaded:" (namespace f)))))]
-      (if resolved-f
-        (if (= :fn (:clojure.exec/invoke args))
-          (apply-program resolved-f args)
-          (resolved-f args))
-        (throw (err "Namespace" (namespace f) "loaded but function not found:" (name f)))))))
+  (let [resolved-f (try
+                     (requiring-resolve' f)
+                     (catch FileNotFoundException _
+                       (throw (err "Namespace could not be loaded:" (namespace f)))))]
+    (if resolved-f
+      (if (= :fn (:clojure.exec/invoke args))
+        (apply-program resolved-f args)
+        (resolved-f args))
+      (throw (err "Namespace" (namespace f) "loaded but function not found:" (name f))))))
 
 (defn- apply-overrides
   [args overrides]
@@ -147,7 +146,7 @@
 (defn- read-args-stdin
   [prior-args]
   (let [eof (Object.)
-        r (PushbackReader. (java.io.BufferedReader. *in*))]
+        r (PushbackReader. (BufferedReader. *in*))]
     (loop [args prior-args]
       (let [arg (edn/read {:eof eof :default tagged-literal} r)]
         (if (= eof arg)
