@@ -1,15 +1,15 @@
 {:paths []
 
  :deps
- {org.clojure/clojure {:mvn/version "1.11.4"}
-  org.clojure/tools.deps {:mvn/version "0.20.1440"}
+ {org.clojure/clojure {:mvn/version "1.12.0"}
+  org.clojure/tools.deps {:mvn/version "0.21.1449"}
   org.slf4j/slf4j-nop {:mvn/version "1.7.36"}}
 
  :aliases
  {
   ;; clj -T:build release
   :build    
-  {:deps {io.github.clojure/tools.build {:git/tag "v0.10.4" :git/sha "31388ff"}}
+  {:deps {io.github.clojure/tools.build {:git/tag "v0.10.5" :git/sha "2a21b7a"}}
    :paths ["script"]
    :ns-default build}
   
