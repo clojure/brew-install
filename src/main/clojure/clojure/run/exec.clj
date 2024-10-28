@@ -81,7 +81,7 @@
   (let [resolved-f (try
                      (requiring-resolve' f)
                      (catch FileNotFoundException _
-                       (throw (err "Namespace could not be loaded:" (namespace f)))))]
+                       (throw (err "Namespace could not be found on classpath:" (namespace f)))))]
     (if resolved-f
       (if (= :fn (:clojure.exec/invoke args))
         (apply-program resolved-f args)
