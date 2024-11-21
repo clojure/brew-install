@@ -10,6 +10,7 @@ Prerelease versions:
 * Next:
   * Tweak message when -X or -T function namespace not found
   * Update to latest tools.tools
+  * Update to latest tools.deps
 
 **Current stable version:**
 
