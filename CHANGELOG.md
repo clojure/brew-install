@@ -5,21 +5,20 @@ Changelog
 
 clj has both stable and prerelease versions. Current and former stable build are listed in **bold** and are (or were) available from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
-Prerelease versions:
-
-* Next:
-  * Tweak message when -X or -T function namespace not found
-  * Update to latest tools.tools
-  * Update to latest tools.deps
+Prerelease versions: none
 
 **Current stable version:**
+
+* **1.12.0.1488** on Nov 21, 2024
+  * **Tweak message when -X or -T function namespace not found**
+  * **Update to latest tools.tools**
+  * **Update to latest tools.deps**
+
+Older versions (previous stable builds in bold):
 
 * **1.12.0.1479**
   * **Default to Clojure 1.12.0**
   * **Update to tools.deps 0.21.1449 and tools.deps.cli**
-
-Older versions (previous stable builds in bold):
-
 * **1.11.4.1474**
   * **Default to Clojure 1.11.4**
   * **Update to tools.deps 0.20.1440**
