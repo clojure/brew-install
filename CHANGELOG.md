@@ -9,6 +9,7 @@ Prerelease versions:
 
 * Next:
   * Tweak message when -X or -T function namespace not found
+  * Update to latest tools.tools
 
 **Current stable version:**
 
