@@ -9,6 +9,7 @@ Prerelease versions:
 
 * Next
   * Echo args with -M deprecation warning for clarity
+  * Update to tools.deps 0.21.1467 
 
 **Current stable version:**
 
