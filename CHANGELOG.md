@@ -9,12 +9,14 @@ Prerelease versions: none
 
 **Current stable version:**
 
-* **1.12.0.1495 on Dec 31, 2024**
-  * **Echo args with -M deprecation warning for clarity**
-  * **Update to tools.deps 0.21.1467**
+* **1.12.0.1501 on Jan 27, 2025**
+  * **Update to tools.deps 0.21.1471**
 
 Older versions (previous stable builds in bold):
 
+* **1.12.0.1495 on Dec 31, 2024**
+  * **Echo args with -M deprecation warning for clarity**
+  * **Update to tools.deps 0.21.1467**
 * **1.12.0.1488** on Nov 21, 2024
   * **Tweak message when -X or -T function namespace not found**
   * **Update to latest tools.tools**
