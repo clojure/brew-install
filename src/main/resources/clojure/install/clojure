@@ -226,7 +226,7 @@ if "$help"; then
 
 	clj-opts:
 	 -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
-	 -Sdeps EDN     Deps data to use as the last deps file to be merged
+	 -Sdeps EDN     Deps data or file to use as the last deps file to be merged
 	 -Spath         Compute classpath and echo to stdout only
 	 -Stree         Print dependency tree
 	 -Scp CP        Do NOT compute or cache classpath, use this one instead
@@ -366,6 +366,11 @@ else
       break
     fi
   done
+
+  # If -Sdeps is a file, and it exists, is it stale?
+  if [[ "$deps_data" != \{* ]] && [[ -e "$deps_data" ]] && [ "$deps_data" -nt "$cp_file" ]; then
+      stale=true
+  fi
 
   # Are .jar files in classpath missing?
   IFS=':' read -ra cp_entries <<<"$(cat $cp_file)"
