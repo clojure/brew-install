@@ -7,17 +7,16 @@ clj has both stable and prerelease versions. Current and former stable build are
 
 Prerelease versions: none
 
-* Next:
-  * -Sdescribe - undocument (prefer tools.deps APIs instead)
-  * -Sverbose - add explicit deps.edn refs
-
 **Current stable version:**
 
-* **1.12.1.1543 on Jun 3, 2025**
-  * **Update to Clojure 1.12.1**
+* **1.12.1.1550 on Jun 3, 2025**
+  * **`-Sdescribe` - undocument (prefer tools.deps APIs instead)**
+  * **`-S`verbose` - add explicit deps.edn refs**
 
 Older versions (previous stable builds in bold):
 
+* **1.12.1.1543 on Jun 3, 2025**
+  * **Update to Clojure 1.12.1**
 * **1.12.1.1538 on Jun 2, 2025**
   * **Update to Clojure 1.12.1**
 * **1.12.0.1530 on Mar 5, 2025**
