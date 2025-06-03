@@ -9,11 +9,13 @@ Prerelease versions: none
 
 **Current stable version:**
 
-* **1.12.1.1538 on Jun 2, 2025**
+* **1.12.1.1543 on Jun 3, 2025**
   * **Update to Clojure 1.12.1**
 
 Older versions (previous stable builds in bold):
 
+* **1.12.1.1538 on Jun 2, 2025**
+  * **Update to Clojure 1.12.1**
 * **1.12.0.1530 on Mar 5, 2025**
   * **Update to tools.deps 0.23.1512**
 * 1.12.0.1523 on Mar 5, 2025
