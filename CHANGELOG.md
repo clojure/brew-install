@@ -10,8 +10,8 @@ Prerelease versions: none
 **Current stable version:**
 
 * **1.12.1.1550 on Jun 3, 2025**
-  * **`-Sdescribe` - undocument (prefer tools.deps APIs instead)**
-  * **`-S`verbose` - add explicit deps.edn refs**
+  * **`-Sdescribe` - undocumented (prefer using tools.deps APIs instead)**
+  * **`-Sverbose` - add explicit deps.edn references**
 
 Older versions (previous stable builds in bold):
 
