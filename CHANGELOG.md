@@ -8,7 +8,8 @@ clj has both stable and prerelease versions. Current and former stable build are
 Prerelease versions: none
 
 * Next:
-  * Undocument -Sdescribe
+  * -Sdescribe - undocument (prefer tools.deps APIs instead)
+  * -Sverbose - add explicit deps.edn refs
 
 **Current stable version:**
 

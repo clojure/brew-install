@@ -346,6 +346,9 @@ if "$verbose"; then
   echo "install_dir  = $install_dir"
   echo "config_dir   = $config_dir"
   echo "config_paths =" "${config_paths[@]}"
+  echo "root_deps    = $tools_cp"
+  echo "user_deps    = $config_user"
+  echo "project_deps = $config_project"
   echo "cache_dir    = $cache_dir"
   echo "cp_file      = $cp_file"
   echo
