@@ -35,7 +35,8 @@ clojure -T:build release
 ## Release Information
 
 These files are not released into Maven central like other libraries. Instead, the tar
-file is created and published to https://download.clojure.org.
+file is created and published as a Github release
+[here](https://github.com/clojure/brew-install/releases).
 
 The [Clojure homebrew tap](https://github.com/clojure/homebrew-tools) is updated when new releases
 are created or promoted to stable.
@@ -46,9 +47,10 @@ The Homebrew Central Clojure recipe is updated manually so may lag the Clojure t
 
 See the following resources for more information:
 
-* https://clojure.org/guides/getting_started - installation
+* https://clojure.org/guides/install_clojure - installation
 * https://clojure.org/guides/deps_and_cli - deps and CLI guide
-* https://clojure.org/reference/deps_and_cli - deps and CLI reference
+* https://clojure.org/reference/deps_edn - deps.edn reference
+* https://clojure.org/reference/clojure_cli - Clojure CLI reference
 * https://github.com/clojure/tools.deps - dependency and classpath library
 
 ## Developer Information
