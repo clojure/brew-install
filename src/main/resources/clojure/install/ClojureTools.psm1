@@ -215,7 +215,6 @@ clj-opts:
   -Srepro        Use only the local deps.edn (ignore other config files)
   -Sforce        Force recomputation of the classpath (don't use the cache)
   -Sverbose      Print important path info to console
-  -Sdescribe     Print environment and command parsing info as data
   -Sthreads      Set specific number of download threads
   -Strace        Write a trace.edn file that traces deps expansion
   --             Stop parsing dep options and pass remaining arguments to clojure.main
