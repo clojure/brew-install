@@ -9,12 +9,14 @@ Prerelease versions: none
 
 **Current stable version:**
 
-* **1.12.1.1550 on Jun 3, 2025**
-  * **`-Sdescribe` - undocumented (prefer using tools.deps APIs instead)**
-  * **`-Sverbose` - add explicit deps.edn references**
+* **1.12.1.1561 on Aug 14, 2025**
+  * **Update to latest deps**
 
 Older versions (previous stable builds in bold):
 
+* **1.12.1.1550 on Jun 3, 2025**
+  * **`-Sdescribe` - undocumented (prefer using tools.deps APIs instead)**
+  * **`-Sverbose` - add explicit deps.edn references**
 * **1.12.1.1543 on Jun 3, 2025**
   * **Update to Clojure 1.12.1**
 * **1.12.1.1538 on Jun 2, 2025**
