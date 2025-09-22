@@ -7,7 +7,7 @@
 
   :aliases {
     :deps {:replace-paths []
-           :replace-deps {org.clojure/tools.deps.cli {:mvn/version "0.12.105"}}
+           :replace-deps {org.clojure/tools.deps.cli {:mvn/version "0.12.110"}}
            :ns-default clojure.tools.deps.cli.api
            :ns-aliases {help clojure.tools.deps.cli.help}}
     :test {:extra-paths ["test"]}
