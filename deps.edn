@@ -1,8 +1,8 @@
 {:paths []
 
  :deps
- {org.clojure/clojure {:mvn/version "1.12.3"}
-  org.clojure/tools.deps {:mvn/version "0.26.1553"}
+ {org.clojure/clojure {:mvn/version "1.12.4"}
+  org.clojure/tools.deps {:mvn/version "0.27.1564"}
   org.slf4j/slf4j-nop {:mvn/version "1.7.36"}}
 
  :aliases
