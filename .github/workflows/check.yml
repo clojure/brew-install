@@ -1,6 +1,7 @@
+name: Check download via setup-clojure
+
 permissions:
   contents: read
-name: Check download via setup-clojure
 
 on:
   workflow_dispatch:
