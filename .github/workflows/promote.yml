@@ -1,8 +1,5 @@
 name: Promote dev to stable
 
-permissions:
-  contents: write
-
 on: [workflow_dispatch]
 
 permissions:        # Exchange the OIDC token (JWT) for a cloud access token
