@@ -62,8 +62,6 @@
   (b/copy-file {:src (str doc-dir "/clojure.1") :target (str tar-dir "/clj.1")})
   (b/copy-dir {:src-dirs [target-dir] :target-dir tar-dir :include "*.jar"})
   (b/process {:command-args ["tar" "-cvzf" tar-file "-Ctarget" "clojure-tools"]})
-  (b/copy-file {:src (str filtered-dir "/clojure/install/linux-install.sh") :target (str target-dir "/linux-install.sh")})
-  (b/copy-file {:src (str filtered-dir "/clojure/install/posix-install.sh") :target (str target-dir "/posix-install.sh")})
 
   ;; Collect the windows files and make the windows zip file and installer
   (doseq [f ["ClojureTools.psd1" "ClojureTools.psm1" "deps.edn" "example-deps.edn" "tools.edn"]]
@@ -72,9 +70,13 @@
   (b/zip {:src-dirs [zip-dir] :zip-file zip-file})
   (b/copy-file {:src (str filtered-dir "/clojure/install/win-install.ps1") :target (str target-dir "/win-install.ps1")})
 
-  ;; Prep the brew files
-  (let [sha (-> (:out (b/process {:command-args ["shasum" "-a" "256" tar-file] :out :capture})) (subs 0 64))
-        brew-recipe (slurp (str filtered-dir "/clojure/install/clojure.rb"))
-        version-recipe (slurp (str filtered-dir "/clojure/install/clojure@version.rb"))]
-    (b/write-file {:path "target/clojure.rb" :string (str/replace brew-recipe "SHA" sha)})
-    (b/write-file {:path (format "target/clojure@%s.rb" version) :string (str/replace version-recipe "SHA" sha)})))
+  ;; Embed artifact checksums within installers
+  (let [sha (-> (:out (b/process {:command-args ["shasum" "-a" "256" tar-file] :out :capture})) (subs 0 64))]
+    (doseq [[src target] [["clojure/install/clojure.rb"]
+                          ["clojure/install/clojure@version.rb" (format "clojure@%s.rb" version)]
+                          ["clojure/install/linux-install.sh"]
+                          ["clojure/install/posix-install.sh"]]
+            :let [target (str target-dir "/" (or target (peek (str/split src #"/"))))
+                  src (str filtered-dir "/" src)]]
+      (b/write-file {:path target
+                     :string (str/replace (slurp src) "SHA" sha)}))))
