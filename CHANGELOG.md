@@ -5,22 +5,21 @@ Changelog
 
 clj has both stable and prerelease versions. Current and former stable build are listed in **bold** and are (or were) available from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
-Prerelease versions:
-
-* next
-  * TDEPS-273 - Add codeberg.org to git deps auto url support
-  * TDEPS-269 - Embed and check checksums in Linux and Posix installers
-  * TDEPS-274 - Add additional options to curl in linux and posix installer for retry and timeout
-  * Update to latest tools.deps, tools.deps.cli
-  * Update to latest tools.tools
+Prerelease versions: none
 
 **Current stable version:**
 
-* **1.12.4.1582 on Dec 10, 2025**
-  * **Update to Clojure 1.12.4**
+* **1.12.4.1597 on Jan 26, 2026**
+  * **TDEPS-273 - Add codeberg.org to git deps auto url support**
+  * **TDEPS-269 - Embed and check checksums in Linux and Posix installers**
+  * **TDEPS-274 - Add additional options to curl in linux and posix installer for retry and timeout**
+  * **Update to latest tools.deps, tools.deps.cli**
+  * **Update to latest tools.tools**
 
 Older versions (previous stable builds in bold):
 
+* **1.12.4.1582 on Dec 10, 2025**
+  * **Update to Clojure 1.12.4**
 * **1.12.3.1577 on Sep 25, 2025**
   * **Update to Clojure 1.12.3**
 * **1.12.2.1571 on Sep 22, 2025**
