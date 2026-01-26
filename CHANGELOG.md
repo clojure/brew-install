@@ -8,6 +8,9 @@ clj has both stable and prerelease versions. Current and former stable build are
 Prerelease versions:
 
 * next
+  * TDEPS-273 - Add codeberg.org to git deps auto url support
+  * TDEPS-274 - Add additional options to curl in linux and posix installer for retry and timeout
+  * Update to latest tools.deps, tools.deps.cli
   * Update to latest tools.tools
 
 **Current stable version:**
