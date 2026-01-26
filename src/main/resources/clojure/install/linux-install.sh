@@ -26,7 +26,18 @@ if [[ "$prefix_param" = "-p" || "$prefix_param" = "--prefix" ]]; then
 fi
 
 echo "Downloading and expanding tar"
-curl -L -O https://github.com/clojure/brew-install/releases/download/${project.version}/clojure-tools-${project.version}.tar.gz
+curl \
+  --connect-timeout 3 \
+  --fail \
+  --max-time 60
+  --no-progress-meter \
+  --retry-max-time 60 \
+  --retry 5
+  --retry-connrefused \
+  --remote-name \
+  --location \
+  https://github.com/clojure/brew-install/releases/download/${project.version}/clojure-tools-${project.version}.tar.gz
+
 tar xzf clojure-tools-${project.version}.tar.gz
 
 lib_dir="$prefix_dir/lib"
