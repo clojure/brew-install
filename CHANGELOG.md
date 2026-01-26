@@ -9,6 +9,7 @@ Prerelease versions:
 
 * next
   * TDEPS-273 - Add codeberg.org to git deps auto url support
+  * TDEPS-269 - Embed and check checksums in Linux and Posix installers
   * TDEPS-274 - Add additional options to curl in linux and posix installer for retry and timeout
   * Update to latest tools.deps, tools.deps.cli
   * Update to latest tools.tools
