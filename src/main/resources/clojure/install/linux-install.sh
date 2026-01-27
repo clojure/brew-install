@@ -27,7 +27,7 @@ fi
 
 echo "Downloading and expanding tar"
 curl -L -O -f -m 120 --connect-timeout 5 --retry 5 --retry-connrefused --retry-max-time 60 --no-progress-meter https://github.com/clojure/brew-install/releases/download/${project.version}/clojure-tools-${project.version}.tar.gz
-echo "SHA  clojure-tools-${project.version}.tar.gz" | shasum -a 256 -c | grep "^clojure-tools-${project.version}.tar.gz: OK$"
+echo "SHA  clojure-tools-${project.version}.tar.gz" | sha256sum -c | grep "^clojure-tools-${project.version}.tar.gz: OK$"
 tar xzf clojure-tools-${project.version}.tar.gz
 
 lib_dir="$prefix_dir/lib"
