@@ -9,11 +9,13 @@ Prerelease versions: none
 
 **Current stable version:**
 
-* **1.12.4.1602 on Jan 27, 2026**
-  * **TDEPS-275 - Use sha256sum in linux-installer instead of shasum**
+* **1.12.4.1607 on Feb 27, 2026**
+  * **Update to latest tools.deps, tools.deps.cli**
 
 Older versions (previous stable builds in bold):
 
+* **1.12.4.1602 on Jan 27, 2026**
+  * **TDEPS-275 - Use sha256sum in linux-installer instead of shasum**
 * **1.12.4.1597 on Jan 26, 2026**
   * **TDEPS-273 - Add codeberg.org to git deps auto url support**
   * **TDEPS-269 - Embed and check checksums in Linux and Posix installers**
