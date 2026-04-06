@@ -17,8 +17,10 @@
 (def class-dir "target/classes")
 (def exec-dir "target/exec")
 (def tar-dir "target/clojure-tools")
+(def zip-dir "target/win")
 (def uber-file (format "target/clojure-tools-%s.jar" version))
 (def tar-file (format "target/clojure-tools-%s.tar.gz" version))
+(def zip-file "target/clojure-tools.zip")
 (def exec-file "target/exec.jar")
 
 (defn clean
@@ -60,6 +62,13 @@
   (b/copy-file {:src (str doc-dir "/clojure.1") :target (str tar-dir "/clj.1")})
   (b/copy-dir {:src-dirs [target-dir] :target-dir tar-dir :include "*.jar"})
   (b/process {:command-args ["tar" "-cvzf" tar-file "-Ctarget" "clojure-tools"]})
+
+  ;; Collect the windows files and make the windows zip file and installer
+  (doseq [f ["ClojureTools.psd1" "ClojureTools.psm1" "deps.edn" "example-deps.edn" "tools.edn"]]
+    (b/copy-file {:src (str filtered-dir "/clojure/install/" f) :target (str zip-dir "/ClojureTools/" f)}))
+  (b/copy-dir {:src-dirs [target-dir] :target-dir (str zip-dir "/ClojureTools") :include "*.jar"})
+  (b/zip {:src-dirs [zip-dir] :zip-file zip-file})
+  (b/copy-file {:src (str filtered-dir "/clojure/install/win-install.ps1") :target (str target-dir "/win-install.ps1")})
 
   ;; Embed artifact checksums within installers
   (let [sha (-> (:out (b/process {:command-args ["shasum" "-a" "256" tar-file] :out :capture})) (subs 0 64))]

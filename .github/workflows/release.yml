@@ -28,7 +28,7 @@ jobs:
         java-version: 8
         distribution: 'temurin'
     - name: Set up Clojure
-      uses: DeLaGuardo/setup-clojure@13.4
+      uses: DeLaGuardo/setup-clojure@13.2
       with:
         cli: latest
     - name: Cache clojure dependencies
@@ -55,7 +55,7 @@ jobs:
         git push --tags
         git push
     - name: Upload to github release
-      run: gh release create "$VERSION" -p -t "$VERSION" "target/clojure@$VERSION.rb" "target/clojure-tools-$VERSION.tar.gz" "target/clojure-tools-$VERSION.tar.gz.sha256" "target/linux-install.sh" "target/posix-install.sh"
+      run: gh release create "$VERSION" -p -t "$VERSION" "target/clojure@$VERSION.rb" "target/clojure-tools-$VERSION.tar.gz" "target/clojure-tools-$VERSION.tar.gz.sha256" "target/linux-install.sh" "target/posix-install.sh" "target/clojure-tools.zip" "target/win-install.ps1" "target/clojure-tools.zip.sha256"
       env:
         GH_TOKEN: ${{secrets.GH_TOKEN}}
     - name: Publish versioned brew recipe to tap
