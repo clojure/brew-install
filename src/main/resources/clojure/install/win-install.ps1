@@ -1,5 +1,7 @@
 #!/usr/bin/env pwsh
 
+Write-Warning 'THIS INSTALL SCRIPT IS NO LONGER UPDATED OR SUPPORTED'
+
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
