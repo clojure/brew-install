@@ -28,7 +28,7 @@ jobs:
         java-version: 8
         distribution: 'temurin'
     - name: Set up Clojure
-      uses: DeLaGuardo/setup-clojure@13.2
+      uses: DeLaGuardo/setup-clojure@13.4
       with:
         cli: latest
     - name: Cache clojure dependencies
