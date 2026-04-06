@@ -5,10 +5,7 @@ Changelog
 
 clj has both stable and prerelease versions. Current and former stable build are listed in **bold** and are (or were) available from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
-Prerelease versions:
-
-* next
-  * Stop building Windows powershell installer
+Prerelease versions: none
 
 **Current stable version:**
 
