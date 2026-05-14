@@ -47,7 +47,10 @@
                   :ns-compile '[clojure.tools.deps.script.make-classpath2
                                 clojure.tools.deps.script.generate-manifest2
                                 clojure.tools.deps.util.s3-aws-client]})
-  (b/copy-file {:src (str filtered-dir "/clojure/install/useragent.txt") :target (str class-dir "/clojure/install/useragent.txt")})
+  (b/copy-file {:src (str filtered-dir "/clojure/install/useragent.txt")
+                :target (str class-dir "/clojure/install/useragent.txt")})
+  (b/copy-file {:src (str filtered-dir "/clojure/install/root-deps.edn")
+                :target (str class-dir "/clojure/tools/deps/deps.edn")})
   (b/uber {:basis basis :class-dir class-dir :uber-file uber-file})
 
   ;; Make the exec jar

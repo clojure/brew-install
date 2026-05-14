@@ -9,6 +9,7 @@ Prerelease versions:
 
 * Next
   * TDEPS-279 Set aether.connector.userAgent to ClojureCLI for the CLI dep expansion
+  * Vendor custom root deps.edn to break dependency cycle
 
 **Current stable version:**
 
