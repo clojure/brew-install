@@ -46,7 +46,8 @@
                   :compile-opts {:elide-meta [:doc :file :line] :direct-linking true}
                   :ns-compile '[clojure.tools.deps.script.make-classpath2
                                 clojure.tools.deps.script.generate-manifest2
-                                clojure.tools.deps.util.s3-aws-client]})
+                                clojure.tools.deps.util.s3-aws-client
+                                clojure.tools.deps.util.s3-transporter]})
   (b/copy-file {:src (str filtered-dir "/clojure/install/useragent.txt")
                 :target (str class-dir "/clojure/install/useragent.txt")})
   (b/copy-file {:src (str filtered-dir "/clojure/install/root-deps.edn")
