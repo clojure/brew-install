@@ -5,21 +5,20 @@ Changelog
 
 clj has both stable and prerelease versions. Current and former stable build are listed in **bold** and are (or were) available from the default [brew formula](https://github.com/clojure/brew-install/). Other versions can be obtained using versioned formulas only.
 
-Prerelease versions: 
-
-* 1.12.5.1654 on May 28, 2026
-  * Fix bad version in :deps alias
-* 1.12.5.1650 on May 28, 2026
-  * Update to latest tools.deps and tools.deps.cli
+Prerelease versions: none
 
 **Current stable version:**
 
-* **1.12.5.1645 on May 14, 2026**
-  * **TDEPS-279 Set aether.connector.userAgent to ClojureCLI for the CLI dep expansion**
-  * **Vendor custom root deps.edn to break dependency cycle**
+* **1.12.5.1654 on May 28, 2026**
+  * **Fix bad version in :deps alias**
 
 Older versions (previous stable builds in bold):
 
+* 1.12.5.1650 on May 28, 2026
+  * Update to latest tools.deps and tools.deps.cli
+* **1.12.5.1645 on May 14, 2026**
+  * **TDEPS-279 Set aether.connector.userAgent to ClojureCLI for the CLI dep expansion**
+  * **Vendor custom root deps.edn to break dependency cycle**
 * **1.12.5.1638 on May 12, 2026**
   * **Update to 1.12.5 and latest deps**
 * **1.12.4.1618 on Mar 9, 2026**
